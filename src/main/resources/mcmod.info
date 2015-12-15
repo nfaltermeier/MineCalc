@@ -1,0 +1,16 @@
+[
+{
+  "modid": "minecraftcalculator778",
+  "name": "MineCalc",
+  "description": "Adds a calculator to the chat window that is interacted with through commands",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/Blackop778/MineCalc",
+  "updateUrl": "",
+  "authorList": ["Blackop778"],
+  "credits": "The Forge dev team",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
