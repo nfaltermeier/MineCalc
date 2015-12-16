@@ -4,8 +4,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
-
-import java.lang.NumberFormatException;
+import net.minecraft.util.EnumChatFormatting;
 
 public class Calculate extends CommandBase{
 
@@ -18,33 +17,76 @@ public class Calculate extends CommandBase{
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
 		//What is shown when "/help Calculate" is typed in
-		return "Calculates from the arguments and outputs answer";
+		return "/Calculate <number> <symbol> <number> [symbol] [number]";
 	}
 
 	@Override
 	public void processCommand(ICommandSender icommandsender, String[] arguments) {
 		//What happens when command is entered
-		try
+		String print = null;
+		if((arguments.length - 1) % 2 == 0 && arguments.length > 1)
 		{
-			double num1 = Double.valueOf(arguments[0]);
-			String opperator = arguments[1];
-			double num2 = Double.valueOf(arguments[2]);
-		}
-		catch(NumberFormatException error)
-		{
-			if(icommandsender instanceof EntityPlayer) // If the sender was a player
+			double n = Double.valueOf(arguments[0]);
+			if(arguments.length == 3 && arguments[1].equals("%"))
 			{
-				EntityPlayer player = (EntityPlayer) icommandsender;
-				player.addChatMessage(new ChatComponentText("Syntax Error"));
-				
+				print = String.valueOf((int) (n / Double.valueOf(arguments[2]))) + "R" + String.valueOf((int) (n % Double.valueOf(arguments[2])));
 			}
+			else
+			{
+				for(int i = 1; i < arguments.length;i++)
+				{
+					if(arguments[i].equals("+"))
+					{
+						i++;
+						n = n + Double.valueOf(arguments[i]);
+					}
+					else if(arguments[i].equals("-"))
+					{
+						i++;
+						n = n - Double.valueOf(arguments[i]);
+					}
+					else if(arguments[i].equals("*"))
+					{
+						i++;
+						n = n * Double.valueOf(arguments[i]);
+					}
+					else if(arguments[i].equals("/"))
+					{
+						i++;
+						n = n / Double.valueOf(arguments[i]);
+					}
+					else if(arguments[i].equals("%"))
+					{
+						i++;
+						n = n % Double.valueOf(arguments[i]);
+					}
+				}
+			if(n % 1 == 0)
+			{
+				int b = (int) (n);
+				print = String.valueOf(b);
+			}
+			else
+			{
+				print = String.valueOf(n);
+			}
+			}
+		}
+		else
+		{
+			print = EnumChatFormatting.RED+"Usage: /Calculate <number> <symbol> <number> [symbol] [number]";
+		}
+		if(icommandsender instanceof EntityPlayer) // If the sender was a player
+		{
+			EntityPlayer player = (EntityPlayer) icommandsender;
+			player.addChatMessage(new ChatComponentText(print));
 		}
 	}
 	
 	@Override
-	public int getRequiredPermissionLevel()
+	public boolean canCommandSenderUseCommand(ICommandSender icommandsender)
     {
-        return 0;
+        return true;
     }
 
 }
