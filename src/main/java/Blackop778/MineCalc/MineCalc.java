@@ -16,7 +16,7 @@ import net.minecraft.server.MinecraftServer;
 public class MineCalc {
 	public static final String MODID = "minecraftcalculator778";
 	public static final String MODNAME = "MineCalc";
-	public static final String MODVER = "1.0.0.0"; //According to https://mcforge.readthedocs.org/en/latest/conventions/versioning/
+	public static final String MODVER = "1.0.1.0"; //According to https://mcforge.readthedocs.org/en/latest/conventions/versioning/
 	
 	@Instance(value = MineCalc.MODID)
 	public static MineCalc instance;

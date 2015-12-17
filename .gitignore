@@ -132,6 +132,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Office file editing
+~$*
+
 
 ### OSX ###
 .DS_Store

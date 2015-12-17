@@ -1,5 +1,8 @@
 package Blackop778.MineCalc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -93,5 +96,15 @@ public class Calculate extends CommandBase{
     {
         return true;
     }
-
+	
+	@Override
+	public List getCommandAliases()
+    {
+		List<String> Aliases = new ArrayList<String>();
+		Aliases.add("calculate");
+		Aliases.add("calc");
+		Aliases.add("Calc");
+        return Aliases;
+    }
+	
 }
