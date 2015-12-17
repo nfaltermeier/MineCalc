@@ -12,11 +12,11 @@ import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
 
-@Mod(modid=MineCalc.MODID, name=MineCalc.MODNAME, version=MineCalc.MODVER)
+@Mod(modid=MineCalc.MODID, name=MineCalc.MODNAME, version=MineCalc.MODVER, acceptableRemoteVersions="*")
 public class MineCalc {
 	public static final String MODID = "minecraftcalculator778";
 	public static final String MODNAME = "MineCalc";
-	public static final String MODVER = "0.0.2.0"; //According to https://mcforge.readthedocs.org/en/latest/conventions/versioning/
+	public static final String MODVER = "1.0.0.0"; //According to https://mcforge.readthedocs.org/en/latest/conventions/versioning/
 	
 	@Instance(value = MineCalc.MODID)
 	public static MineCalc instance;

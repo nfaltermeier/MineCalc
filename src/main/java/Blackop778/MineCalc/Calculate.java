@@ -27,13 +27,14 @@ public class Calculate extends CommandBase{
 		if((arguments.length - 1) % 2 == 0 && arguments.length > 1)
 		{
 			double n = Double.valueOf(arguments[0]);
-			if(arguments.length == 3 && arguments[1].equals("%"))
+			for(int i = 1; i < arguments.length;i++)
 			{
-				print = String.valueOf((int) (n / Double.valueOf(arguments[2]))) + "R" + String.valueOf((int) (n % Double.valueOf(arguments[2])));
-			}
-			else
-			{
-				for(int i = 1; i < arguments.length;i++)
+				if(i + 2 == arguments.length && arguments[i].equals("%"))
+				{
+					print = String.valueOf((int) (n / Double.valueOf(arguments[i + 1]))) + "R" + String.valueOf((int) (n % Double.valueOf(arguments[i + 1])));
+					i++;
+				}
+				else
 				{
 					if(arguments[i].equals("+"))
 					{
@@ -60,16 +61,20 @@ public class Calculate extends CommandBase{
 						i++;
 						n = n % Double.valueOf(arguments[i]);
 					}
+					
+					if(i + 1 == arguments.length)
+					{
+						if(n % 1 == 0)
+						{
+							int b = (int) (n);
+							print = String.valueOf(b);
+						}
+						else
+						{
+							print = String.valueOf(n);
+						}
+					}
 				}
-			if(n % 1 == 0)
-			{
-				int b = (int) (n);
-				print = String.valueOf(b);
-			}
-			else
-			{
-				print = String.valueOf(n);
-			}
 			}
 		}
 		else
