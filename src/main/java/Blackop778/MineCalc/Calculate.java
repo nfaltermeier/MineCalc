@@ -28,10 +28,7 @@ public class Calculate extends CommandBase {
 		// What happens when command is entered
 		String print = null;
 		boolean divError = false;
-		boolean[] symbolErrors = new boolean[arguments.length];
-		for (int i = 0; i < symbolErrors.length; i++) {
-			symbolErrors[i] = false;
-		}
+		boolean symbolError = false;
 		if ((arguments.length - 1) % 2 == 0 && arguments.length > 1) {
 			try {
 				double n = Double.valueOf(arguments[0]);
@@ -66,25 +63,10 @@ public class Calculate extends CommandBase {
 							i++;
 							n = n % Double.valueOf(arguments[i]);
 						} else {
-							symbolErrors[i] = true;
-							EntityPlayer player = (EntityPlayer) icommandsender;
-							player.addChatMessage(new ChatComponentText(arguments[i] + "isn't a symbol"));
+							symbolError = true;
 							i++;
 						}
-
-						boolean foundError = false;
-						for (int o = 0; i < symbolErrors.length; i++) {
-							if (symbolErrors[o] == true) {
-								if (!foundError) {
-									print = "Error: Symbol(s) could not be interpreted: " + symbolErrors[o]; // TEST
-																												// ME
-									foundError = true;
-								} else {
-									print = print + ", " + symbolErrors[o];
-								}
-							}
-						}
-						if (i + 1 == arguments.length && !foundError) {
+						if (i + 1 == arguments.length) {
 							if (n % 1 == 0) {
 								int b = (int) (n);
 								print = String.valueOf(b);
@@ -105,6 +87,9 @@ public class Calculate extends CommandBase {
 
 		if (divError == true && !print.contains("Error")) {
 			print = EnumChatFormatting.RED + "Error: Cannot divide by zero";
+		}
+		else if(symbolError && !print.contains("Error")) {
+			print = EnumChatFormatting.RED + "Error: Valid symbols are '+,-,*,/,%'";
 		}
 
 		if (icommandsender instanceof EntityPlayer) // If the sender was a

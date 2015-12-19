@@ -15,7 +15,7 @@ import net.minecraft.server.MinecraftServer;
 public class MineCalc {
 	public static final String MODID = "minecraftcalculator778";
 	public static final String MODNAME = "MineCalc";
-	public static final String MODVER = "1.0.1.1"; // According to
+	public static final String MODVER = "1.0.1.2"; // According to
 													// https://mcforge.readthedocs.org/en/latest/conventions/versioning/
 
 	@Instance(value = MineCalc.MODID)
@@ -23,17 +23,17 @@ public class MineCalc {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-
+		
 	}
 
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
-
+		
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-
+		
 	}
 
 	// Called when a server is started, both solo and multiplayer
