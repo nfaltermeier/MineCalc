@@ -73,7 +73,17 @@ public class Calculate extends CommandBase {
 						}
 
 						boolean foundError = false;
-
+						for (int o = 0; i < symbolErrors.length; i++) {
+							if (symbolErrors[o] == true) {
+								if (!foundError) {
+									print = "Error: Symbol(s) could not be interpreted: " + symbolErrors[o]; // TEST
+																												// ME
+									foundError = true;
+								} else {
+									print = print + ", " + symbolErrors[o];
+								}
+							}
+						}
 						if (i + 1 == arguments.length && !foundError) {
 							if (n % 1 == 0) {
 								int b = (int) (n);
