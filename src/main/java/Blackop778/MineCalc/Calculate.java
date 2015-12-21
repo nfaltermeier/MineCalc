@@ -169,7 +169,7 @@ public class Calculate extends CommandBase
 		}
 		else if (symbolError && !print.contains("Error"))
 		{
-			print = EnumChatFormatting.RED + "Error: Valid symbols are '+, -, *, /, %'";
+			print = EnumChatFormatting.RED + "Error: Valid symbols are '+, -, *, /, %, ^'";
 		}
 		else if (decimalPower && !print.contains("Error"))
 		{
