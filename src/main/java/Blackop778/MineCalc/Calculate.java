@@ -33,6 +33,8 @@ public class Calculate extends CommandBase
 		String print = null;
 		boolean divError = false;
 		boolean symbolError = false;
+		boolean zeroPower = false;
+		boolean decimalPower = false;
 		if ((arguments.length - 1) % 2 == 0 && arguments.length > 1)
 		{
 			try
@@ -85,11 +87,49 @@ public class Calculate extends CommandBase
 							i++;
 							n = n % Double.valueOf(arguments[i]);
 						}
+						else if (arguments[1].equals("^"))
+						{
+							i++;
+							if (Double.valueOf(arguments[i]) == 0)
+							{
+								if (n > 0)
+								{
+									n = 1;
+								}
+								else
+								{
+									n = -1;
+								}
+								zeroPower = true;
+							}
+							else if (Double.valueOf(arguments[i]) % 1 != 0)
+							{
+								decimalPower = true;
+							}
+							else if (Double.valueOf(arguments[i]) > 0)
+							{
+								double b = n;
+								for (int c = 1; c < Double.valueOf(arguments[i]); c++)
+								{
+									n = n * b;
+								}
+							}
+							else
+							{
+								double b = n;
+								n = 1 / b;
+								for (int c = 2; c < Double.valueOf(arguments[i]); c++)
+								{
+									n = n / b;
+								}
+							}
+						}
 						else
 						{
 							symbolError = true;
 							i++;
 						}
+
 						if (i + 1 == arguments.length)
 						{
 							if (n % 1 == 0)
@@ -100,6 +140,12 @@ public class Calculate extends CommandBase
 							else
 							{
 								print = String.valueOf(n);
+							}
+							if (zeroPower)
+							{
+								print = print + EnumChatFormatting.RED
+										+ " Warning: Anything to the power of 0 is one (or " + EnumChatFormatting.RED
+										+ "negative one)";
 							}
 						}
 					}
@@ -119,11 +165,15 @@ public class Calculate extends CommandBase
 
 		if (divError == true && !print.contains("Error"))
 		{
-			print = EnumChatFormatting.RED + "Error: Cannot divide by zero";
+			print = EnumChatFormatting.RED + "Error: Cannot divide by 0";
 		}
 		else if (symbolError && !print.contains("Error"))
 		{
 			print = EnumChatFormatting.RED + "Error: Valid symbols are '+, -, *, /, %'";
+		}
+		else if (decimalPower && !print.contains("Error"))
+		{
+			print = EnumChatFormatting.RED + "Error: Decmial powers are a lot of work. Maybe later. Sorry.";
 		}
 
 		if (MCConfig.returnInput && !print.contains("Error"))
