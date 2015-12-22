@@ -25,6 +25,8 @@ public class MCConfig
 		config.load();
 
 		returnInput = config.get("Options", "Prepend Input to Output", true).getBoolean(true);
+		rootTimes = config.get("Options", "Times to estimate roots", 5, "More times makes estimates more accurate")
+				.getInt();
 
 		if (config.hasChanged())
 		{
@@ -33,4 +35,5 @@ public class MCConfig
 	}
 
 	public static boolean returnInput;
+	public static int rootTimes;
 }

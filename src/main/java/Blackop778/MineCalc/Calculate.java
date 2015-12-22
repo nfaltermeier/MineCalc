@@ -104,7 +104,12 @@ public class Calculate extends CommandBase
 							}
 							else if (Double.valueOf(arguments[i]) % 1 != 0)
 							{
-								decimalPower = true;
+								int x;
+								for (x = 10; x * Double.valueOf(arguments[i]) % 1 != 0; x = x * 10)
+								{
+
+								}
+
 							}
 							else if (Double.valueOf(arguments[i]) > 0)
 							{
@@ -123,6 +128,28 @@ public class Calculate extends CommandBase
 									n = n / b;
 								}
 							}
+						}
+						else if (arguments[i].equals("/-"))
+						{
+							i++;
+							boolean test = false;
+							int b = 0;
+							int bb = 0;
+							for (int x = 0; test = false; x++)
+							{
+								b = x;
+								bb = x + 1;
+								for (int y = 1; y < Double.valueOf(arguments[i]); y++)
+								{
+									b = b * x;
+									bb = bb * (x + 1);
+								}
+								if (b <= n && bb >= n)
+								{
+									test = true;
+								}
+							}
+							n = (b + bb) / 2;
 						}
 						else
 						{
