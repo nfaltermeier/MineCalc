@@ -135,6 +135,8 @@ public class Calculate extends CommandBase
 							boolean test = false;
 							int b = 0;
 							int bb = 0;
+							double nn = n;
+							double ii = (Double.valueOf(arguments[i]) - 1);
 							for (int x = 0; test = false; x++)
 							{
 								b = x;
@@ -150,6 +152,11 @@ public class Calculate extends CommandBase
 								}
 							}
 							n = (b + bb) / 2;
+							
+							for(int x = 0; x < MCConfig.rootTimes; x++)
+							{
+								n = (ii * n + nn / n)
+							}
 						}
 						else
 						{
