@@ -34,7 +34,6 @@ public class Calculate extends CommandBase
 		boolean divError = false;
 		boolean symbolError = false;
 		boolean zeroPower = false;
-		boolean decimalPower = false;
 		if ((arguments.length - 1) % 2 == 0 && arguments.length > 1)
 		{
 			try
@@ -92,70 +91,34 @@ public class Calculate extends CommandBase
 							i++;
 							if (Double.valueOf(arguments[i]) == 0)
 							{
-								if (n > 0)
-								{
-									n = 1;
-								}
-								else
-								{
-									n = -1;
-								}
 								zeroPower = true;
 							}
-							else if (Double.valueOf(arguments[i]) % 1 != 0)
-							{
-								int x;
-								for (x = 10; x * Double.valueOf(arguments[i]) % 1 != 0; x = x * 10)
-								{
-
-								}
-
-							}
-							else if (Double.valueOf(arguments[i]) > 0)
-							{
-								double b = n;
-								for (int c = 1; c < Double.valueOf(arguments[i]); c++)
-								{
-									n = n * b;
-								}
-							}
-							else
-							{
-								double b = n;
-								n = 1 / b;
-								for (int c = 2; c < Double.valueOf(arguments[i]); c++)
-								{
-									n = n / b;
-								}
-							}
+							n = Math.pow(n, Double.valueOf(arguments[i]));
 						}
 						else if (arguments[i].equals("/-"))
 						{
 							i++;
 							boolean test = false;
-							int b = 0;
-							int bb = 0;
-							double nn = n;
-							double ii = (Double.valueOf(arguments[i]) - 1);
+							double b = 0; // Used to guess what the root is
+							double bb = 0; // Used to guess what the root is
+							double nn = n; // What the original number was
 							for (int x = 0; test = false; x++)
 							{
 								b = x;
 								bb = x + 1;
-								for (int y = 1; y < Double.valueOf(arguments[i]); y++)
-								{
-									b = b * x;
-									bb = bb * (x + 1);
-								}
+								b = Math.pow(b, Double.valueOf(arguments[i]));
+								bb = Math.pow(bb, Double.valueOf(arguments[i]));
 								if (b <= n && bb >= n)
 								{
 									test = true;
+									n = (x + x + 1) / 2; // Make n the guess
 								}
 							}
-							n = (b + bb) / 2;
-							
-							for(int x = 0; x < MCConfig.rootTimes; x++)
+							for (int x = 0; x < MCConfig.rootTimes; x++)
 							{
-								n = (ii * n + nn / n)
+								n = ((Double.valueOf(arguments[i]) - 1) * n
+										+ nn / Math.pow(n, Double.valueOf(arguments[i]) - 1))
+										/ Double.valueOf(arguments[i]);
 							}
 						}
 						else
@@ -177,9 +140,7 @@ public class Calculate extends CommandBase
 							}
 							if (zeroPower)
 							{
-								print = print + EnumChatFormatting.RED
-										+ " Warning: Anything to the power of 0 is one (or " + EnumChatFormatting.RED
-										+ "negative one)";
+								print = print + EnumChatFormatting.RED + " Warning: Anything to the power of 0 is one";
 							}
 						}
 					}
@@ -204,10 +165,6 @@ public class Calculate extends CommandBase
 		else if (symbolError && !print.contains("Error"))
 		{
 			print = EnumChatFormatting.RED + "Error: Valid symbols are '+, -, *, /, %, ^'";
-		}
-		else if (decimalPower && !print.contains("Error"))
-		{
-			print = EnumChatFormatting.RED + "Error: Decmial powers are a lot of work. Maybe later. Sorry.";
 		}
 
 		if (MCConfig.returnInput && !print.contains("Error"))
