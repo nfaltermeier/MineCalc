@@ -98,6 +98,7 @@ public class Calculate extends CommandBase
 						else if (arguments[i].equals("/-"))
 						{
 							i++;
+							@SuppressWarnings("unused")
 							boolean test = false;
 							double b = 0; // Used to guess what the root is
 							double bb = 0; // Used to guess what the root is
@@ -164,7 +165,7 @@ public class Calculate extends CommandBase
 		}
 		else if (symbolError && !print.contains("Error"))
 		{
-			print = EnumChatFormatting.RED + "Error: Valid symbols are '+, -, *, /, %, ^'";
+			print = EnumChatFormatting.RED + "Error: Valid symbols are '+, -, *, /, %, ^, /-'";
 		}
 
 		if (MCConfig.returnInput && !print.contains("Error"))
