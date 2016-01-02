@@ -34,6 +34,7 @@ public class Calculate extends CommandBase
 		boolean divError = false;
 		boolean symbolError = false;
 		boolean zeroPower = false;
+		boolean zeroMult = false;
 		if ((arguments.length - 1) % 2 == 0 && arguments.length > 1)
 		{
 			try
@@ -43,13 +44,13 @@ public class Calculate extends CommandBase
 				{
 					if (i + 2 == arguments.length && arguments[i].equals("%"))
 					{
-						if (arguments[i + 1].equals("0"))
+						i++;
+						if (arguments[i].equals("0"))
 						{
 							divError = true;
 						}
-						print = String.valueOf((int) (n / Double.valueOf(arguments[i + 1]))) + "R"
-								+ String.valueOf((int) (n % Double.valueOf(arguments[i + 1])));
-						i++;
+						print = String.valueOf((int) (n / Double.valueOf(arguments[i]))) + "R"
+								+ String.valueOf((int) (n % Double.valueOf(arguments[i])));
 					}
 					else
 					{
@@ -67,6 +68,10 @@ public class Calculate extends CommandBase
 						{
 							i++;
 							n = n * Double.valueOf(arguments[i]);
+							if (arguments[i].equals("0"))
+							{
+								zeroMult = true;
+							}
 						}
 						else if (arguments[i].equals("/"))
 						{
@@ -141,7 +146,11 @@ public class Calculate extends CommandBase
 							}
 							if (zeroPower)
 							{
-								print = print + EnumChatFormatting.RED + " Warning: Anything to the power of 0 is one";
+								print = print + EnumChatFormatting.RED + " Warning: Anything to the power of 0 is 1";
+							}
+							else if (zeroMult)
+							{
+								print = print + EnumChatFormatting.RED + " Warning: Anything times 0 is 0";
 							}
 						}
 					}
