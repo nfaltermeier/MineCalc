@@ -34,6 +34,7 @@ public class Calculate extends CommandBase
 		boolean divError = false;
 		boolean symbolError = false;
 		boolean zeroPower = false;
+		boolean zeroMult = false;
 		if ((arguments.length - 1) % 2 == 0 && arguments.length > 1)
 		{
 			try
@@ -43,13 +44,13 @@ public class Calculate extends CommandBase
 				{
 					if (i + 2 == arguments.length && arguments[i].equals("%"))
 					{
-						if (arguments[i + 1].equals("0"))
+						i++;
+						if (arguments[i].equals("0"))
 						{
 							divError = true;
 						}
-						print = String.valueOf((int) (n / Double.valueOf(arguments[i + 1]))) + "R"
-								+ String.valueOf((int) (n % Double.valueOf(arguments[i + 1])));
-						i++;
+						print = String.valueOf((int) (n / Double.valueOf(arguments[i]))) + "R"
+								+ String.valueOf((int) (n % Double.valueOf(arguments[i])));
 					}
 					else
 					{
@@ -66,6 +67,10 @@ public class Calculate extends CommandBase
 						else if (arguments[i].equals("*"))
 						{
 							i++;
+							if (arguments[i].equals("0"))
+							{
+								zeroMult = true;
+							}
 							n = n * Double.valueOf(arguments[i]);
 						}
 						else if (arguments[i].equals("/"))
@@ -98,6 +103,7 @@ public class Calculate extends CommandBase
 						else if (arguments[i].equals("/-"))
 						{
 							i++;
+							@SuppressWarnings("unused")
 							boolean test = false;
 							double b = 0; // Used to guess what the root is
 							double bb = 0; // Used to guess what the root is
@@ -141,6 +147,10 @@ public class Calculate extends CommandBase
 							if (zeroPower)
 							{
 								print = print + EnumChatFormatting.RED + " Warning: Anything to the power of 0 is one";
+							}
+							else if (zeroMult)
+							{
+								print = print + EnumChatFormatting.RED + " Warning: Anything times 0 is 0";
 							}
 						}
 					}
