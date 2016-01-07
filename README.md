@@ -11,7 +11,6 @@ I would appreciate if you used my Java format prefs, which can be found at `\src
 * Add Last
 * Add Pi
 * Add GUI Config
-* Add sqrt() and cbrt()
 
 ##[Issues](https://github.com/Blackop778/MineCalc/issues)
 For issue reporting please click above and tell me what the error is, what version it is, and steps to reproduce.

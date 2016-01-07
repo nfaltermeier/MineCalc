@@ -5,6 +5,7 @@
 .gradle
 build/
 run/
+gradle.properties
 
 # Ignore Gradle GUI config
 gradle-app.setting

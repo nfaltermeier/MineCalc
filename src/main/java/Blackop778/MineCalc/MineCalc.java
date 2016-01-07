@@ -19,7 +19,7 @@ public class MineCalc
 {
 	public static final String MODID = "minecraftcalculator778";
 	public static final String MODNAME = "MineCalc";
-	public static final String MODVER = "2.0.3.1"; // According to
+	public static final String MODVER = "2.0.3.2"; // According to
 													// https://mcforge.readthedocs.org/en/latest/conventions/versioning/
 	public static final Logger Logger = LogManager.getLogger(MODID);
 

@@ -35,6 +35,7 @@ public class Calculate extends CommandBase
 		boolean symbolError = false;
 		boolean zeroPower = false;
 		boolean zeroMult = false;
+		boolean imaginaryError = false;
 		if ((arguments.length - 1) % 2 == 0 && arguments.length > 1)
 		{
 			try
@@ -103,28 +104,50 @@ public class Calculate extends CommandBase
 						else if (arguments[i].equals("/-"))
 						{
 							i++;
-							@SuppressWarnings("unused")
-							boolean test = false;
-							double b = 0; // Used to guess what the root is
-							double bb = 0; // Used to guess what the root is
-							double nn = n; // What the original number was
-							for (int x = 0; test = false; x++)
+							if (n < 0 && Double.valueOf(arguments[i]) % 2 == 0)
 							{
-								b = x;
-								bb = x + 1;
-								b = Math.pow(b, Double.valueOf(arguments[i]));
-								bb = Math.pow(bb, Double.valueOf(arguments[i]));
-								if (b <= n && bb >= n)
-								{
-									test = true;
-									n = (x + x + 1) / 2; // Make n the guess
-								}
+								imaginaryError = true;
 							}
-							for (int x = 0; x < MCConfig.rootTimes; x++)
+							else
 							{
-								n = ((Double.valueOf(arguments[i]) - 1) * n
-										+ nn / Math.pow(n, Double.valueOf(arguments[i]) - 1))
-										/ Double.valueOf(arguments[i]);
+								if (arguments[i].equals("2"))
+								{
+									n = Math.sqrt(n);
+								}
+								else if (arguments[i].equals("3"))
+								{
+									n = Math.cbrt(n);
+								}
+								else
+								{
+									@SuppressWarnings("unused")
+									boolean test = false;
+									double b = 0; // Used to guess what the root
+													// is
+									double bb = 0; // Used to guess what the
+													// root is
+									double nn = n; // What the original number
+													// was
+									for (int x = 0; test = false; x++)
+									{
+										b = x;
+										bb = x + 1;
+										b = Math.pow(b, Double.valueOf(arguments[i]));
+										bb = Math.pow(bb, Double.valueOf(arguments[i]));
+										if (b <= n && bb >= n)
+										{
+											test = true;
+											n = (x + x + 1) / 2; // Make n the
+																	// guess
+										}
+									}
+									for (int x = 0; x < MCConfig.rootTimes; x++)
+									{
+										n = ((Double.valueOf(arguments[i]) - 1) * n
+												+ nn / Math.pow(n, Double.valueOf(arguments[i]) - 1))
+												/ Double.valueOf(arguments[i]);
+									}
+								}
 							}
 						}
 						else
@@ -168,7 +191,11 @@ public class Calculate extends CommandBase
 					+ EnumChatFormatting.RED + "[number]";
 		}
 
-		if (divError == true && !print.contains("Error"))
+		if (imaginaryError && !print.contains("Error"))
+		{
+			print = EnumChatFormatting.RED + "Error: Imaginary numbers are not supported";
+		}
+		else if (divError && !print.contains("Error"))
 		{
 			print = EnumChatFormatting.RED + "Error: Cannot divide by 0";
 		}
