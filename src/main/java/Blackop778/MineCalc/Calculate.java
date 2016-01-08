@@ -129,7 +129,9 @@ public class Calculate extends CommandBase
 									double nn = n; // What the original number
 													// was
 									for (int x = 0; test = false; x++)
-									{
+									{ // Find what set of nth powers 'n' falls
+										// between, and set n to the average of
+										// them pre-powering
 										b = x;
 										bb = x + 1;
 										b = Math.pow(b, Double.valueOf(arguments[i]));
@@ -137,12 +139,12 @@ public class Calculate extends CommandBase
 										if (b <= n && bb >= n)
 										{
 											test = true;
-											n = (x + x + 1) / 2; // Make n the
-																	// guess
+											n = (x + x + 1) / 2;
 										}
 									}
 									for (int x = 0; x < MCConfig.rootTimes; x++)
-									{
+									{ // Each time this is run it gets more
+										// accurate
 										n = ((Double.valueOf(arguments[i]) - 1) * n
 												+ nn / Math.pow(n, Double.valueOf(arguments[i]) - 1))
 												/ Double.valueOf(arguments[i]);
@@ -209,7 +211,7 @@ public class Calculate extends CommandBase
 			String tempPrint;
 			tempPrint = arguments[0];
 			for (int i = 1; i < arguments.length; i++)
-			{
+			{ // Puts all the arguments into a string then prepends it to print
 				tempPrint = tempPrint + " " + arguments[i];
 			}
 			tempPrint = tempPrint + " = ";
@@ -222,7 +224,7 @@ public class Calculate extends CommandBase
 		}
 		else if (icommandsender.getCommandSenderName().equals("@"))
 		{
-			MineCalc.Logger.info("Command blocks cannot use /calculate");
+			MineCalc.Logger.warn("Command blocks cannot use /Calculate");
 		}
 		else
 		{
