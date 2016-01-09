@@ -6,9 +6,13 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MCConfig
 {
+	private static Configuration config;
+	private static File configFile;
+
 	public static void loadConfig(File location)
+
 	{
-		File configFile = new File(location + "/MineCalc.cfg");
+		configFile = new File(location + "/MineCalc.cfg");
 		if (!configFile.exists())
 		{
 			try
@@ -21,7 +25,7 @@ public class MCConfig
 				MineCalc.Logger.warn(e.getLocalizedMessage());
 			}
 		}
-		Configuration config = new Configuration(configFile);
+		config = new Configuration(configFile);
 		config.load();
 
 		returnInput = config.get("Options", "Prepend Input to Output", true).getBoolean(true);
@@ -36,4 +40,14 @@ public class MCConfig
 
 	public static boolean returnInput;
 	public static int rootTimes;
+
+	public static Configuration getConfig()
+	{
+		return config;
+	}
+
+	public static File getConfigFile()
+	{
+		return configFile;
+	}
 }

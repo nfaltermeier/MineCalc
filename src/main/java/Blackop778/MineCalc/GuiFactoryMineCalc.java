@@ -12,15 +12,16 @@ public class GuiFactoryMineCalc implements IModGuiFactory
 	@Override
 	public void initialize(Minecraft minecraftInstance)
 	{
-		// TODO Auto-generated method stub
+		// Called when Minecraft finishes loading
 
 	}
 
 	@Override
 	public Class<? extends GuiScreen> mainConfigGuiClass()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		// Needs a return that extends GuiConfig, which will be the main Gui
+		// Class
+		return GuiConfigMineCalc.class;
 	}
 
 	@Override
