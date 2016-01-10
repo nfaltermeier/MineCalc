@@ -206,7 +206,7 @@ public class Calculate extends CommandBase
 			print = EnumChatFormatting.RED + "Error: Valid symbols are '+, -, *, /, %, ^, /-'";
 		}
 
-		if (MCConfig.returnInput && !print.contains("Error"))
+		if (MCConfig.returnInput && !print.contains("Error") && !print.contains("Usage"))
 		{
 			String tempPrint;
 			tempPrint = arguments[0];
