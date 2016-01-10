@@ -18,6 +18,7 @@ public class GuiConfigMineCalc extends GuiConfig
 	public void initGui()
 	{
 		// You can add buttons and initialize fields here
+		super.buttonList.add(new GuiButton(778, 200, 150, 20, 200, "Testing"));
 		super.initGui();
 	}
 
