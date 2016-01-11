@@ -173,20 +173,20 @@ public class Calculate extends CommandBase
 							else
 							{
 								lastMap.put(icommandsender.getCommandSenderName(),
-										n % getDouble(icommandsender, arguments, i));
+										new Double(n % getDouble(icommandsender, arguments, i));
 								print = String.valueOf((int) (n / getDouble(icommandsender, arguments, i))) + "R"
 										+ String.valueOf((int) (n % getDouble(icommandsender, arguments, i)));
 							}
 						}
 						else if(n % 1 == 0)
 						{ // Remove unnecessary doubles
-							lastMap.put(icommandsender.getCommandSenderName(), n);
+							lastMap.put(icommandsender.getCommandSenderName(), new Double(n);
 							int b = (int) (n);
 							print = String.valueOf(b);
 						}
 						else
 						{
-							lastMap.put(icommandsender.getCommandSenderName(), n);
+							lastMap.put(icommandsender.getCommandSenderName(), new Double(n);
 							print = String.valueOf(n);
 						}
 
