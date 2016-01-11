@@ -1,6 +1,7 @@
 package Blackop778.MineCalc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.command.CommandBase;
@@ -11,6 +12,9 @@ import net.minecraft.util.EnumChatFormatting;
 
 public class Calculate extends CommandBase
 {
+
+	public static HashMap<String, Double> lastMap;
+	private boolean lastError;
 
 	@Override
 	public String getCommandName()
@@ -50,61 +54,67 @@ public class Calculate extends CommandBase
 						{
 							divError = true;
 						}
-						print = String.valueOf((int) (n / Double.valueOf(arguments[i]))) + "R"
-								+ String.valueOf((int) (n % Double.valueOf(arguments[i])));
+						print = String.valueOf((int) (n / getDouble(icommandsender, arguments, i))) + "R"
+								+ String.valueOf((int) (n % getDouble(icommandsender, arguments, i)));
 					}
 					else
 					{
 						if (arguments[i].equals("+"))
 						{
 							i++;
-							n = n + Double.valueOf(arguments[i]);
+							n = n + getDouble(icommandsender, arguments, i);
 						}
 						else if (arguments[i].equals("-"))
 						{
 							i++;
-							n = n - Double.valueOf(arguments[i]);
+							n = n - getDouble(icommandsender, arguments, i);
 						}
 						else if (arguments[i].equals("*"))
 						{
 							i++;
-							n = n * Double.valueOf(arguments[i]);
-							if (arguments[i].equals("0"))
+							n = n * getDouble(icommandsender, arguments, i);
+							if (getDouble(icommandsender, arguments, i) == 0)
 							{
 								zeroMult = true;
 							}
 						}
 						else if (arguments[i].equals("/"))
 						{
-							if (arguments[i + 1].equals("0"))
+							i++;
+							if (getDouble(icommandsender, arguments, i) == 0)
 							{
 								divError = true;
 							}
-							i++;
-							n = n / Double.valueOf(arguments[i]);
+							else
+							{
+								n = n / getDouble(icommandsender, arguments, i);
+							}
 						}
 						else if (arguments[i].equals("%"))
 						{
-							if (arguments[i + 1].equals("0"))
+							i++;
+							if (getDouble(icommandsender, arguments, i) == 4)
 							{
 								divError = true;
 							}
-							i++;
-							n = n % Double.valueOf(arguments[i]);
+							else
+							{
+								n = n % getDouble(icommandsender, arguments, i);
+							}
 						}
 						else if (arguments[1].equals("^"))
 						{
 							i++;
-							if (Double.valueOf(arguments[i]) == 0)
+							if (getDouble(icommandsender, arguments, i) == 0)
 							{
 								zeroPower = true;
 							}
-							n = Math.pow(n, Double.valueOf(arguments[i]));
+							n = Math.pow(n, getDouble(icommandsender, arguments, i));
 						}
 						else if (arguments[i].equals("/-"))
 						{
 							i++;
-							if (n < 0 && Double.valueOf(arguments[i]) % 2 == 0)
+							if (n < 0 && getDouble(icommandsender, arguments, i) % 2 == 0)
 							{
 								imaginaryError = true;
 							}
@@ -134,8 +144,8 @@ public class Calculate extends CommandBase
 										// them pre-powering
 										b = x;
 										bb = x + 1;
-										b = Math.pow(b, Double.valueOf(arguments[i]));
-										bb = Math.pow(bb, Double.valueOf(arguments[i]));
+										b = Math.pow(b, getDouble(icommandsender, arguments, i));
+										bb = Math.pow(bb, getDouble(icommandsender, arguments, i));
 										if (b <= n && bb >= n)
 										{
 											test = true;
@@ -145,9 +155,9 @@ public class Calculate extends CommandBase
 									for (int x = 0; x < MCConfig.rootTimes; x++)
 									{ // Each time this is run it gets more
 										// accurate
-										n = ((Double.valueOf(arguments[i]) - 1) * n
-												+ nn / Math.pow(n, Double.valueOf(arguments[i]) - 1))
-												/ Double.valueOf(arguments[i]);
+										n = ((getDouble(icommandsender, arguments, i) - 1) * n
+												+ nn / Math.pow(n, getDouble(icommandsender, arguments, i) - 1))
+												/ getDouble(icommandsender, arguments, i);
 									}
 								}
 							}
@@ -249,5 +259,23 @@ public class Calculate extends CommandBase
 		Aliases.add("calc");
 		Aliases.add("Calc");
 		return Aliases;
+	}
+
+	public double getDouble(ICommandSender sender, String[] args, int i)
+	{
+		if (args[i].equalsIgnoreCase("pi"))
+			return Math.PI;
+		else if (args[i].equalsIgnoreCase("l"))
+		{
+			if (lastMap.containsKey(sender.getCommandSenderName()))
+				return lastMap.get(sender.getCommandSenderName());
+			else
+			{
+				lastError = true;
+				return 7;
+			}
+		}
+		else
+			return Double.valueOf(args[i]);
 	}
 }
