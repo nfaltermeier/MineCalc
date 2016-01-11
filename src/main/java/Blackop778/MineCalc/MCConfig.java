@@ -13,13 +13,13 @@ public class MCConfig
 
 	{
 		configFile = new File(location + "/MineCalc.cfg");
-		if (!configFile.exists())
+		if(!configFile.exists())
 		{
 			try
 			{
 				configFile.createNewFile();
 			}
-			catch (Exception e)
+			catch(Exception e)
 			{
 				MineCalc.Logger.warn("Couldn't create a new config file. Reason:");
 				MineCalc.Logger.warn(e.getLocalizedMessage());
@@ -32,7 +32,7 @@ public class MCConfig
 		rootTimes = config.get("Options", "Times to estimate roots", 15, "More times makes estimates more accurate")
 				.getInt();
 
-		if (config.hasChanged())
+		if(config.hasChanged())
 		{
 			config.save();
 		}
