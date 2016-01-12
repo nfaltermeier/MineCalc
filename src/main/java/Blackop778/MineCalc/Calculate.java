@@ -13,7 +13,7 @@ import net.minecraft.util.EnumChatFormatting;
 public class Calculate extends CommandBase
 {
 
-	static HashMap<String, Double> lastMap;
+	static HashMap<String, Double> lastMap = new HashMap<String, Double>();
 	private boolean lastError;
 
 	@Override
@@ -44,7 +44,11 @@ public class Calculate extends CommandBase
 		{
 			try
 			{
-				double n = Double.valueOf(arguments[0]);
+				// The loop looks at the symbol so we have to progress to a
+				// symbol
+				double n = getDouble(icommandsender, arguments, 0);
+				// Process all the inputs, check for errors, and print back to
+				// user
 				for(int i = 1; i < arguments.length; i++)
 				{
 
@@ -62,7 +66,7 @@ public class Calculate extends CommandBase
 					{
 						i++;
 						n = n * getDouble(icommandsender, arguments, i);
-						if(getDouble(icommandsender, arguments, i) == 0)
+						if(getDouble(icommandsender, arguments, i) == 0 && MCConfig.zeroMultWarns)
 						{
 							zeroMult = true;
 						}
@@ -82,7 +86,7 @@ public class Calculate extends CommandBase
 					else if(arguments[i].equals("%"))
 					{
 						i++;
-						if(i + 1 == arguments.length)
+						if(i + 1 == arguments.length && MCConfig.fancyRemainders)
 						{
 							// Skip the math to be done later for fancy
 							// remainder output
@@ -102,7 +106,7 @@ public class Calculate extends CommandBase
 					else if(arguments[1].equals("^"))
 					{
 						i++;
-						if(getDouble(icommandsender, arguments, i) == 0)
+						if(getDouble(icommandsender, arguments, i) == 0 && MCConfig.zeroMultWarns)
 						{
 							zeroPower = true;
 						}
@@ -164,7 +168,7 @@ public class Calculate extends CommandBase
 
 					if(i + 1 == arguments.length)
 					{
-						if(arguments[i - 1].equals("%"))
+						if(arguments[i - 1].equals("%") && MCConfig.fancyRemainders)
 						{ // Fancy remainder output
 							if(getDouble(icommandsender, arguments, i) == 0)
 							{
@@ -173,20 +177,20 @@ public class Calculate extends CommandBase
 							else
 							{
 								lastMap.put(icommandsender.getCommandSenderName(),
-										new Double(n % getDouble(icommandsender, arguments, i));
+										n % getDouble(icommandsender, arguments, i));
 								print = String.valueOf((int) (n / getDouble(icommandsender, arguments, i))) + "R"
 										+ String.valueOf((int) (n % getDouble(icommandsender, arguments, i)));
 							}
 						}
 						else if(n % 1 == 0)
 						{ // Remove unnecessary doubles
-							lastMap.put(icommandsender.getCommandSenderName(), new Double(n);
+							lastMap.put(icommandsender.getCommandSenderName(), n);
 							int b = (int) (n);
 							print = String.valueOf(b);
 						}
 						else
 						{
-							lastMap.put(icommandsender.getCommandSenderName(), new Double(n);
+							lastMap.put(icommandsender.getCommandSenderName(), n);
 							print = String.valueOf(n);
 						}
 
@@ -204,7 +208,7 @@ public class Calculate extends CommandBase
 			}
 			catch(NumberFormatException error)
 			{
-				print = EnumChatFormatting.RED + "Error: Could not beinterpreted as a double:"
+				print = EnumChatFormatting.RED + "Error: Could not be interpreted as a double:"
 						+ error.getMessage().substring(17, error.getMessage().length());
 			}
 		}
@@ -230,6 +234,7 @@ public class Calculate extends CommandBase
 		else if(lastError && !print.contains("Error"))
 		{
 			print = EnumChatFormatting.RED + "Error: There is no previous output to insert";
+			lastError = false;
 		}
 
 		// Prepend the arguments to the output, if configured to

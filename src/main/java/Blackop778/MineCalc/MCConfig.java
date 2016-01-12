@@ -31,6 +31,11 @@ public class MCConfig
 		returnInput = config.get("Options", "Prepend Input to Output", true).getBoolean(true);
 		rootTimes = config.get("Options", "Times to estimate roots", 15, "More times makes estimates more accurate")
 				.getInt();
+		fancyRemainders = config.get("Options", "Display remainders with a fancy output", true,
+				"Looks like: 5 % 2 = 2R1 versus 5 % 2 = 1").getBoolean(true);
+		zeroMultWarns = config
+				.get("Options", "Display warnings when multiplying by 0", true, "Also applied to power of 0")
+				.getBoolean(true);
 
 		if(config.hasChanged())
 		{
@@ -40,6 +45,8 @@ public class MCConfig
 
 	public static boolean returnInput;
 	public static int rootTimes;
+	public static boolean fancyRemainders;
+	public static boolean zeroMultWarns;
 
 	public static Configuration getConfig()
 	{
