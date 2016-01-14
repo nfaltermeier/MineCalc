@@ -1,12 +1,14 @@
 package Blackop778.MineCalc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -277,11 +279,20 @@ public class Calculate extends CommandBase
 	public List<String> getCommandAliases()
 	{
 		// A list of alternate command names
-		List<String> Aliases = new ArrayList<String>();
-		Aliases.add("calculate");
-		Aliases.add("calc");
-		Aliases.add("Calc");
-		return Aliases;
+		List<String> aliases = new ArrayList<String>(Arrays.asList("Calc", "calculate", "calc"));
+		return aliases;
+	}
+
+	@Override
+	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
+	{
+		if(args.length % 2 != 1)
+		{
+			ArrayList<String> options = new ArrayList<String>(Arrays.asList("+", "-", "*", "/", "%", "^", "/-"));
+			return options;
+		}
+		else
+			return null;
 	}
 
 	public double getDouble(ICommandSender sender, String[] args, int i) throws NumberFormatException
