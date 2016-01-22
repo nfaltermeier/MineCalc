@@ -7,7 +7,6 @@ Running Build.bat will build MineCalc into a .jar a normal forge installation ca
 I would appreciate if you used my Java format prefs, which can be found at \src\main\java\Blackop778\MineCalc\ and are called EclipseFormatPrefs.xml. Note you can enable Project Specific Settings if you don't like my format preferences. To enable my prefs open Eclipse, then right click on the main window and select Preferences, 2nd from the bottom. Next expand the Editor tab on the left pane, next click Save Actions and at least enable Format source code, but enabling others would be appreciated. Next click the Formatter link and Import my format from the path above. Finally hit ok. Thanks :)
   To Do
 Add GUI Config
-Tab completion for symbols
   Issues (https://github.com/Blackop778/MineCalc/issues)
 For issue reporting please click above and tell me what the error is, what version it is, and steps to reproduce.
   Also see

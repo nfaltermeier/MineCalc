@@ -9,10 +9,9 @@ I would appreciate if you used my Java format prefs, which can be found at `\src
 
 ##To Do
 * Add GUI Config
-* Tab completion for symbols
 
-##[Issues](https://github.com/Blackop778/MineCalc/issues)
-For issue reporting please click above and tell me what the error is, what version it is, and steps to reproduce.
+##[Issues](https://github.com/Blackop778/MineCalc/blob/master/ISSUES.md)
+**Please** view this file for guidelines on reporting issues
 
 ##Also see
 You can go to [my Github](https://github.com/Blackop778) or my [group's Github](https://github.com/TeaNCode) to see more of my projects
