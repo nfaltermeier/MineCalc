@@ -10,7 +10,7 @@ I would appreciate if you used my Java format prefs, which can be found at `\src
 ##To Do
 * Add GUI Config
 
-##[Issues](https://github.com/Blackop778/blob/master/ISSUES.md)
+##[Issues](https://github.com/Blackop778/MineCalc/blob/master/ISSUES.md)
 **Please** view this file for guidelines on reporting issues
 
 ##Also see
