@@ -63,7 +63,7 @@ public class Calculate extends CommandBase
 						i++;
 						n = n - getDouble(icommandsender, arguments, i);
 					}
-					else if(arguments[i].equals("*"))
+					else if(arguments[i].equals("*") || arguments[i].equalsIgnoreCase("x"))
 					{
 						i++;
 						n = n * getDouble(icommandsender, arguments, i);
