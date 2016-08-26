@@ -5,18 +5,22 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 
 public class Calculate extends CommandBase
 {
 
 	static HashMap<String, Double> lastMap = new HashMap<String, Double>();
 	private boolean lastError;
+	public static String redStyle;
 
 	@Override
 	public String getCommandName()
@@ -32,8 +36,7 @@ public class Calculate extends CommandBase
 		return "/Calculate <number> <symbol> <number> [symbol] [number]";
 	}
 
-	@Override
-	public void processCommand(ICommandSender icommandsender, String[] arguments)
+	public String calculate(ICommandSender icommandsender, String[] arguments)
 	{
 		// What happens when command is entered
 		String print = null;
@@ -178,64 +181,66 @@ public class Calculate extends CommandBase
 							}
 							else
 							{
-								lastMap.put(icommandsender.getCommandSenderName(),
-										n % getDouble(icommandsender, arguments, i));
+								lastMap.put(icommandsender.getName(), n % getDouble(icommandsender, arguments, i));
 								print = String.valueOf((int) (n / getDouble(icommandsender, arguments, i))) + "R"
 										+ String.valueOf((int) (n % getDouble(icommandsender, arguments, i)));
 							}
 						}
 						else if(n % 1 == 0)
 						{ // Remove unnecessary doubles
-							lastMap.put(icommandsender.getCommandSenderName(), n);
+							lastMap.put(icommandsender.getName(), n);
 							int b = (int) (n);
 							print = String.valueOf(b);
 						}
 						else
 						{
-							lastMap.put(icommandsender.getCommandSenderName(), n);
+							lastMap.put(icommandsender.getName(), n);
 							print = String.valueOf(n);
 						}
 
 						// Append warnings if needed
 						if(zeroPower)
 						{
-							print = print + EnumChatFormatting.RED + " Warning: Anything to the power of 0 is 1";
+							print = print + redStyle + " Warning: Anything to the power of 0 is 1";
 						}
 						else if(zeroMult)
 						{
-							print = print + EnumChatFormatting.RED + " Warning: Anything times 0 is 0";
+							print = print + redStyle + " Warning: Anything times 0 is 0";
 						}
 					}
 				}
 			}
 			catch(NumberFormatException error)
 			{
-				print = EnumChatFormatting.RED + "Error: Could not be interpreted as a double:"
-						+ error.getMessage().substring(17, error.getMessage().length());
+				print = redStyle + "Error: Could not be interpreted as a double:"
+						+ error.getMessage()/**
+											 * .substring(17,
+											 * error.getMessage().length())
+											 */
+						;
 			}
 		}
 		else
 		{ // If the number of arguments is wrong
-			print = EnumChatFormatting.RED + "Usage: /Calculate <number> <symbol> <number> [symbol] "
-					+ EnumChatFormatting.RED + "[number]";
+			print = redStyle + "Usage: /Calculate <number> <symbol> <number> [symbol] " + redStyle + "[number]";
 		}
 
 		// Change print to an error message if an error was thrown
 		if(imaginaryError && !print.contains("Error"))
 		{
-			print = EnumChatFormatting.RED + "Error: Imaginary numbers are not supported";
+			print = redStyle + "Error: Imaginary numbers are not supported";
 		}
 		else if(divError && !print.contains("Error"))
 		{
-			print = EnumChatFormatting.RED + "Error: Cannot divide by 0";
+			print = redStyle + "Error: Cannot divide by 0";
 		}
 		else if(symbolError && !print.contains("Error"))
 		{
-			print = EnumChatFormatting.RED + "Error: Valid symbols are '+, -, *, /, %, ^, /-'";
+			print = redStyle + "Error: Valid symbols are '+, -, *, /, %, ^, /-'";
 		}
 		else if(lastError && !print.contains("Error"))
 		{
-			print = EnumChatFormatting.RED + "Error: There is no previous output to insert";
+			print = redStyle + "Error: There is no previous output to insert";
 			lastError = false;
 		}
 
@@ -252,27 +257,7 @@ public class Calculate extends CommandBase
 			print = tempPrint + print;
 		}
 
-		// Send the message back to the user
-		if(icommandsender.getCommandSenderName().equals("Server"))
-		{
-			MineCalc.Logger.info(print);
-		}
-		else if(icommandsender.getCommandSenderName().equals("@"))
-		{
-			MineCalc.Logger.warn("Command blocks cannot use /Calculate");
-		}
-		else
-		{
-			EntityPlayer player = (EntityPlayer) icommandsender;
-			player.addChatMessage(new ChatComponentText(print));
-		}
-	}
-
-	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender icommandsender)
-	{
-		// User can always use this command
-		return true;
+		return print;
 	}
 
 	@Override
@@ -284,7 +269,8 @@ public class Calculate extends CommandBase
 	}
 
 	@Override
-	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args,
+			@Nullable BlockPos pos)
 	{
 		if(args.length % 2 != 1)
 		{
@@ -301,8 +287,8 @@ public class Calculate extends CommandBase
 			return Math.PI;
 		else if(args[i].equalsIgnoreCase("l"))
 		{
-			if(lastMap.containsKey(sender.getCommandSenderName()))
-				return lastMap.get(sender.getCommandSenderName());
+			if(lastMap.containsKey(sender.getName()))
+				return lastMap.get(sender.getName());
 			else
 			{
 				lastError = true;
@@ -311,5 +297,93 @@ public class Calculate extends CommandBase
 		}
 		else
 			return Double.valueOf(args[i]);
+	}
+
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		ArrayList<String> formattedArgs;
+		formattedArgs = new ArrayList<String>();
+		for(String arg : args)
+		{
+			int numberStartIndex = 0;
+			boolean lastIsNum = false;
+			for(int i = 0; i < arg.toCharArray().length + 1; i++)
+			{
+				if(i == arg.toCharArray().length)
+				{
+					if(lastIsNum)
+					{
+						formattedArgs.add(new String(arg.toCharArray(), numberStartIndex, i - numberStartIndex));
+					}
+				}
+				else if(lastIsNum)
+				{
+					lastIsNum = isNumber(arg.toCharArray()[i], lastIsNum);
+					if(!lastIsNum)
+					{
+						formattedArgs.add(new String(arg.toCharArray(), numberStartIndex, i - numberStartIndex));
+					}
+				}
+				else
+				{
+					lastIsNum = isNumber(arg.toCharArray()[i], lastIsNum);
+					if(lastIsNum)
+					{
+						numberStartIndex = i;
+					}
+					else
+					{
+						formattedArgs.add(String.valueOf(arg.toCharArray()[i]));
+					}
+				}
+			}
+		}
+
+		args = formattedArgs.toArray(new String[1]);
+
+		String output = calculate(sender, args);
+
+		// Send the message back to the user
+		if(sender.getName().equals("Server"))
+		{
+			MineCalc.Logger.info(output);
+		}
+		else if(sender.getName().equals("@"))
+		{
+			MineCalc.Logger.warn("Command blocks cannot use /Calculate");
+		}
+		else
+		{
+			EntityPlayer player = (EntityPlayer) sender;
+			player.addChatMessage(new TextComponentString(output));
+		}
+	}
+
+	public static boolean isNumber(Character character, boolean lastIsNum)
+	{
+		if(!character.equals('.'))
+		{
+			if(!(character.equals('-') && !lastIsNum))
+			{
+				try
+				{
+					Double.valueOf(String.valueOf(character));
+				}
+				catch(NumberFormatException e)
+				{
+					System.out.println("f");
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean checkPermission(MinecraftServer server, ICommandSender sender)
+	{
+		return true;
 	}
 }

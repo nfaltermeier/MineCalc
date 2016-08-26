@@ -6,6 +6,8 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -14,17 +16,14 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = MineCalc.MODID, name = MineCalc.MODNAME, version = MineCalc.MODVER, acceptableRemoteVersions = "*"/*
-																												 * ,
-																												 * guiFactory
-																												 * =
-																												 * "Blackop778.MineCalc.GuiFactoryMineCalc"
-																												 */)
+@Mod(modid = MineCalc.MODID, name = MineCalc.MODNAME, version = MineCalc.MODVER, acceptableRemoteVersions = "*"
+/** , guiFactory = "Blackop778.MineCalc.GuiFactoryMineCalc" */
+, updateJSON = "https://github.com/Blackop778/ModUpdateJsons/blob/master/MineCalc.json")
 public class MineCalc
 {
 	public static final String MODID = "minecraftcalculator778";
 	public static final String MODNAME = "MineCalc";
-	public static final String MODVER = "2.4.2"; // According to
+	public static final String MODVER = "3.0.0"; // According to
 													// https://mcforge.readthedocs.org/en/latest/conventions/versioning/
 	public static final Logger Logger = LogManager.getLogger(MODID);
 
@@ -45,7 +44,9 @@ public class MineCalc
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-
+		Style style = new Style();
+		style = style.setColor(TextFormatting.RED);
+		Calculate.redStyle = style.getFormattingCode();
 	}
 
 	@EventHandler
@@ -58,7 +59,7 @@ public class MineCalc
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event)
 	{
-		MinecraftServer server = MinecraftServer.getServer();
+		MinecraftServer server = event.getServer();
 		ICommandManager command = server.getCommandManager();
 		ServerCommandManager manager = (ServerCommandManager) command;
 		manager.registerCommand(new Calculate());
