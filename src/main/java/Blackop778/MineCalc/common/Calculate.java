@@ -5,21 +5,18 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
 public class Calculate extends CommandBase
 {
 
 	static HashMap<String, Double> lastMap = new HashMap<String, Double>();
-	public static String redStyle;
 
 	@Override
 	public String getCommandName()
@@ -172,40 +169,41 @@ public class Calculate extends CommandBase
 						// Append warnings if needed
 						if(zeroPower)
 						{
-							print = print + redStyle + " Warning: Anything to the power of 0 is 1";
+							print = print + EnumChatFormatting.RED + " Warning: Anything to the power of 0 is 1";
 						}
 						else if(zeroMult)
 						{
-							print = print + redStyle + " Warning: Anything times 0 is 0";
+							print = print + EnumChatFormatting.RED + " Warning: Anything times 0 is 0";
 						}
 					}
 				}
 			}
 			catch(NumberFormatException e)
 			{
-				print = redStyle + "Error: Could not be interpreted as a double:"
+				print = EnumChatFormatting.RED + "Error: Could not be interpreted as a double:"
 						+ e.getMessage().substring(17, e.getMessage().length());
 			}
 			catch(ImaginaryNumberException er)
 			{
-				print = redStyle + "Error: Imaginary numbers are not supported";
+				print = EnumChatFormatting.RED + "Error: Imaginary numbers are not supported";
 			}
 			catch(DivisionException err)
 			{
-				print = redStyle + "Error: Cannot divide by 0";
+				print = EnumChatFormatting.RED + "Error: Cannot divide by 0";
 			}
 			catch(SymbolException erro)
 			{
-				print = redStyle + "Error: Valid symbols are '+, -, *, /, %, ^, /-'";
+				print = EnumChatFormatting.RED + "Error: Valid symbols are '+, -, *, /, %, ^, /-'";
 			}
 			catch(PreviousOutputException error)
 			{
-				print = redStyle + "Error: There is no previous output to insert";
+				print = EnumChatFormatting.RED + "Error: There is no previous output to insert";
 			}
 		}
 		else
 		{ // If the number of arguments is wrong
-			print = redStyle + "Usage: /Calculate <number> <symbol> <number> [symbol] " + redStyle + "[number]";
+			print = EnumChatFormatting.RED + "Usage: /Calculate <number> <symbol> <number> [symbol] "
+					+ EnumChatFormatting.RED + "[number]";
 		}
 
 		// Prepend the arguments to the output, if configured to
@@ -233,8 +231,7 @@ public class Calculate extends CommandBase
 	}
 
 	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args,
-			@Nullable BlockPos pos)
+	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
 	{
 		if(args.length % 2 != 1)
 		{
@@ -264,7 +261,7 @@ public class Calculate extends CommandBase
 	}
 
 	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException
 	{
 		ArrayList<String> formattedArgs;
 		formattedArgs = new ArrayList<String>();
@@ -313,7 +310,7 @@ public class Calculate extends CommandBase
 		else
 		{
 			EntityPlayer player = (EntityPlayer) sender;
-			player.addChatMessage(new TextComponentString(output));
+			player.addChatMessage(new ChatComponentText(output));
 		}
 	}
 
@@ -347,7 +344,7 @@ public class Calculate extends CommandBase
 	}
 
 	@Override
-	public boolean checkPermission(MinecraftServer server, ICommandSender sender)
+	public boolean canCommandSenderUseCommand(ICommandSender sender)
 	{
 		return true;
 	}

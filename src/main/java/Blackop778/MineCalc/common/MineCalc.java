@@ -6,8 +6,6 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -44,9 +42,7 @@ public class MineCalc
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-		Style style = new Style();
-		style = style.setColor(TextFormatting.RED);
-		Calculate.redStyle = style.getFormattingCode();
+
 	}
 
 	@EventHandler
