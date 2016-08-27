@@ -1,5 +1,7 @@
-package Blackop778.MineCalc;
+package Blackop778.MineCalc.client;
 
+import Blackop778.MineCalc.common.MCConfig;
+import Blackop778.MineCalc.common.MineCalc;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;

@@ -1,4 +1,4 @@
-package Blackop778.MineCalc;
+package Blackop778.MineCalc.client;
 
 import java.util.Set;
 
