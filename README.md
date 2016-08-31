@@ -15,3 +15,5 @@ I would appreciate if you used my Java format prefs, which can be found at `\src
 
 ##Also see
 You can go to [my Github](https://github.com/Blackop778) or my [group's Github](https://github.com/TeaNCode) to see more of my projects
+
+Note to self: create `gradle.properties` and add:`org.gradle.jvmargs= -Xmx2G` and `org.gradle.java.home=C:/Program Files/Java/jdk1.8.0_31` on seperate lines.
