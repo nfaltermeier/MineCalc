@@ -3,16 +3,16 @@ package Blackop778.MineCalc.common;
 import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MCConfig
 {
 	private static Configuration config;
-	private static File configFile;
 
 	public static void loadConfig(File location)
-
 	{
-		configFile = new File(location + "/MineCalc.cfg");
+		File configFile = new File(location + "/MineCalc.cfg");
 		if(!configFile.exists())
 		{
 			try
@@ -28,16 +28,26 @@ public class MCConfig
 		config = new Configuration(configFile);
 		config.load();
 
-		returnInput = config.get("Options", "Prepend Input to Output", true).getBoolean(true);
-		fancyRemainders = config.get("Options", "Display remainders with a fancy output", true,
-				"Looks like: 5 % 2 = 2R1 versus 5 % 2 = 1").getBoolean(true);
-		zeroMultWarns = config
-				.get("Options", "Display warnings when multiplying by 0", true, "Also applied to power of 0")
-				.getBoolean(true);
+		syncConfig();
+	}
 
-		if(config.hasChanged())
+	public static void syncConfig()
+	{
+		returnInput = config.getBoolean("Prepend Input to Output", Configuration.CATEGORY_GENERAL, true, null);
+		fancyRemainders = config.getBoolean("Display remainders with a fancy output", Configuration.CATEGORY_GENERAL,
+				true, "Looks like: 5 % 2 = 2R1 versus 5 % 2 = 1");
+		zeroMultWarns = config.getBoolean("Display warnings when multiplying by 0", Configuration.CATEGORY_GENERAL,
+				true, "Also applied to power of 0");
+
+		config.save();
+	}
+
+	@SubscribeEvent
+	public void onConfigChanged(OnConfigChangedEvent event)
+	{
+		if(event.getModID().equalsIgnoreCase(MineCalc.MODID))
 		{
-			config.save();
+			syncConfig();
 		}
 	}
 
@@ -48,10 +58,5 @@ public class MCConfig
 	public static Configuration getConfig()
 	{
 		return config;
-	}
-
-	public static File getConfigFile()
-	{
-		return configFile;
 	}
 }

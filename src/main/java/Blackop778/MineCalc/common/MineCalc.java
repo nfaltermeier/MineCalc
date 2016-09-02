@@ -8,6 +8,7 @@ import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -16,9 +17,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = MineCalc.MODID, name = MineCalc.MODNAME, version = MineCalc.MODVER, acceptableRemoteVersions = "*"
-/** , guiFactory = "Blackop778.MineCalc.GuiFactoryMineCalc" */
-, updateJSON = "https://github.com/Blackop778/ModUpdateJsons/blob/master/MineCalc.json")
+@Mod(modid = MineCalc.MODID, name = MineCalc.MODNAME, version = MineCalc.MODVER, acceptableRemoteVersions = "*", guiFactory = "Blackop778.MineCalc.client.GuiFactoryMineCalc", updateJSON = "https://github.com/Blackop778/ModUpdateJsons/blob/master/MineCalc.json")
 public class MineCalc
 {
 	public static final String MODID = "minecraftcalculator778";
@@ -39,6 +38,7 @@ public class MineCalc
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		MCConfig.loadConfig(event.getModConfigurationDirectory());
+		MinecraftForge.EVENT_BUS.register(new MCConfig());
 	}
 
 	@EventHandler
