@@ -1,8 +1,10 @@
-package Blackop778.MineCalc.common;
+package Blackop778.MineCalc;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import Blackop778.MineCalc.common.Calculate;
+import Blackop778.MineCalc.common.MCConfig;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
@@ -17,12 +19,12 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = MineCalc.MODID, name = MineCalc.MODNAME, version = MineCalc.MODVER, acceptableRemoteVersions = "*", guiFactory = "Blackop778.MineCalc.client.GuiFactoryMineCalc", updateJSON = "https://github.com/Blackop778/ModUpdateJsons/blob/master/MineCalc.json")
+@Mod(modid = MineCalc.MODID, name = MineCalc.MODNAME, version = MineCalc.MODVER, acceptableRemoteVersions = "*", guiFactory = "Blackop778.MineCalc.client.config.GuiFactoryMineCalc", updateJSON = "https://github.com/Blackop778/ModUpdateJsons/blob/master/MineCalc.json")
 public class MineCalc
 {
 	public static final String MODID = "minecraftcalculator778";
 	public static final String MODNAME = "MineCalc";
-	public static final String MODVER = "3.0.0"; // According to
+	public static final String MODVER = "3.1.0"; // According to
 													// https://mcforge.readthedocs.org/en/latest/conventions/versioning/
 	public static final Logger Logger = LogManager.getLogger(MODID);
 
