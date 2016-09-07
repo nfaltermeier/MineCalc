@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import Blackop778.MineCalc.MineCalc;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -25,14 +26,14 @@ public class Calculate extends CommandBase
 	public String getCommandName()
 	{
 		// What must be typed in following the / to trigger the command
-		return "Calculate";
+		return "calc";
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender)
 	{
 		// What is shown when "/help Calculate" is typed in
-		return "/Calculate <number> <symbol> <number> [symbol] [number]";
+		return "/calc <number><symbol><number>[symbol][number]";
 	}
 
 	public String calculate(ICommandSender icommandsender, String[] arguments)
@@ -76,9 +77,7 @@ public class Calculate extends CommandBase
 					{
 						i++;
 						if(getDouble(icommandsender, arguments, i) == 0)
-						{
 							throw new DivisionException();
-						}
 						else
 						{
 							n = n / getDouble(icommandsender, arguments, i);
@@ -95,9 +94,7 @@ public class Calculate extends CommandBase
 						else
 						{
 							if(getDouble(icommandsender, arguments, i) == 0)
-							{
 								throw new DivisionException();
-							}
 							else
 							{
 								n = n % getDouble(icommandsender, arguments, i);
@@ -117,13 +114,9 @@ public class Calculate extends CommandBase
 					{
 						i++;
 						if(n < 0 && getDouble(icommandsender, arguments, i) % 2 == 0)
-						{
 							throw new ImaginaryNumberException();
-						}
 						else if(n == 0)
-						{
 							throw new DivisionException();
-						}
 						else
 						{
 							boolean neg = false;
@@ -134,22 +127,20 @@ public class Calculate extends CommandBase
 							}
 							n = Math.pow(n, 1.0 / getDouble(icommandsender, arguments, i));
 							if(neg)
+							{
 								n = -n;
+							}
 						}
 					}
 					else
-					{
 						throw new SymbolException();
-					}
 
 					if(i + 1 == arguments.length)
 					{
 						if(arguments[i - 1].equals("%") && MCConfig.fancyRemainders)
 						{ // Fancy remainder output
 							if(getDouble(icommandsender, arguments, i) == 0)
-							{
 								throw new DivisionException();
-							}
 							else
 							{
 								lastMap.put(icommandsender.getName(), n % getDouble(icommandsender, arguments, i));
@@ -205,7 +196,7 @@ public class Calculate extends CommandBase
 		}
 		else
 		{ // If the number of arguments is wrong
-			print = redStyle + "Usage: /Calculate <number> <symbol> <number> [symbol] " + redStyle + "[number]";
+			print = redStyle + "Usage: /calc <number><symbol><number>[symbol]" + redStyle + "[number]";
 		}
 
 		// Prepend the arguments to the output, if configured to
@@ -228,7 +219,7 @@ public class Calculate extends CommandBase
 	public List<String> getCommandAliases()
 	{
 		// A list of alternate command names
-		List<String> aliases = new ArrayList<String>(Arrays.asList("Calc", "calculate", "calc"));
+		List<String> aliases = new ArrayList<String>(Arrays.asList("Calc", "calculate", "Calculate"));
 		return aliases;
 	}
 
@@ -255,9 +246,7 @@ public class Calculate extends CommandBase
 			if(lastMap.containsKey(sender.getName()))
 				return lastMap.get(sender.getName());
 			else
-			{
 				throw new PreviousOutputException();
-			}
 		}
 		else
 			return Double.valueOf(args[i]);
@@ -266,54 +255,57 @@ public class Calculate extends CommandBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		ArrayList<String> formattedArgs;
-		formattedArgs = new ArrayList<String>();
-		for(String arg : args)
+		if(sender.getName().equals("@"))
 		{
-			int argStartIndex = 0;
-			boolean lastIsNum = false;
-			boolean thisIsNum = false;
-			Character lastChar = 'z';
-			for(int i = 0; i < arg.toCharArray().length + 1; i++)
+			MineCalc.Logger.warn("Command blocks cannot use /calc");
+		}
+		else
+		{
+			ArrayList<String> formattedArgs;
+			formattedArgs = new ArrayList<String>();
+			for(String arg : args)
 			{
-				if(i == arg.toCharArray().length)
+				int argStartIndex = 0;
+				boolean lastIsNum = false;
+				boolean thisIsNum = false;
+				Character lastChar = 'z';
+				for(int i = 0; i < arg.toCharArray().length + 1; i++)
 				{
-					formattedArgs.add(new String(arg.toCharArray(), argStartIndex, i - argStartIndex));
-				}
-				else
-				{
-					lastIsNum = thisIsNum;
-					thisIsNum = isNumber(arg.toCharArray()[i], lastIsNum, lastChar);
-					lastChar = arg.toCharArray()[i];
-					if(thisIsNum != lastIsNum)
+					if(i == arg.toCharArray().length)
 					{
-						if(i != 0)
+						formattedArgs.add(new String(arg.toCharArray(), argStartIndex, i - argStartIndex));
+					}
+					else
+					{
+						lastIsNum = thisIsNum;
+						thisIsNum = isNumber(arg.toCharArray()[i], lastIsNum, lastChar);
+						lastChar = arg.toCharArray()[i];
+						if(thisIsNum != lastIsNum)
 						{
-							formattedArgs.add(new String(arg.toCharArray(), argStartIndex, i - argStartIndex));
-							argStartIndex = i;
+							if(i != 0)
+							{
+								formattedArgs.add(new String(arg.toCharArray(), argStartIndex, i - argStartIndex));
+								argStartIndex = i;
+							}
 						}
 					}
 				}
 			}
-		}
 
-		args = formattedArgs.toArray(new String[1]);
+			args = formattedArgs.toArray(new String[1]);
 
-		String output = calculate(sender, args);
+			String output = calculate(sender, args);
 
-		// Send the message back to the user
-		if(sender.getName().equals("Server"))
-		{
-			MineCalc.Logger.info(output);
-		}
-		else if(sender.getName().equals("@"))
-		{
-			MineCalc.Logger.warn("Command blocks cannot use /Calculate");
-		}
-		else
-		{
-			EntityPlayer player = (EntityPlayer) sender;
-			player.addChatMessage(new TextComponentString(output));
+			// Send the message back to the user
+			if(sender.getName().equals("Server"))
+			{
+				MineCalc.Logger.info(output);
+			}
+			else
+			{
+				EntityPlayer player = (EntityPlayer) sender;
+				player.addChatMessage(new TextComponentString(output));
+			}
 		}
 	}
 
