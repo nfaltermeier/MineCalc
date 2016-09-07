@@ -1,7 +1,7 @@
 package Blackop778.MineCalc.client.config;
 
+import Blackop778.MineCalc.MineCalc;
 import Blackop778.MineCalc.common.MCConfig;
-import Blackop778.MineCalc.common.MineCalc;
 import cpw.mods.fml.client.config.GuiConfig;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -10,15 +10,13 @@ import net.minecraftforge.common.config.Configuration;
 
 public class GuiConfigMineCalc extends GuiConfig
 {
-	// http://jabelarminecraft.blogspot.com/p/minecraft-modding-configuration-guis.html
+	@SuppressWarnings("unchecked")
 	public GuiConfigMineCalc(GuiScreen parent)
 	{
 		super(parent,
-				new ConfigElement(
-						MCConfig.getConfig().
-						getCategory(Configuration.CATEGORY_GENERAL))
-				.getChildElements(),
-				MineCalc.MODID, false, false, "Calculate All the Things", MCConfig.getConfigFile().getAbsolutePath());
+				new ConfigElement(MCConfig.getConfig().getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(),
+				MineCalc.MODID, MineCalc.MODID, false, false, "Calculate All the Things",
+				MCConfig.getConfig().getConfigFile().getAbsolutePath());
 	}
 
 	@Override

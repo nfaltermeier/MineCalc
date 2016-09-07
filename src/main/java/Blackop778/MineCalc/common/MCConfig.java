@@ -2,6 +2,7 @@ package Blackop778.MineCalc.common;
 
 import java.io.File;
 
+import Blackop778.MineCalc.MineCalc;
 import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.common.config.Configuration;
@@ -9,11 +10,11 @@ import net.minecraftforge.common.config.Configuration;
 public class MCConfig
 {
 	private static Configuration config;
-	private static File configFile;
 
 	public static void loadConfig(File location)
 
 	{
+		File configFile;
 		configFile = new File(location + "/MineCalc.cfg");
 		if(!configFile.exists())
 		{
@@ -23,8 +24,8 @@ public class MCConfig
 			}
 			catch(Exception e)
 			{
-				MineCalc.Logger.warn("Couldn't create a new config file. Reason:");
-				MineCalc.Logger.warn(e.getLocalizedMessage());
+				MineCalc.Logger.error("Couldn't create a new config file. Reason:");
+				MineCalc.Logger.error(e.getLocalizedMessage());
 			}
 		}
 		config = new Configuration(configFile);
@@ -47,10 +48,11 @@ public class MCConfig
 	@SubscribeEvent
 	public void onConfigChanged(OnConfigChangedEvent event)
 	{
-		if(event.modID.equalsIgnoreCase(MineCalc.MODID))
-		{
-			syncConfig();
-		}
+		if(!event.modID.equalsIgnoreCase(MineCalc.MODID))
+			if(!event.configID.equalsIgnoreCase(MineCalc.MODID))
+				return;
+
+		syncConfig();
 	}
 
 	public static boolean returnInput;
@@ -60,10 +62,5 @@ public class MCConfig
 	public static Configuration getConfig()
 	{
 		return config;
-	}
-
-	public static File getConfigFile()
-	{
-		return configFile;
 	}
 }

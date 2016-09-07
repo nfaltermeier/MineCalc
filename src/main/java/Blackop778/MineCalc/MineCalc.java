@@ -1,8 +1,9 @@
-package Blackop778.MineCalc.common;
+package Blackop778.MineCalc;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import Blackop778.MineCalc.common.CommonProxy;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -17,7 +18,7 @@ public class MineCalc
 {
 	public static final String MODID = "minecraftcalculator778";
 	public static final String MODNAME = "MineCalc";
-	public static final String MODVER = "3.0.0"; // According to
+	public static final String MODVER = "3.1.0"; // According to
 													// https://mcforge.readthedocs.org/en/latest/conventions/versioning/
 	public static final Logger Logger = LogManager.getLogger(MODID);
 

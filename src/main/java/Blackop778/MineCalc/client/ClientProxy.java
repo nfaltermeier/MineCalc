@@ -2,11 +2,11 @@ package Blackop778.MineCalc.client;
 
 import Blackop778.MineCalc.common.CommonProxy;
 import Blackop778.MineCalc.common.MCConfig;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy
 {
@@ -14,7 +14,7 @@ public class ClientProxy extends CommonProxy
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		super.preInit(event);
-		MinecraftForge.EVENT_BUS.register(new MCConfig());
+		FMLCommonHandler.instance().bus().register(new MCConfig());
 	}
 
 	@Override
