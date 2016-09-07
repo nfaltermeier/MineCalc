@@ -1,4 +1,4 @@
-package Blackop778.MineCalc.client;
+package Blackop778.MineCalc.client.config;
 
 import java.util.Set;
 
@@ -13,7 +13,6 @@ public class GuiFactoryMineCalc implements IModGuiFactory
 	public void initialize(Minecraft minecraftInstance)
 	{
 		// Called when Minecraft finishes loading
-
 	}
 
 	@Override
