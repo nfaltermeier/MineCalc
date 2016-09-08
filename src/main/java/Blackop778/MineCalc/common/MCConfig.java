@@ -39,6 +39,8 @@ public class MCConfig
 				true, "Looks like: 5 % 2 = 2R1 versus 5 % 2 = 1");
 		zeroMultWarns = config.getBoolean("Display warnings when multiplying by 0", Configuration.CATEGORY_GENERAL,
 				true, "Also applied to power of 0");
+		checkForUpdate = config.getBoolean("Check for Update", Configuration.CATEGORY_GENERAL, true,
+				"Whether or not the this mod should check if it has an update");
 
 		config.save();
 	}
@@ -55,6 +57,7 @@ public class MCConfig
 	public static boolean returnInput;
 	public static boolean fancyRemainders;
 	public static boolean zeroMultWarns;
+	public static boolean checkForUpdate;
 
 	public static Configuration getConfig()
 	{
