@@ -14,13 +14,18 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 
 public class Calculate extends CommandBase
 {
 
-	static HashMap<String, Double> lastMap = new HashMap<String, Double>();
-	public static String redStyle;
+	static HashMap<String, Double> lastMap = new HashMap<>();
+	public static final Style redStyle = new Style().setColor(TextFormatting.RED);;
 
 	@Override
 	public String getCommandName()
@@ -33,10 +38,10 @@ public class Calculate extends CommandBase
 	public String getCommandUsage(ICommandSender icommandsender)
 	{
 		// What is shown when "/help Calculate" is typed in
-		return "/calc <number><symbol><number>[symbol][number]";
+		return "/calc " + I18n.translateToLocal("minecalc.calc.help");
 	}
 
-	public String calculate(ICommandSender icommandsender, String[] arguments)
+	public ITextComponent calculate(ICommandSender icommandsender, String[] arguments)
 	{
 		// What happens when command is entered
 		String print = null;
@@ -173,44 +178,49 @@ public class Calculate extends CommandBase
 						// Append warnings if needed
 						if(zeroPower)
 						{
-							print = print + redStyle + " Warning: Anything to the power of 0 is 1";
+							return new TextComponentString(print + " ").appendSibling(
+									new TextComponentTranslation("minecalc.calc.powerZeroWarning").setStyle(redStyle));
 						}
 						else if(zeroMult)
 						{
-							print = print + redStyle + " Warning: Anything times 0 is 0";
+							return new TextComponentString(print + " ").appendSibling(
+									new TextComponentTranslation("minecalc.calc.multZeroWarning").setStyle(redStyle));
 						}
 					}
 				}
 			}
 			catch(NumberFormatException e)
 			{
-				print = redStyle + "Error: Could not be interpreted as a double:"
-						+ e.getMessage().substring(17, e.getMessage().length());
+				return new TextComponentTranslation("minecalc.calc.numberFormatException")
+						.appendSibling(new TextComponentString(e.getMessage().substring(17, e.getMessage().length())))
+						.setStyle(redStyle);
 			}
 			catch(ImaginaryNumberException er)
 			{
-				print = redStyle + "Error: Imaginary numbers are not supported";
+				return new TextComponentTranslation("minecalc.calc.imaginaryException").setStyle(redStyle);
 			}
 			catch(DivisionException err)
 			{
-				print = redStyle + "Error: Cannot divide by 0";
+				return new TextComponentTranslation("minecalc.calc.divZeroException").setStyle(redStyle);
 			}
 			catch(SymbolException erro)
 			{
-				print = redStyle + "Error: Valid symbols are '+, -, *, /, %, ^, /-'";
+				return new TextComponentTranslation("minecalc.calc.symbolException").setStyle(redStyle);
 			}
 			catch(PreviousOutputException error)
 			{
-				print = redStyle + "Error: There is no previous output to insert";
+				return new TextComponentTranslation("minecalc.calc.previousOutputException").setStyle(redStyle);
 			}
 		}
 		else
 		{ // If the number of arguments is wrong
-			print = redStyle + "Usage: /calc <number><symbol><number>[symbol]" + redStyle + "[number]";
+			return new TextComponentTranslation("minecalc.calc.usage").setStyle(redStyle)
+					.appendSibling(new TextComponentString(" /calc ")
+							.appendSibling(new TextComponentTranslation("minecalc.calc.help")));
 		}
 
 		// Prepend the arguments to the output, if configured to
-		if(MCConfig.returnInput && !print.contains("Error") && !print.contains("Usage"))
+		if(MCConfig.returnInput)
 		{
 			String tempPrint;
 			tempPrint = arguments[0];
@@ -222,14 +232,14 @@ public class Calculate extends CommandBase
 			print = tempPrint + print;
 		}
 
-		return print;
+		return new TextComponentString(print);
 	}
 
 	@Override
 	public List<String> getCommandAliases()
 	{
 		// A list of alternate command names
-		List<String> aliases = new ArrayList<String>(Arrays.asList("Calc", "calculate", "Calculate"));
+		List<String> aliases = new ArrayList<>(Arrays.asList("Calc", "calculate", "Calculate"));
 		return aliases;
 	}
 
@@ -239,7 +249,7 @@ public class Calculate extends CommandBase
 	{
 		if(args.length % 2 != 1)
 		{
-			ArrayList<String> options = new ArrayList<String>(Arrays.asList("+", "-", "*", "/", "%", "^", "/-"));
+			ArrayList<String> options = new ArrayList<>(Arrays.asList("+", "-", "*", "/", "%", "^", "/-"));
 			return options;
 		}
 		else
@@ -274,7 +284,7 @@ public class Calculate extends CommandBase
 		else
 		{
 			ArrayList<String> formattedArgs;
-			formattedArgs = new ArrayList<String>();
+			formattedArgs = new ArrayList<>();
 			for(String arg : args)
 			{
 				int argStartIndex = 0;
@@ -306,17 +316,17 @@ public class Calculate extends CommandBase
 
 			args = formattedArgs.toArray(new String[1]);
 
-			String output = calculate(sender, args);
+			ITextComponent output = calculate(sender, args);
 
 			// Send the message back to the user
 			if(sender.getName().equals("Server"))
 			{
-				MineCalc.Logger.info(output);
+				MineCalc.Logger.info(output.getUnformattedText());
 			}
 			else
 			{
 				EntityPlayer player = (EntityPlayer) sender;
-				player.addChatMessage(new TextComponentString(output));
+				player.addChatMessage(output);
 			}
 		}
 	}

@@ -3,8 +3,6 @@ package Blackop778.MineCalc.common;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -19,9 +17,7 @@ public class CommonProxy
 
 	public void load(FMLInitializationEvent event)
 	{
-		Style style = new Style();
-		style = style.setColor(TextFormatting.RED);
-		Calculate.redStyle = style.getFormattingCode();
+
 	}
 
 	public void postInit(FMLPostInitializationEvent event)
