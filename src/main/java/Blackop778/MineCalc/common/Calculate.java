@@ -21,6 +21,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 
+@SuppressWarnings("deprecation")
 public class Calculate extends CommandBase
 {
 
@@ -38,7 +39,7 @@ public class Calculate extends CommandBase
 	public String getCommandUsage(ICommandSender icommandsender)
 	{
 		// What is shown when "/help Calculate" is typed in
-		return "/calc " + I18n.translateToLocal("minecalc.calc.help");
+		return I18n.translateToLocal("minecalc.calc.help");
 	}
 
 	public ITextComponent calculate(ICommandSender icommandsender, String[] arguments)
@@ -214,9 +215,7 @@ public class Calculate extends CommandBase
 		}
 		else
 		{ // If the number of arguments is wrong
-			return new TextComponentTranslation("minecalc.calc.usage").setStyle(redStyle)
-					.appendSibling(new TextComponentString(" /calc ")
-							.appendSibling(new TextComponentTranslation("minecalc.calc.help")));
+			return new TextComponentTranslation("minecalc.calc.usage").setStyle(redStyle);
 		}
 
 		// Prepend the arguments to the output, if configured to

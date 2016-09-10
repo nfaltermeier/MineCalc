@@ -22,8 +22,8 @@ public class MCConfig
 			}
 			catch(Exception e)
 			{
-				MineCalc.Logger.warn("Couldn't create a new config file. Reason:");
-				MineCalc.Logger.warn(e.getLocalizedMessage());
+				MineCalc.Logger.error("Couldn't create a new config file. Reason:");
+				MineCalc.Logger.error(e.getLocalizedMessage());
 			}
 		}
 		config = new Configuration(configFile);
