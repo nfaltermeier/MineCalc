@@ -14,13 +14,19 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 
+@SuppressWarnings("deprecation")
 public class Calculate extends CommandBase
 {
 
 	static HashMap<String, Double> lastMap = new HashMap<String, Double>();
-	public static String redStyle;
+	public static final Style redStyle = new Style().setColor(TextFormatting.RED);
 
 	@Override
 	public String getCommandName()
@@ -33,22 +39,21 @@ public class Calculate extends CommandBase
 	public String getCommandUsage(ICommandSender icommandsender)
 	{
 		// What is shown when "/help Calculate" is typed in
-		return "/calc <number><symbol><number>[symbol][number]";
+		return I18n.translateToLocal("minecalc.calc.help");
 	}
 
-	public String calculate(ICommandSender icommandsender, String[] arguments)
+	public ITextComponent calculate(ICommandSender icommandsender, String[] arguments)
 	{
 		// What happens when command is entered
-		String print = null;
+		ITextComponent toReturn = null;
 		boolean zeroPower = false;
 		boolean zeroMult = false;
 		if((arguments.length - 1) % 2 == 0 && arguments.length > 1)
 		{
 			try
 			{
-				// The loop looks at the symbol so we have to progress to a
-				// symbol
-				double n = getDouble(icommandsender, arguments, 0);
+				// Get the first number to give us a starting place
+				double number = getDouble(icommandsender, arguments, 0);
 				// Process all the inputs, check for errors, and print back to
 				// user
 				for(int i = 1; i < arguments.length; i++)
@@ -57,17 +62,17 @@ public class Calculate extends CommandBase
 					if(arguments[i].equals("+"))
 					{
 						i++;
-						n = n + getDouble(icommandsender, arguments, i);
+						number = number + getDouble(icommandsender, arguments, i);
 					}
 					else if(arguments[i].equals("-"))
 					{
 						i++;
-						n = n - getDouble(icommandsender, arguments, i);
+						number = number - getDouble(icommandsender, arguments, i);
 					}
 					else if(arguments[i].equals("*") || arguments[i].equalsIgnoreCase("x"))
 					{
 						i++;
-						n = n * getDouble(icommandsender, arguments, i);
+						number = number * getDouble(icommandsender, arguments, i);
 						if(getDouble(icommandsender, arguments, i) == 0 && MCConfig.zeroMultWarns)
 						{
 							zeroMult = true;
@@ -80,7 +85,7 @@ public class Calculate extends CommandBase
 							throw new DivisionException();
 						else
 						{
-							n = n / getDouble(icommandsender, arguments, i);
+							number = number / getDouble(icommandsender, arguments, i);
 						}
 					}
 					else if(arguments[i].equals("%"))
@@ -97,7 +102,7 @@ public class Calculate extends CommandBase
 								throw new DivisionException();
 							else
 							{
-								n = n % getDouble(icommandsender, arguments, i);
+								number = number % getDouble(icommandsender, arguments, i);
 							}
 						}
 					}
@@ -108,27 +113,27 @@ public class Calculate extends CommandBase
 						{
 							zeroPower = true;
 						}
-						n = Math.pow(n, getDouble(icommandsender, arguments, i));
+						number = Math.pow(number, getDouble(icommandsender, arguments, i));
 					}
 					else if(arguments[i].equals("/-"))
 					{
 						i++;
-						if(n < 0 && getDouble(icommandsender, arguments, i) % 2 == 0)
+						if(number < 0 && getDouble(icommandsender, arguments, i) % 2 == 0)
 							throw new ImaginaryNumberException();
-						else if(n == 0)
+						else if(number == 0)
 							throw new DivisionException();
 						else
 						{
 							boolean neg = false;
-							if(n < 0)
+							if(number < 0)
 							{
-								n = -n;
+								number = -number;
 								neg = true;
 							}
-							n = Math.pow(n, 1.0 / getDouble(icommandsender, arguments, i));
+							number = Math.pow(number, 1.0 / getDouble(icommandsender, arguments, i));
 							if(neg)
 							{
-								n = -n;
+								number = -number;
 							}
 						}
 					}
@@ -143,64 +148,67 @@ public class Calculate extends CommandBase
 								throw new DivisionException();
 							else
 							{
-								lastMap.put(icommandsender.getName(), n % getDouble(icommandsender, arguments, i));
-								print = String.valueOf((int) (n / getDouble(icommandsender, arguments, i))) + "R"
-										+ String.valueOf((int) (n % getDouble(icommandsender, arguments, i)));
+								lastMap.put(icommandsender.getName(), number % getDouble(icommandsender, arguments, i));
+								toReturn = new TextComponentString(String
+										.valueOf((int) (number / getDouble(icommandsender, arguments, i))) + "R"
+										+ String.valueOf((int) (number % getDouble(icommandsender, arguments, i))));
 							}
 						}
-						else if(n % 1 == 0)
+						else if(number % 1 == 0)
 						{ // Remove unnecessary doubles
-							lastMap.put(icommandsender.getName(), n);
-							int b = (int) (n);
-							print = String.valueOf(b);
+							lastMap.put(icommandsender.getName(), number);
+							int b = (int) (number);
+							toReturn = new TextComponentString(String.valueOf(b));
 						}
 						else
 						{
-							lastMap.put(icommandsender.getName(), n);
-							print = String.valueOf(n);
+							lastMap.put(icommandsender.getName(), number);
+							toReturn = new TextComponentString(String.valueOf(number));
 						}
 
 						// Append warnings if needed
 						if(zeroPower)
 						{
-							print = print + redStyle + " Warning: Anything to the power of 0 is 1";
+							toReturn.appendSibling(new TextComponentString(" ").appendSibling(
+									new TextComponentTranslation("minecalc.calc.powerZeroWarning").setStyle(redStyle)));
 						}
 						else if(zeroMult)
 						{
-							print = print + redStyle + " Warning: Anything times 0 is 0";
+							toReturn.appendSibling(new TextComponentString(" ").appendSibling(
+									new TextComponentTranslation("minecalc.calc.multZeroWarning").setStyle(redStyle)));
 						}
 					}
 				}
 			}
 			catch(NumberFormatException e)
 			{
-				print = redStyle + "Error: Could not be interpreted as a double:"
-						+ e.getMessage().substring(17, e.getMessage().length());
+				return new TextComponentTranslation("minecalc.calc.numberFormatException").setStyle(redStyle)
+						.appendSibling(new TextComponentString(e.getMessage().substring(17, e.getMessage().length())));
 			}
 			catch(ImaginaryNumberException er)
 			{
-				print = redStyle + "Error: Imaginary numbers are not supported";
+				return new TextComponentTranslation("minecalc.calc.imaginaryException").setStyle(redStyle);
 			}
 			catch(DivisionException err)
 			{
-				print = redStyle + "Error: Cannot divide by 0";
+				return new TextComponentTranslation("minecalc.calc.divZeroException").setStyle(redStyle);
 			}
 			catch(SymbolException erro)
 			{
-				print = redStyle + "Error: Valid symbols are '+, -, *, /, %, ^, /-'";
+				return new TextComponentTranslation("minecalc.calc.symbolException").setStyle(redStyle);
 			}
 			catch(PreviousOutputException error)
 			{
-				print = redStyle + "Error: There is no previous output to insert";
+				return new TextComponentTranslation("minecalc.calc.previousOutputException").setStyle(redStyle);
 			}
 		}
 		else
 		{ // If the number of arguments is wrong
-			print = redStyle + "Usage: /calc <number><symbol><number>[symbol]" + redStyle + "[number]";
+			return new TextComponentTranslation("minecalc.calc.usage").setStyle(redStyle);
 		}
 
 		// Prepend the arguments to the output, if configured to
-		if(MCConfig.returnInput && !print.contains("Error") && !print.contains("Usage"))
+		if(MCConfig.returnInput)
 		{
 			String tempPrint;
 			tempPrint = arguments[0];
@@ -209,10 +217,10 @@ public class Calculate extends CommandBase
 				tempPrint = tempPrint + " " + arguments[i];
 			}
 			tempPrint = tempPrint + " = ";
-			print = tempPrint + print;
+			toReturn = new TextComponentString(tempPrint).appendSibling(toReturn);
 		}
 
-		return print;
+		return toReturn;
 	}
 
 	@Override
@@ -294,17 +302,17 @@ public class Calculate extends CommandBase
 
 			args = formattedArgs.toArray(new String[1]);
 
-			String output = calculate(sender, args);
+			ITextComponent output = calculate(sender, args);
 
 			// Send the message back to the user
 			if(sender.getName().equals("Server"))
 			{
-				MineCalc.Logger.info(output);
+				MineCalc.Logger.info(output.getUnformattedComponentText());
 			}
 			else
 			{
 				EntityPlayer player = (EntityPlayer) sender;
-				player.addChatMessage(new TextComponentString(output));
+				player.addChatMessage(output);
 			}
 		}
 	}

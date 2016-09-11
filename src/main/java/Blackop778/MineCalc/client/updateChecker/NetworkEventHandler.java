@@ -16,6 +16,7 @@ public class NetworkEventHandler
 			public void run()
 			{
 				MinecraftForge.EVENT_BUS.register(new EntityEventHandler());
+				MinecraftForge.EVENT_BUS.unregister(this);
 			}
 		});
 	}
