@@ -25,7 +25,7 @@ import net.minecraft.util.text.translation.I18n;
 public class Calculate extends CommandBase
 {
 
-	static HashMap<String, Double> lastMap = new HashMap<>();
+	static HashMap<String, Double> lastMap = new HashMap<String, Double>();
 	public static final Style redStyle = new Style().setColor(TextFormatting.RED);;
 
 	@Override
@@ -238,7 +238,7 @@ public class Calculate extends CommandBase
 	public List<String> getCommandAliases()
 	{
 		// A list of alternate command names
-		List<String> aliases = new ArrayList<>(Arrays.asList("Calc", "calculate", "Calculate"));
+		List<String> aliases = new ArrayList<String>(Arrays.asList("Calc", "calculate", "Calculate"));
 		return aliases;
 	}
 
@@ -248,7 +248,7 @@ public class Calculate extends CommandBase
 	{
 		if(args.length % 2 != 1)
 		{
-			ArrayList<String> options = new ArrayList<>(Arrays.asList("+", "-", "*", "/", "%", "^", "/-"));
+			ArrayList<String> options = new ArrayList<String>(Arrays.asList("+", "-", "*", "/", "%", "^", "/-"));
 			return options;
 		}
 		else
@@ -283,7 +283,7 @@ public class Calculate extends CommandBase
 		else
 		{
 			ArrayList<String> formattedArgs;
-			formattedArgs = new ArrayList<>();
+			formattedArgs = new ArrayList<String>();
 			for(String arg : args)
 			{
 				int argStartIndex = 0;

@@ -24,6 +24,9 @@ version = "1.10.2-"
 group= "Blackop778.MineCalc" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "MineCalc"
 
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
 minecraft {
     version = "1.10.2-12.18.1.2011"
     runDir = "run"

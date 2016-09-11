@@ -10,9 +10,13 @@ public class NetworkEventHandler
 	@SubscribeEvent
 	public void clientConnectedToServer(ClientConnectedToServerEvent event)
 	{
-		Minecraft.getMinecraft().addScheduledTask(() ->
+		Minecraft.getMinecraft().addScheduledTask(new Runnable()
 		{
-			MinecraftForge.EVENT_BUS.register(new EntityEventHandler());
+			@Override
+			public void run()
+			{
+				MinecraftForge.EVENT_BUS.register(new EntityEventHandler());
+			}
 		});
 	}
 }
