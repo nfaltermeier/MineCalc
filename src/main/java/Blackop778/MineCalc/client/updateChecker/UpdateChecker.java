@@ -3,8 +3,6 @@ package Blackop778.MineCalc.client.updateChecker;
 import java.io.IOException;
 import java.net.URL;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.io.IOUtils;
 
 import com.google.gson.JsonObject;
@@ -18,10 +16,9 @@ import net.minecraftforge.fml.common.versioning.ComparableVersion;
 public class UpdateChecker
 {
 	/**
-	 * @return the message to send to the client about an update or null if no
-	 *         update
+	 * @return if there is an update for MineCalc
 	 */
-	public static @Nullable String checkForUpdate()
+	public static boolean isUpdateAvailable()
 	{
 		String jsonString;
 		try
@@ -43,18 +40,13 @@ public class UpdateChecker
 			String modVersionString = currentVersion.split("-")[1];
 			ComparableVersion modVersion = new ComparableVersion(modVersionString);
 			ComparableVersion clientVersion = new ComparableVersion(MineCalc.MODVER);
-			if(modVersion.compareTo(clientVersion) > 0)
-			{
-				JsonObject modVersions = json.getAsJsonObject(ForgeVersion.mcVersion);
-				String updateMessage = modVersions.getAsJsonPrimitive(currentVersion).getAsString();
 
-				return updateMessage;
-			}
+			return modVersion.compareTo(clientVersion) > 0;
 		}
 		catch(JsonParseException e)
 		{
 			MineCalc.Logger.warn("Failed to check for an update.");
 		}
-		return null;
+		return false;
 	}
 }
