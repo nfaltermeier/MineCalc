@@ -13,12 +13,11 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = MineCalc.MODID, name = MineCalc.MODNAME, version = MineCalc.MODVER, acceptableRemoteVersions = "*", guiFactory = "Blackop778.MineCalc.client.config.GuiFactoryMineCalc")
+@Mod(modid = MineCalc.MODID, name = MineCalc.MODNAME, version = MineCalc.MODVER, acceptableRemoteVersions = "*", guiFactory = "Blackop778.MineCalc.client.config.GuiFactoryMineCalc", updateJSON = MineCalc.UPDATEJSONURL)
 public class MineCalc
 {
 	public static final String MODID = "minecraftcalculator778";
 	public static final String MODNAME = "MineCalc";
-	public static final String MODVER = "3.1.1";
 	public static final Logger Logger = LogManager.getLogger(MODID);
 	public static final String UPDATEJSONURL = "https://raw.githubusercontent.com/Blackop778/ModUpdateJsons/master/MineCalc.json";
 

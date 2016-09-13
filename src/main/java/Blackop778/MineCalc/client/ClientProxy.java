@@ -1,6 +1,5 @@
 package Blackop778.MineCalc.client;
 
-import Blackop778.MineCalc.client.updateChecker.NetworkEventHandler;
 import Blackop778.MineCalc.common.CommonProxy;
 import Blackop778.MineCalc.common.MCConfig;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,8 +15,6 @@ public class ClientProxy extends CommonProxy
 	{
 		super.preInit(event);
 		MinecraftForge.EVENT_BUS.register(new MCConfig());
-		if(MCConfig.checkForUpdate)
-			MinecraftForge.EVENT_BUS.register(new NetworkEventHandler());
 	}
 
 	@Override
