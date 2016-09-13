@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import Blackop778.MineCalc.MineCalc;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -13,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 public class Calculate extends CommandBase
 {
@@ -30,10 +32,10 @@ public class Calculate extends CommandBase
 	public String getCommandUsage(ICommandSender icommandsender)
 	{
 		// What is shown when "/help Calculate" is typed in
-		return "/calc <number><symbol><number>[symbol][number]";
+		return I18n.format("minecalc.calc.help");
 	}
 
-	public String calculate(ICommandSender icommandsender, String[] arguments)
+	public IChatComponent calculate(ICommandSender icommandsender, String[] arguments)
 	{
 		// What happens when command is entered
 		String print = null;
