@@ -18,6 +18,7 @@ public class MineCalc
 {
 	public static final String MODID = "minecraftcalculator778";
 	public static final String MODNAME = "MineCalc";
+	public static final String MODVER = "3.1.2";
 	public static final Logger Logger = LogManager.getLogger(MODID);
 	public static final String UPDATEJSONURL = "https://raw.githubusercontent.com/Blackop778/ModUpdateJsons/master/MineCalc.json";
 
