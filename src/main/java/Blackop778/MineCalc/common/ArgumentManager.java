@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 public class ArgumentManager
 {
-	private String[] args;
+	private Argument args;
 	private int inIndex;
 
 	public ArgumentManager()
@@ -12,18 +12,15 @@ public class ArgumentManager
 		args = new String[0];
 		inIndex = 0;
 	}
-
-	public @Nullable String getAnswer()
+	
+	public void digest(String math)
 	{
-		for(int i = 0; i < args.length; i++)
-		{
-			if(!args[i].contains("$#"))
-			{
-
-			}
-		}
-
-		return null;
+		
+	}
+	
+	public void modifyOthersImportance(Argument notChanged, double amountChanged)
+	{
+		
 	}
 
 	public void addArg(String toAdd)
@@ -38,14 +35,14 @@ public class ArgumentManager
 		return "$#" + String.valueOf(i) + "#";
 	}
 
-	public static String[] extendArray(String[] array)
+	public static Argument[] extendArray(String[] array)
 	{
 		return extendArray(array, 1);
 	}
 
-	public static String[] extendArray(String[] array, int lengthToExtend)
+	public static Argument[] extendArray(Argument[] array, int lengthToExtend)
 	{
-		String[] newArray = new String[array.length + lengthToExtend];
+		Argument[] newArray = new Argument[array.length + lengthToExtend];
 		for(int i = 0; i < array.length; i++)
 		{
 			newArray[i] = array[i];
