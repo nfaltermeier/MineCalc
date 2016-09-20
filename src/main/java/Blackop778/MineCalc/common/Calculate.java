@@ -6,17 +6,22 @@ import java.util.HashMap;
 import java.util.List;
 
 import Blackop778.MineCalc.MineCalc;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 public class Calculate extends CommandBase
 {
 
 	static HashMap<String, Double> lastMap = new HashMap<String, Double>();
+	static final ChatStyle redStyle = new ChatStyle().setColor(EnumChatFormatting.RED);
 
 	@Override
 	public String getCommandName()
@@ -29,13 +34,13 @@ public class Calculate extends CommandBase
 	public String getCommandUsage(ICommandSender icommandsender)
 	{
 		// What is shown when "/help Calculate" is typed in
-		return "/calc <number><symbol><number>[symbol][number]";
+		return I18n.format("minecalc.calc.help");
 	}
 
-	public String calculate(ICommandSender icommandsender, String[] arguments)
+	public IChatComponent calculate(ICommandSender icommandsender, String[] arguments)
 	{
 		// What happens when command is entered
-		String print = null;
+		IChatComponent print = null;
 		boolean zeroPower = false;
 		boolean zeroMult = false;
 		if((arguments.length - 1) % 2 == 0 && arguments.length > 1)
@@ -151,64 +156,66 @@ public class Calculate extends CommandBase
 							{
 								lastMap.put(icommandsender.getCommandSenderName(),
 										n % getDouble(icommandsender, arguments, i));
-								print = String.valueOf((int) (n / getDouble(icommandsender, arguments, i))) + "R"
-										+ String.valueOf((int) (n % getDouble(icommandsender, arguments, i)));
+								print = new ChatComponentText(
+										String.valueOf((int) (n / getDouble(icommandsender, arguments, i))) + "R"
+												+ String.valueOf((int) (n % getDouble(icommandsender, arguments, i))));
 							}
 						}
 						else if(n % 1 == 0)
 						{ // Remove unnecessary doubles
 							lastMap.put(icommandsender.getCommandSenderName(), n);
 							int b = (int) (n);
-							print = String.valueOf(b);
+							print = new ChatComponentText(String.valueOf(b));
 						}
 						else
 						{
 							lastMap.put(icommandsender.getCommandSenderName(), n);
-							print = String.valueOf(n);
+							print = new ChatComponentText(String.valueOf(n));
 						}
 
 						// Append warnings if needed
 						if(zeroPower)
 						{
-							print = print + EnumChatFormatting.RED + " Warning: Anything to the power of 0 is 1";
+							print.appendSibling(new ChatComponentTranslation("minecalc.calc.powerZeroWarning")
+									.setChatStyle(redStyle));
 						}
 						else if(zeroMult)
 						{
-							print = print + EnumChatFormatting.RED + " Warning: Anything times 0 is 0";
+							print.appendSibling(new ChatComponentTranslation("minecalc.calc.multZeroWarning")
+									.setChatStyle(redStyle));
 						}
 					}
 				}
 			}
 			catch(NumberFormatException e)
 			{
-				print = EnumChatFormatting.RED + "Error: Could not be interpreted as a double:"
-						+ e.getMessage().substring(17, e.getMessage().length());
+				return new ChatComponentTranslation("minecalc.calc.numberFormatException").setChatStyle(redStyle)
+						.appendSibling(new ChatComponentText(e.getMessage().substring(17, e.getMessage().length())));
 			}
 			catch(ImaginaryNumberException er)
 			{
-				print = EnumChatFormatting.RED + "Error: Imaginary numbers are not supported";
+				return new ChatComponentTranslation("minecalc.calc.imaginaryException").setChatStyle(redStyle);
 			}
 			catch(DivisionException err)
 			{
-				print = EnumChatFormatting.RED + "Error: Cannot divide by 0";
+				return new ChatComponentTranslation("minecalc.calc.divZeroException").setChatStyle(redStyle);
 			}
 			catch(SymbolException erro)
 			{
-				print = EnumChatFormatting.RED + "Error: Valid symbols are '+, -, *, /, %, ^, /-'";
+				return new ChatComponentTranslation("minecalc.calc.symbolException").setChatStyle(redStyle);
 			}
 			catch(PreviousOutputException error)
 			{
-				print = EnumChatFormatting.RED + "Error: There is no previous output to insert";
+				return new ChatComponentTranslation("minecalc.calc.previousOutputException").setChatStyle(redStyle);
 			}
 		}
 		else
 		{ // If the number of arguments is wrong
-			print = EnumChatFormatting.RED + "Usage: /calc <number><symbol><number>[symbol]" + EnumChatFormatting.RED
-					+ "[number]";
+			return new ChatComponentTranslation("minecalc.calc.usage").setChatStyle(redStyle);
 		}
 
 		// Prepend the arguments to the output, if configured to
-		if(MCConfig.returnInput && !print.contains("Error") && !print.contains("Usage"))
+		if(MCConfig.returnInput)
 		{
 			String tempPrint;
 			tempPrint = arguments[0];
@@ -217,7 +224,7 @@ public class Calculate extends CommandBase
 				tempPrint = tempPrint + " " + arguments[i];
 			}
 			tempPrint = tempPrint + " = ";
-			print = tempPrint + print;
+			print = new ChatComponentText(tempPrint).appendSibling(print);
 		}
 
 		return print;
@@ -303,17 +310,17 @@ public class Calculate extends CommandBase
 
 			args = formattedArgs.toArray(new String[1]);
 
-			String output = calculate(sender, args);
+			IChatComponent output = calculate(sender, args);
 
 			// Send the message back to the user
 			if(sender.getCommandSenderName().equals("Server"))
 			{
-				MineCalc.Logger.info(output);
+				MineCalc.Logger.info(output.getUnformattedText());
 			}
 			else
 			{
 				EntityPlayer player = (EntityPlayer) sender;
-				player.addChatMessage(new ChatComponentText(output));
+				player.addChatMessage(output);
 			}
 		}
 	}
