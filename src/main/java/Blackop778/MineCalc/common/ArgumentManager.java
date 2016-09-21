@@ -9,7 +9,7 @@ public class ArgumentManager
 
 	public ArgumentManager(boolean useOOPS)
 	{
-		args = new ArrayList<Argument>();
+		args = new ArrayList<>();
 		this.useOOPS = useOOPS;
 	}
 
@@ -38,12 +38,13 @@ public class ArgumentManager
 				{
 					parenthesisLevel++;
 					threeMode = true;
+					argumentPhrase += insertArrayReference(inIndex + 1);
 				}
 				if(!type.equals(lastType))
 				{
 					argumentPhrase += math.substring(startIndex, i);
 					phraseCount++;
-					if(phraseCount == 3 && threeMode)
+					if(phraseCount > 2)
 					{
 						args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
 						phraseCount = 0;
@@ -55,6 +56,10 @@ public class ArgumentManager
 						args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
 						phraseCount = 0;
 						argumentPhrase = "";
+						if(getType(math.charAt(i + 1), type).equals(Type.CLOSEPARENTHESIS))
+						{
+
+						}
 					}
 				}
 			}
@@ -112,6 +117,31 @@ public class ArgumentManager
 		}
 
 		return Type.NUMBER;
+	}
+
+	/**
+	 * 
+	 * @param string
+	 *            The string to search
+	 * @param index
+	 *            Index of the string to start at
+	 * @param typeToFind
+	 *            the Type to find in string
+	 * @param lastType
+	 *            the last type you got
+	 * @return The number of Types until the target Type, or -1 if none
+	 */
+	public static int getTypesUntilTarget(String string, int index, Type typeToFind, Type lastType)
+	{
+		int differingTypes = 0;
+		for(int i = index; i < string.length(); i++)
+		{
+			Type type = getType(string.charAt(i), lastType);
+			if(!type.equals(typeToFind))
+				return i - index;
+		}
+
+		return -1;
 	}
 
 	public enum Type
