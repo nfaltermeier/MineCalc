@@ -1,53 +1,50 @@
 package Blackop778.MineCalc.common;
 
+import java.util.ArrayList;
+
 public class ArgumentManager
 {
-	private Argument[] args;
-	private int inIndex;
+	private ArrayList<Argument> args;
+	private boolean useOOPS;
 
-	public ArgumentManager()
+	public ArgumentManager(boolean useOOPS)
 	{
-		args = new Argument[0];
-		inIndex = 0;
+		args = new ArrayList<Argument>();
+		this.useOOPS = useOOPS;
 	}
 
-	public void digest(String math)
+	public void digest(String math, boolean useOOPs)
 	{
 		math = math.replaceAll("\\s", "");
-		Type lastType = Type.CLOSEPARENTHESIS;
-		int lastIndex = -1;
+		Type lastType = Type.NUMBER;
+		int startIndex = 0;
 		int parenthesisLevel = 0;
-		String argumentPhrase;
-		for(int i = 0; i < math.length(); i++)
+		String argumentPhrase = "";
+		int phraseImportanceLevel = 0;
+		int phraseCount = 0;
+		boolean threeMode = true;
+		int inIndex = 0;
+		for(int i = 0; i <= math.length(); i++)
 		{
-			Type type = getType(math.charAt(i), lastType);
+			if(i == math.length())
+			{
+				argumentPhrase += math.substring(startIndex, i);
+				args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
+			}
+			else
+			{
+				Type type = getType(math.charAt(i), lastType);
+				if(!type.equals(lastType))
+				{
+
+				}
+			}
 		}
 	}
 
-	public void modifyOthersImportance(Argument notChanged, double amountChanged)
-	{
-
-	}
-
-	public static String insertArrayReference(int i)
+	private String insertArrayReference(int i)
 	{
 		return "$#" + String.valueOf(i) + "#";
-	}
-
-	private Argument[] extendArray(Argument[] array)
-	{
-		return extendArray(array, 1);
-	}
-
-	private Argument[] extendArray(Argument[] array, int lengthToExtend)
-	{
-		Argument[] newArray = new Argument[array.length + lengthToExtend];
-		for(int i = 0; i < array.length; i++)
-		{
-			newArray[i] = array[i];
-		}
-
-		return newArray;
 	}
 
 	public static Type getType(Character character, Type lastType)
@@ -65,7 +62,7 @@ public class ArgumentManager
 					if(!character.toString().equalsIgnoreCase("i"))
 					{
 						if(!(character.equals('-')
-								&& (!lastType.equals(Type.NUMBER) && !lastType.equals(Type.DIVISION)))
+								&& (!lastType.equals(Type.NUMBER) && !lastType.equals(Type.DIVISION))))
 						{
 							try
 							{
@@ -73,7 +70,15 @@ public class ArgumentManager
 							}
 							catch(NumberFormatException e)
 							{
-								return Type.FUNCTION;
+								if(character.equals('/'))
+									return Type.DIVISION;
+								if(character.equals('*') || character.toString().equalsIgnoreCase("X"))
+									return Type.MULTIPLICATION;
+								if(character.equals('-') || character.equals('+'))
+									return Type.ADDITIONSUBTRACTION;
+								if(character.equals('^'))
+									return Type.EXPONENTROOT;
+								// TODO: check if root
 							}
 						}
 					}
@@ -86,7 +91,7 @@ public class ArgumentManager
 
 	public enum Type
 	{
-		NUMBER, FUNCTION, OPENPARENTHESIS, CLOSEPARENTHESIS, DIVISION;
+		NUMBER, OPENPARENTHESIS, CLOSEPARENTHESIS, DIVISION, MULTIPLICATION, ADDITIONSUBTRACTION, EXPONENTROOT, CUSTOMFUNCTION, JUNK;
 
 	}
 }
