@@ -34,9 +34,28 @@ public class ArgumentManager
 			else
 			{
 				Type type = getType(math.charAt(i), lastType);
+				if(type.equals(Type.OPENPARENTHESIS))
+				{
+					parenthesisLevel++;
+					threeMode = true;
+				}
 				if(!type.equals(lastType))
 				{
-
+					argumentPhrase += math.substring(startIndex, i);
+					phraseCount++;
+					if(phraseCount == 3 && threeMode)
+					{
+						args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
+						phraseCount = 0;
+						argumentPhrase = "";
+						threeMode = false;
+					}
+					else if(phraseCount == 2 && !threeMode)
+					{
+						args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
+						phraseCount = 0;
+						argumentPhrase = "";
+					}
 				}
 			}
 		}
@@ -74,11 +93,17 @@ public class ArgumentManager
 									return Type.DIVISION;
 								if(character.equals('*') || character.toString().equalsIgnoreCase("X"))
 									return Type.MULTIPLICATION;
-								if(character.equals('-') || character.equals('+'))
-									return Type.ADDITIONSUBTRACTION;
+								if(character.equals('-'))
+								{
+									if(lastType.equals(Type.DIVISION))
+										return Type.EXPONENTROOT;
+									return Type.SUBTRACTION;
+								}
+								if(character.equals('+'))
+									return Type.ADDITION;
 								if(character.equals('^'))
 									return Type.EXPONENTROOT;
-								// TODO: check if root
+								return Type.JUNK;
 							}
 						}
 					}
@@ -91,7 +116,7 @@ public class ArgumentManager
 
 	public enum Type
 	{
-		NUMBER, OPENPARENTHESIS, CLOSEPARENTHESIS, DIVISION, MULTIPLICATION, ADDITIONSUBTRACTION, EXPONENTROOT, CUSTOMFUNCTION, JUNK;
+		NUMBER, OPENPARENTHESIS, CLOSEPARENTHESIS, DIVISION, MULTIPLICATION, ADDITION, SUBTRACTION, EXPONENTROOT, CUSTOMFUNCTION, JUNK;
 
 	}
 }
