@@ -1,33 +1,32 @@
 package Blackop778.MineCalc.common;
 
-import javax.annotation.Nullable;
-
 public class ArgumentManager
 {
-	private Argument args;
+	private Argument[] args;
 	private int inIndex;
 
 	public ArgumentManager()
 	{
-		args = new String[0];
+		args = new Argument[0];
 		inIndex = 0;
 	}
-	
+
 	public void digest(String math)
 	{
-		
-	}
-	
-	public void modifyOthersImportance(Argument notChanged, double amountChanged)
-	{
-		
+		math = math.replaceAll("\\s", "");
+		Type lastType = Type.CLOSEPARENTHESIS;
+		int lastIndex = -1;
+		int parenthesisLevel = 0;
+		String argumentPhrase;
+		for(int i = 0; i < math.length(); i++)
+		{
+			Type type = getType(math.charAt(i), lastType);
+		}
 	}
 
-	public void addArg(String toAdd)
+	public void modifyOthersImportance(Argument notChanged, double amountChanged)
 	{
-		args = extendArray(args);
-		args[inIndex] = toAdd;
-		inIndex++;
+
 	}
 
 	public static String insertArrayReference(int i)
@@ -35,12 +34,12 @@ public class ArgumentManager
 		return "$#" + String.valueOf(i) + "#";
 	}
 
-	public static Argument[] extendArray(String[] array)
+	private Argument[] extendArray(Argument[] array)
 	{
 		return extendArray(array, 1);
 	}
 
-	public static Argument[] extendArray(Argument[] array, int lengthToExtend)
+	private Argument[] extendArray(Argument[] array, int lengthToExtend)
 	{
 		Argument[] newArray = new Argument[array.length + lengthToExtend];
 		for(int i = 0; i < array.length; i++)
@@ -49,5 +48,45 @@ public class ArgumentManager
 		}
 
 		return newArray;
+	}
+
+	public static Type getType(Character character, Type lastType)
+	{
+		if(character.equals('('))
+			return Type.OPENPARENTHESIS;
+		if(character.equals(')'))
+			return Type.CLOSEPARENTHESIS;
+		if(!character.equals('.'))
+		{
+			if(!character.toString().equalsIgnoreCase("l"))
+			{
+				if(!character.toString().equalsIgnoreCase("p"))
+				{
+					if(!character.toString().equalsIgnoreCase("i"))
+					{
+						if(!(character.equals('-')
+								&& (!lastType.equals(Type.NUMBER) && !lastType.equals(Type.DIVISION)))
+						{
+							try
+							{
+								Double.valueOf(String.valueOf(character));
+							}
+							catch(NumberFormatException e)
+							{
+								return Type.FUNCTION;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return Type.NUMBER;
+	}
+
+	public enum Type
+	{
+		NUMBER, FUNCTION, OPENPARENTHESIS, CLOSEPARENTHESIS, DIVISION;
+
 	}
 }

@@ -25,7 +25,7 @@ import net.minecraft.util.text.translation.I18n;
 public class Calculate extends CommandBase
 {
 
-	static HashMap<String, Double> lastMap = new HashMap<String, Double>();
+	static HashMap<String, Double> lastMap = new HashMap<>();
 	public static final Style redStyle = new Style().setColor(TextFormatting.RED);;
 
 	@Override
@@ -83,9 +83,7 @@ public class Calculate extends CommandBase
 					{
 						i++;
 						if(getDouble(icommandsender, arguments, i) == 0)
-						{
 							throw new DivisionException();
-						}
 						else
 						{
 							n = n / getDouble(icommandsender, arguments, i);
@@ -102,9 +100,7 @@ public class Calculate extends CommandBase
 						else
 						{
 							if(getDouble(icommandsender, arguments, i) == 0)
-							{
 								throw new DivisionException();
-							}
 							else
 							{
 								n = n % getDouble(icommandsender, arguments, i);
@@ -124,13 +120,9 @@ public class Calculate extends CommandBase
 					{
 						i++;
 						if(n < 0 && getDouble(icommandsender, arguments, i) % 2 == 0)
-						{
 							throw new ImaginaryNumberException();
-						}
 						else if(n == 0)
-						{
 							throw new DivisionException();
-						}
 						else
 						{
 							boolean neg = false;
@@ -141,22 +133,20 @@ public class Calculate extends CommandBase
 							}
 							n = Math.pow(n, 1.0 / getDouble(icommandsender, arguments, i));
 							if(neg)
+							{
 								n = -n;
+							}
 						}
 					}
 					else
-					{
 						throw new SymbolException();
-					}
 
 					if(i + 1 == arguments.length)
 					{
 						if(arguments[i - 1].equals("%") && MCConfig.fancyRemainders)
 						{ // Fancy remainder output
 							if(getDouble(icommandsender, arguments, i) == 0)
-							{
 								throw new DivisionException();
-							}
 							else
 							{
 								lastMap.put(icommandsender.getName(), n % getDouble(icommandsender, arguments, i));
@@ -178,15 +168,11 @@ public class Calculate extends CommandBase
 
 						// Append warnings if needed
 						if(zeroPower)
-						{
 							return new TextComponentString(print + " ").appendSibling(
 									new TextComponentTranslation("minecalc.calc.powerZeroWarning").setStyle(redStyle));
-						}
 						else if(zeroMult)
-						{
 							return new TextComponentString(print + " ").appendSibling(
 									new TextComponentTranslation("minecalc.calc.multZeroWarning").setStyle(redStyle));
-						}
 					}
 				}
 			}
@@ -214,9 +200,7 @@ public class Calculate extends CommandBase
 			}
 		}
 		else
-		{ // If the number of arguments is wrong
 			return new TextComponentTranslation("minecalc.calc.usage").setStyle(redStyle);
-		}
 
 		// Prepend the arguments to the output, if configured to
 		if(MCConfig.returnInput)
@@ -238,7 +222,7 @@ public class Calculate extends CommandBase
 	public List<String> getCommandAliases()
 	{
 		// A list of alternate command names
-		List<String> aliases = new ArrayList<String>(Arrays.asList("Calc", "calculate", "Calculate"));
+		List<String> aliases = new ArrayList<>(Arrays.asList("Calc", "calculate", "Calculate"));
 		return aliases;
 	}
 
@@ -248,7 +232,7 @@ public class Calculate extends CommandBase
 	{
 		if(args.length % 2 != 1)
 		{
-			ArrayList<String> options = new ArrayList<String>(Arrays.asList("+", "-", "*", "/", "%", "^", "/-"));
+			ArrayList<String> options = new ArrayList<>(Arrays.asList("+", "-", "*", "/", "%", "^", "/-"));
 			return options;
 		}
 		else
@@ -265,9 +249,7 @@ public class Calculate extends CommandBase
 			if(lastMap.containsKey(sender.getName()))
 				return lastMap.get(sender.getName());
 			else
-			{
 				throw new PreviousOutputException();
-			}
 		}
 		else
 			return Double.valueOf(args[i]);
@@ -283,7 +265,7 @@ public class Calculate extends CommandBase
 		else
 		{
 			ArrayList<String> formattedArgs;
-			formattedArgs = new ArrayList<String>();
+			formattedArgs = new ArrayList<>();
 			for(String arg : args)
 			{
 				int argStartIndex = 0;
@@ -328,35 +310,6 @@ public class Calculate extends CommandBase
 				player.addChatMessage(output);
 			}
 		}
-	}
-
-	public static boolean isNumber(Character character, boolean lastIsNum, Character lastChar)
-	{
-		if(!character.equals('.'))
-		{
-			if(!character.toString().equalsIgnoreCase("l"))
-			{
-				if(!character.toString().equalsIgnoreCase("p"))
-				{
-					if(!character.toString().equalsIgnoreCase("i"))
-					{
-						if(!(character.equals('-') && (!lastIsNum && !lastChar.toString().equals("/"))))
-						{
-							try
-							{
-								Double.valueOf(String.valueOf(character));
-							}
-							catch(NumberFormatException e)
-							{
-								return false;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return true;
 	}
 
 	@Override
