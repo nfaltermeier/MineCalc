@@ -182,6 +182,8 @@ public class Calculate extends CommandBase
 			}
 			catch(NumberFormatException e)
 			{
+				if(e.getMessage().equals("multiple points"))
+					return new TextComponentTranslation("minecalc.calc.multiplePointsException").setStyle(redStyle);
 				return new TextComponentTranslation("minecalc.calc.numberFormatException").setStyle(redStyle)
 						.appendSibling(new TextComponentString(e.getMessage().substring(17, e.getMessage().length())));
 			}
@@ -195,7 +197,9 @@ public class Calculate extends CommandBase
 			}
 			catch(SymbolException erro)
 			{
-				return new TextComponentTranslation("minecalc.calc.symbolException").setStyle(redStyle);
+				return new TextComponentTranslation("minecalc.calc.symbolException").setStyle(redStyle)
+						.appendSibling(new TextComponentString(" %"))
+						.appendSibling(new TextComponentTranslation("minecalc.calc.symbolExceptionPartTwo"));
 			}
 			catch(PreviousOutputException error)
 			{

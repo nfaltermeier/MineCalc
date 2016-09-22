@@ -5,7 +5,9 @@ minecalc.calc.multZeroWarning=0 sᴉ 0 sǝɯᴉʇ ƃuᴉɥʇʎu∀ :ƃuᴉuɹɐM
 minecalc.calc.numberFormatException=:ǝlqnop ɐ sɐ pǝʇǝɹdɹǝʇuᴉ ǝq ʇou plnoƆ :ɹoɹɹƎ
 minecalc.calc.imaginaryException=pǝʇɹoddns ʇou ǝɹɐ sɹǝqɯnu ʎɹɐuᴉƃɐɯI :ɹoɹɹƎ
 minecalc.calc.divZeroException=0 ʎq ǝpᴉʌᴉp ʇouuɐƆ :ɹoɹɹƎ
-minecalc.calc.symbolException=,-/ '^ '% '/ '* '- '+, ǝɹɐ sloqɯʎs pᴉlɐΛ :ɹoɹɹƎ
+minecalc.calc.symbolException=,-/ '^ '
+minecalc.calc.symbolExceptionPartTwo='/ '* '- '+, ǝɹɐ sloqɯʎs pᴉlɐΛ :ɹoɹɹƎ
+minecalc.calc.multiplePointsException=ʇuᴉod lɐɯᴉɔǝp ǝuo ǝʌɐɥ ʎluo ʎɐɯ ɹǝqɯnu ∀ :ɹoɹɹƎ
 minecalc.calc.previousOutputException=ʇɹǝsuᴉ oʇ ʇndʇno snoᴉʌǝɹd ou sᴉ ǝɹǝɥ┴ :ɹoɹɹƎ
 #'/calc' should NOT be translated
 minecalc.calc.usage=[ɹǝqɯnu][loqɯʎs]<ɹǝqɯnu><loqɯʎs><ɹǝqɯnu> ɔlɐɔ/ :ǝƃɐs∩
