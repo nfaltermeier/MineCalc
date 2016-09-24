@@ -79,9 +79,7 @@ public class Calculate extends CommandBase
 					{
 						i++;
 						if(getDouble(icommandsender, arguments, i) == 0)
-						{
 							throw new DivisionException();
-						}
 						else
 						{
 							n = n / getDouble(icommandsender, arguments, i);
@@ -98,35 +96,36 @@ public class Calculate extends CommandBase
 						else
 						{
 							if(getDouble(icommandsender, arguments, i) == 0)
-							{
 								throw new DivisionException();
-							}
 							else
 							{
 								n = n % getDouble(icommandsender, arguments, i);
 							}
 						}
 					}
-					else if(arguments[1].equals("^"))
+					else if(arguments[i].equals("^"))
 					{
 						i++;
+						double next = getDouble(icommandsender, arguments, i);
+						if(n < 0)
+						{
+							double num = next / next / next;
+							if(num % 2 == 0)
+								throw new ImaginaryNumberException();
+						}
 						if(getDouble(icommandsender, arguments, i) == 0 && MCConfig.zeroMultWarns)
 						{
 							zeroPower = true;
 						}
-						n = Math.pow(n, getDouble(icommandsender, arguments, i));
+						n = Math.pow(n, next);
 					}
 					else if(arguments[i].equals("/-"))
 					{
 						i++;
 						if(n < 0 && getDouble(icommandsender, arguments, i) % 2 == 0)
-						{
 							throw new ImaginaryNumberException();
-						}
 						else if(n == 0)
-						{
 							throw new DivisionException();
-						}
 						else
 						{
 							boolean neg = false;
@@ -137,22 +136,20 @@ public class Calculate extends CommandBase
 							}
 							n = Math.pow(n, 1.0 / getDouble(icommandsender, arguments, i));
 							if(neg)
+							{
 								n = -n;
+							}
 						}
 					}
 					else
-					{
 						throw new SymbolException();
-					}
 
 					if(i + 1 == arguments.length)
 					{
 						if(arguments[i - 1].equals("%") && MCConfig.fancyRemainders)
 						{ // Fancy remainder output
 							if(getDouble(icommandsender, arguments, i) == 0)
-							{
 								throw new DivisionException();
-							}
 							else
 							{
 								lastMap.put(icommandsender.getName(), n % getDouble(icommandsender, arguments, i));
@@ -189,6 +186,8 @@ public class Calculate extends CommandBase
 			}
 			catch(NumberFormatException e)
 			{
+				if(e.getMessage().equals("multiple points"))
+					return new ChatComponentTranslation("minecalc.calc.multiplePointsException").setChatStyle(redStyle);
 				return new ChatComponentTranslation("minecalc.calc.numberFormatException").setChatStyle(redStyle)
 						.appendSibling(new ChatComponentText(e.getMessage().substring(17, e.getMessage().length())));
 			}
@@ -202,7 +201,9 @@ public class Calculate extends CommandBase
 			}
 			catch(SymbolException erro)
 			{
-				return new ChatComponentTranslation("minecalc.calc.symbolException").setChatStyle(redStyle);
+				return new ChatComponentTranslation("minecalc.calc.symbolException").setChatStyle(redStyle)
+						.appendSibling(new ChatComponentText(" %"))
+						.appendSibling(new ChatComponentTranslation("minecalc.calc.symbolExceptionPartTwo"));
 			}
 			catch(PreviousOutputException error)
 			{
@@ -210,9 +211,7 @@ public class Calculate extends CommandBase
 			}
 		}
 		else
-		{ // If the number of arguments is wrong
 			return new ChatComponentTranslation("minecalc.calc.usage").setChatStyle(redStyle);
-		}
 
 		// Prepend the arguments to the output, if configured to
 		if(MCConfig.returnInput)
@@ -260,9 +259,7 @@ public class Calculate extends CommandBase
 			if(lastMap.containsKey(sender.getName()))
 				return lastMap.get(sender.getName());
 			else
-			{
 				throw new PreviousOutputException();
-			}
 		}
 		else
 			return Double.valueOf(args[i]);

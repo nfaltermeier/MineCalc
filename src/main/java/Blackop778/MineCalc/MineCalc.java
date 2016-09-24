@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import Blackop778.MineCalc.common.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -18,20 +17,12 @@ public class MineCalc
 {
 	public static final String MODID = "minecraftcalculator778";
 	public static final String MODNAME = "MineCalc";
-	public static final String MODVER = "3.1.2";
+	public static final String MODVER = "3.1.4";
 	public static final String UPDATEJSONURL = "https://raw.githubusercontent.com/Blackop778/ModUpdateJsons/master/MineCalc.json";
 	public static final Logger Logger = LogManager.getLogger(MODID);
 
 	@SidedProxy(clientSide = "Blackop778.MineCalc.client.ClientProxy", serverSide = "Blackop778.MineCalc.common.CommonProxy")
 	public static CommonProxy proxy;
-
-	public MineCalc()
-	{
-		Logger.info("Everytime you divide by zero a computer cries");
-	}
-
-	@Instance(value = MineCalc.MODID)
-	public static MineCalc instance;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)

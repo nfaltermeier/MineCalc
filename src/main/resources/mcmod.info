@@ -3,7 +3,7 @@
   "modid": "minecraftcalculator778",
   "name": "MineCalc",
   "description": "Adds a calculator to the chat window that is interacted with through commands",
-  "version": "3.1.2",
+  "version": "3.1.4",
   "mcversion": "1.8.9",
   "url": "https://github.com/Blackop778/MineCalc",
   "updateUrl": "https://minecraft.curseforge.com/projects/minecalc",
