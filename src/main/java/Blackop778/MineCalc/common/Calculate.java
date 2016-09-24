@@ -106,14 +106,21 @@ public class Calculate extends CommandBase
 							}
 						}
 					}
-					else if(arguments[1].equals("^"))
+					else if(arguments[i].equals("^"))
 					{
 						i++;
+						double next = getDouble(icommandsender, arguments, i);
+						if(number < 0)
+						{
+							double num = next / next / next;
+							if(num % 2 == 0)
+								throw new ImaginaryNumberException();
+						}
 						if(getDouble(icommandsender, arguments, i) == 0 && MCConfig.zeroMultWarns)
 						{
 							zeroPower = true;
 						}
-						number = Math.pow(number, getDouble(icommandsender, arguments, i));
+						number = Math.pow(number, next);
 					}
 					else if(arguments[i].equals("/-"))
 					{
