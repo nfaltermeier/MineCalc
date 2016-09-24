@@ -9,7 +9,7 @@ public class ArgumentManager
 
 	public ArgumentManager(boolean useOOPS)
 	{
-		args = new ArrayList<>();
+		args = new ArrayList<Argument>();
 		this.useOOPS = useOOPS;
 	}
 

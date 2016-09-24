@@ -25,7 +25,7 @@ import net.minecraft.util.text.translation.I18n;
 public class Calculate extends CommandBase
 {
 
-	static HashMap<String, Double> lastMap = new HashMap<>();
+	static HashMap<String, Double> lastMap = new HashMap<String, Double>();
 	public static final Style redStyle = new Style().setColor(TextFormatting.RED);;
 
 	@Override
@@ -45,7 +45,7 @@ public class Calculate extends CommandBase
 	public ITextComponent calculate(ICommandSender icommandsender, String[] arguments)
 	{
 		// What happens when command is entered
-		String print = null;
+		ITextComponent print = null;
 		boolean zeroPower = false;
 		boolean zeroMult = false;
 		if((arguments.length - 1) % 2 == 0 && arguments.length > 1)
@@ -150,37 +150,43 @@ public class Calculate extends CommandBase
 							else
 							{
 								lastMap.put(icommandsender.getName(), n % getDouble(icommandsender, arguments, i));
-								print = String.valueOf((int) (n / getDouble(icommandsender, arguments, i))) + "R"
-										+ String.valueOf((int) (n % getDouble(icommandsender, arguments, i)));
+								print = new TextComponentString(
+										String.valueOf((int) (n / getDouble(icommandsender, arguments, i))) + "R"
+												+ String.valueOf((int) (n % getDouble(icommandsender, arguments, i))));
 							}
 						}
 						else if(n % 1 == 0)
 						{ // Remove unnecessary doubles
 							lastMap.put(icommandsender.getName(), n);
 							int b = (int) (n);
-							print = String.valueOf(b);
+							print = new TextComponentString(String.valueOf(b));
 						}
 						else
 						{
 							lastMap.put(icommandsender.getName(), n);
-							print = String.valueOf(n);
+							print = new TextComponentString(String.valueOf(n));
 						}
 
 						// Append warnings if needed
 						if(zeroPower)
-							return new TextComponentString(print + " ").appendSibling(
-									new TextComponentTranslation("minecalc.calc.powerZeroWarning").setStyle(redStyle));
+						{
+							print.appendSibling(new TextComponentString(print + " ").appendSibling(
+									new TextComponentTranslation("minecalc.calc.powerZeroWarning").setStyle(redStyle)));
+						}
 						else if(zeroMult)
-							return new TextComponentString(print + " ").appendSibling(
-									new TextComponentTranslation("minecalc.calc.multZeroWarning").setStyle(redStyle));
+						{
+							print.appendSibling(new TextComponentString(print + " ").appendSibling(
+									new TextComponentTranslation("minecalc.calc.multZeroWarning").setStyle(redStyle)));
+						}
 					}
 				}
 			}
 			catch(NumberFormatException e)
 			{
-				return new TextComponentTranslation("minecalc.calc.numberFormatException")
-						.appendSibling(new TextComponentString(e.getMessage().substring(17, e.getMessage().length())))
-						.setStyle(redStyle);
+				if(e.getMessage().equals("multiple points"))
+					return new TextComponentTranslation("minecalc.calc.multiplePointsException").setStyle(redStyle);
+				return new TextComponentTranslation("minecalc.calc.numberFormatException").setStyle(redStyle)
+						.appendSibling(new TextComponentString(e.getMessage().substring(17, e.getMessage().length())));
 			}
 			catch(ImaginaryNumberException er)
 			{
@@ -192,7 +198,9 @@ public class Calculate extends CommandBase
 			}
 			catch(SymbolException erro)
 			{
-				return new TextComponentTranslation("minecalc.calc.symbolException").setStyle(redStyle);
+				return new TextComponentTranslation("minecalc.calc.symbolException").setStyle(redStyle)
+						.appendSibling(new TextComponentString(" %"))
+						.appendSibling(new TextComponentTranslation("minecalc.calc.symbolExceptionPartTwo"));
 			}
 			catch(PreviousOutputException error)
 			{
@@ -212,17 +220,17 @@ public class Calculate extends CommandBase
 				tempPrint = tempPrint + " " + arguments[i];
 			}
 			tempPrint = tempPrint + " = ";
-			print = tempPrint + print;
+			print = new TextComponentString(tempPrint).appendSibling(print);
 		}
 
-		return new TextComponentString(print);
+		return print;
 	}
 
 	@Override
 	public List<String> getCommandAliases()
 	{
 		// A list of alternate command names
-		List<String> aliases = new ArrayList<>(Arrays.asList("Calc", "calculate", "Calculate"));
+		List<String> aliases = new ArrayList<String>(Arrays.asList("Calc", "calculate", "Calculate"));
 		return aliases;
 	}
 
@@ -232,7 +240,7 @@ public class Calculate extends CommandBase
 	{
 		if(args.length % 2 != 1)
 		{
-			ArrayList<String> options = new ArrayList<>(Arrays.asList("+", "-", "*", "/", "%", "^", "/-"));
+			ArrayList<String> options = new ArrayList<String>(Arrays.asList("+", "-", "*", "/", "%", "^", "/-"));
 			return options;
 		}
 		else
@@ -265,7 +273,7 @@ public class Calculate extends CommandBase
 		else
 		{
 			ArrayList<String> formattedArgs;
-			formattedArgs = new ArrayList<>();
+			formattedArgs = new ArrayList<String>();
 			for(String arg : args)
 			{
 				int argStartIndex = 0;
@@ -310,6 +318,35 @@ public class Calculate extends CommandBase
 				player.addChatMessage(output);
 			}
 		}
+	}
+
+	public static boolean isNumber(Character character, boolean lastIsNum, Character lastChar)
+	{
+		if(!character.equals('.'))
+		{
+			if(!character.toString().equalsIgnoreCase("l"))
+			{
+				if(!character.toString().equalsIgnoreCase("p"))
+				{
+					if(!character.toString().equalsIgnoreCase("i"))
+					{
+						if(!(character.equals('-') && (!lastIsNum && !lastChar.toString().equals("/"))))
+						{
+							try
+							{
+								Double.valueOf(String.valueOf(character));
+							}
+							catch(NumberFormatException e)
+							{
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 
 	@Override
