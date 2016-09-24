@@ -106,14 +106,21 @@ public class Calculate extends CommandBase
 							}
 						}
 					}
-					else if(arguments[1].equals("^"))
+					else if(arguments[i].equals("^"))
 					{
 						i++;
+						double next = getDouble(icommandsender, arguments, i);
+						if(n < 0)
+						{
+							double num = next / next / next;
+							if(num % 2 == 0)
+								throw new ImaginaryNumberException();
+						}
 						if(getDouble(icommandsender, arguments, i) == 0 && MCConfig.zeroMultWarns)
 						{
 							zeroPower = true;
 						}
-						n = Math.pow(n, getDouble(icommandsender, arguments, i));
+						n = Math.pow(n, next);
 					}
 					else if(arguments[i].equals("/-"))
 					{
@@ -189,6 +196,8 @@ public class Calculate extends CommandBase
 			}
 			catch(NumberFormatException e)
 			{
+				if(e.getMessage().equals("multiple points"))
+					return new ChatComponentTranslation("minecalc.calc.multiplePointsException").setChatStyle(redStyle);
 				return new ChatComponentTranslation("minecalc.calc.numberFormatException").setChatStyle(redStyle)
 						.appendSibling(new ChatComponentText(e.getMessage().substring(17, e.getMessage().length())));
 			}
@@ -202,7 +211,9 @@ public class Calculate extends CommandBase
 			}
 			catch(SymbolException erro)
 			{
-				return new ChatComponentTranslation("minecalc.calc.symbolException").setChatStyle(redStyle);
+				return new ChatComponentTranslation("minecalc.calc.symbolException").setChatStyle(redStyle)
+						.appendSibling(new ChatComponentText(" %"))
+						.appendSibling(new ChatComponentTranslation("minecalc.calc.symbolExceptionPartTwo"));
 			}
 			catch(PreviousOutputException error)
 			{
