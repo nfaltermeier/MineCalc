@@ -107,14 +107,21 @@ public class Calculate extends CommandBase
 							}
 						}
 					}
-					else if(arguments[1].equals("^"))
+					else if(arguments[i].equals("^"))
 					{
 						i++;
+						double next = getDouble(icommandsender, arguments, i);
+						if(n < 0)
+						{
+							double num = next / next / next;
+							if(num % 2 == 0)
+								throw new ImaginaryNumberException();
+						}
 						if(getDouble(icommandsender, arguments, i) == 0 && MCConfig.zeroMultWarns)
 						{
 							zeroPower = true;
 						}
-						n = Math.pow(n, getDouble(icommandsender, arguments, i));
+						n = Math.pow(n, next);
 					}
 					else if(arguments[i].equals("/-"))
 					{
@@ -170,12 +177,12 @@ public class Calculate extends CommandBase
 						// Append warnings if needed
 						if(zeroPower)
 						{
-							print.appendSibling(new TextComponentString(print + " ").appendSibling(
+							print.appendSibling(new TextComponentString(" ").appendSibling(
 									new TextComponentTranslation("minecalc.calc.powerZeroWarning").setStyle(redStyle)));
 						}
 						else if(zeroMult)
 						{
-							print.appendSibling(new TextComponentString(print + " ").appendSibling(
+							print.appendSibling(new TextComponentString(" ").appendSibling(
 									new TextComponentTranslation("minecalc.calc.multZeroWarning").setStyle(redStyle)));
 						}
 					}
