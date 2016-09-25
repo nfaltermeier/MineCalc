@@ -13,7 +13,7 @@ public class ArgumentManager
 		this.useOOPS = useOOPS;
 	}
 
-	public void digest(String math, boolean useOOPs)
+	public void digest(String math)
 	{
 		math = math.replaceAll("\\s", "");
 		Type lastType = Type.NUMBER;
@@ -24,6 +24,7 @@ public class ArgumentManager
 		int phraseCount = 0;
 		boolean threeMode = true;
 		int inIndex = 0;
+		int typesUntilParen = getTypesUntilTarget(math, 0, Type.OPENPARENTHESIS, lastType);
 		for(int i = 0; i <= math.length(); i++)
 		{
 			if(i == math.length())
@@ -36,32 +37,40 @@ public class ArgumentManager
 				Type type = getType(math.charAt(i), lastType);
 				if(type.equals(Type.OPENPARENTHESIS))
 				{
-					parenthesisLevel++;
 					threeMode = true;
-					argumentPhrase += insertArrayReference(inIndex + 1);
+					argumentPhrase = argumentPhrase + insertArrayReference(inIndex + 1);
+					args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
+					inIndex++;
+					parenthesisLevel++;
+					phraseCount = 0;
 				}
-				if(!type.equals(lastType))
+				else if(!type.equals(lastType))
 				{
-					argumentPhrase += math.substring(startIndex, i);
+					typesUntilParen--;
+					argumentPhrase = argumentPhrase + math.substring(startIndex, i);
+					startIndex = i;
 					phraseCount++;
 					if(phraseCount > 2)
 					{
 						args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
 						phraseCount = 0;
-						argumentPhrase = "";
+						argumentPhrase = insertArrayReference(inIndex);
+						inIndex++;
 						threeMode = false;
 					}
 					else if(phraseCount == 2 && !threeMode)
 					{
-						args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
-						phraseCount = 0;
-						argumentPhrase = "";
-						if(getType(math.charAt(i + 1), type).equals(Type.CLOSEPARENTHESIS))
+						if(!getType(math.charAt(i + 1), type).equals(Type.CLOSEPARENTHESIS))
 						{
-
+							args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6,
+									argumentPhrase));
+							phraseCount = 0;
+							argumentPhrase = insertArrayReference(inIndex);
+							inIndex++;
 						}
 					}
 				}
+				lastType = type;
 			}
 		}
 	}
@@ -133,12 +142,16 @@ public class ArgumentManager
 	 */
 	public static int getTypesUntilTarget(String string, int index, Type typeToFind, Type lastType)
 	{
-		int differingTypes = 0;
+		ArrayList<Type> differingTypes = new ArrayList<Type>();
 		for(int i = index; i < string.length(); i++)
 		{
 			Type type = getType(string.charAt(i), lastType);
-			if(!type.equals(typeToFind))
-				return i - index;
+			if(type.equals(typeToFind))
+				return differingTypes.size();
+			if(differingTypes.size() == 0)
+				differingTypes.add(type);
+			else if(!differingTypes.get(differingTypes.size() - 1).equals(type))
+				differingTypes.add(type);
 		}
 
 		return -1;

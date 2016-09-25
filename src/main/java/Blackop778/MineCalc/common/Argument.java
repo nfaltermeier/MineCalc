@@ -5,7 +5,7 @@ import java.util.Comparator;
 public class Argument implements Comparator<Argument>
 {
 	private int index;
-	private Double importance;
+	private double importance;
 	private String contents;
 
 	public Argument(int index, double importance, String contents)
@@ -18,17 +18,21 @@ public class Argument implements Comparator<Argument>
 	@Override
 	public int compare(Argument o1, Argument o2)
 	{
-		return o1.getImportance().compareTo(o2.getImportance());
+		int importanceOrder = o1.getImportance().compareTo(o2.getImportance());
+		if(importanceOrder != 0)
+			return importanceOrder;
+		return -(o1.getIndex().compareTo(o2.getIndex()));
+
 	}
 
-	public int getIndex()
+	public Integer getIndex()
 	{
-		return index;
+		return new Integer(index);
 	}
 
 	public Double getImportance()
 	{
-		return importance;
+		return new Double(importance);
 	}
 
 	public String getContents()
