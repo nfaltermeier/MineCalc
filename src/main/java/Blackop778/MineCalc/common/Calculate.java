@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Nullable;
 
 import Blackop778.MineCalc.MineCalc;
 import net.minecraft.command.CommandBase;
@@ -243,7 +242,7 @@ public class Calculate extends CommandBase
 
 	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args,
-			@Nullable BlockPos pos)
+			 BlockPos pos)
 	{
 		if(args.length % 2 != 1)
 		{

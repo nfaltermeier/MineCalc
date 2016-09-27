@@ -37,7 +37,11 @@ public class ArgumentManager
 			else
 			{
 				Type type = getType(math.charAt(i), lastType);
-				if(!type.equals(lastType))
+				if(type.equals(Type.OPENPARENTHESIS) && lastType.equals(type))
+				{
+					
+				}
+				else if(!type.equals(lastType))
 				{
 					typesUntilParen--;
 					argumentPhrase = argumentPhrase + math.substring(startIndex, i);
