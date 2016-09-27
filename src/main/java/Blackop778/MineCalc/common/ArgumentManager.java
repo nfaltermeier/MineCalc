@@ -1,6 +1,7 @@
 package Blackop778.MineCalc.common;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class ArgumentManager
 {
@@ -19,12 +20,13 @@ public class ArgumentManager
 		Type lastType = Type.NUMBER;
 		int startIndex = 0;
 		int parenthesisLevel = 0;
+		Stack<Integer> parenthesisStartIndex = new Stack<Integer>();
 		String argumentPhrase = "";
 		int phraseImportanceLevel = 0;
 		int phraseCount = 0;
 		boolean threeMode = true;
 		int inIndex = 0;
-		int typesUntilParen = getTypesUntilTarget(math, 0, Type.OPENPARENTHESIS, lastType);
+		int typesUntilParen = getTypesUntilTarget(math, 0, Type.CLOSEPARENTHESIS, lastType);
 		for(int i = 0; i <= math.length(); i++)
 		{
 			if(i == math.length())
@@ -35,49 +37,74 @@ public class ArgumentManager
 			else
 			{
 				Type type = getType(math.charAt(i), lastType);
-				if(type.equals(Type.OPENPARENTHESIS))
-				{
-					threeMode = true;
-					argumentPhrase = argumentPhrase + insertArrayReference(inIndex + 1);
-					args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
-					inIndex++;
-					parenthesisLevel++;
-					phraseCount = 0;
-				}
-				else if(!type.equals(lastType))
+				if(!type.equals(lastType))
 				{
 					typesUntilParen--;
 					argumentPhrase = argumentPhrase + math.substring(startIndex, i);
 					startIndex = i;
 					phraseCount++;
-					if(phraseCount > 2)
+					if(type.equals(Type.OPENPARENTHESIS))
+					{
+						threeMode = true;
+						argumentPhrase = argumentPhrase + insertArrayReference(inIndex + 1);
+						args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
+						parenthesisStartIndex.add(inIndex);
+						inIndex++;
+						parenthesisLevel++;
+						phraseCount = 0;
+						argumentPhrase = "";
+						i++;
+						startIndex++;
+					}
+					else if(phraseCount > 2)
 					{
 						args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
 						phraseCount = 0;
-						argumentPhrase = insertArrayReference(inIndex);
+						if(typesUntilParen == 0)
+						{
+							argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
+							parenthesisLevel--;
+							i++;
+							startIndex++;
+							typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType);
+						}
+						else
+						{
+							argumentPhrase = insertArrayReference(inIndex);
+						}
+
 						inIndex++;
 						threeMode = false;
 					}
 					else if(phraseCount == 2 && !threeMode)
 					{
-						if(!getType(math.charAt(i + 1), type).equals(Type.CLOSEPARENTHESIS))
+						args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
+						phraseCount = 0;
+						if(typesUntilParen == 0)
 						{
-							args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6,
-									argumentPhrase));
-							phraseCount = 0;
-							argumentPhrase = insertArrayReference(inIndex);
-							inIndex++;
+							argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
+							parenthesisLevel--;
+							i++;
+							startIndex++;
+							typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType);
 						}
+						else
+						{
+							argumentPhrase = insertArrayReference(inIndex);
+						}
+						inIndex++;
 					}
 				}
 				lastType = type;
 			}
 		}
+
+		args.trimToSize();
 	}
 
 	private String insertArrayReference(int i)
 	{
-		return "$#" + String.valueOf(i) + "#";
+		return "$#" + String.valueOf(i) + "$";
 	}
 
 	public static Type getType(Character character, Type lastType)
@@ -129,7 +156,6 @@ public class ArgumentManager
 	}
 
 	/**
-	 * 
 	 * @param string
 	 *            The string to search
 	 * @param index
@@ -147,7 +173,7 @@ public class ArgumentManager
 		{
 			Type type = getType(string.charAt(i), lastType);
 			if(type.equals(typeToFind))
-				return differingTypes.size();
+				return differingTypes.size() - 1;
 			if(differingTypes.size() == 0)
 				differingTypes.add(type);
 			else if(!differingTypes.get(differingTypes.size() - 1).equals(type))
