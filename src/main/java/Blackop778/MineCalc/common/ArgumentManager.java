@@ -59,6 +59,7 @@ public class ArgumentManager
 						argumentPhrase = "";
 						i++;
 						startIndex++;
+						typesUntilParen--;
 					}
 					else if(phraseCount > 2)
 					{
