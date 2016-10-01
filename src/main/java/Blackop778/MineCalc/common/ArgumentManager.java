@@ -18,30 +18,34 @@ public class ArgumentManager
 	{
 		math = math.replaceAll("\\s", "");
 		Type lastType = Type.NUMBER;
+		// The index of the start of the current Type
 		int startIndex = 0;
+		// How many layers of parenthesis we're in
 		int parenthesisLevel = 0;
+		// The index at which we increased parenthesis level
 		Stack<Integer> parenthesisStartIndex = new Stack<Integer>();
+		// The current argument we've parsed so far
 		String argumentPhrase = "";
+		// To be implemented
 		int phraseImportanceLevel = 0;
+		// How many phrases are in the argumentPhrase
 		int phraseCount = 0;
+		// Whether or not we should get 3 explicit arguments
 		boolean threeMode = true;
-		int inIndex = 0;
+		// How many Types until a closed parenthesis
 		int typesUntilParen = getTypesUntilTarget(math, 0, Type.CLOSEPARENTHESIS, lastType);
 		for(int i = 0; i <= math.length(); i++)
 		{
+			// We're out of input so we have to take what we've got
 			if(i == math.length())
 			{
 				argumentPhrase += math.substring(startIndex, i);
-				args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
+				args.add(new Argument(args.size() - 1, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
 			}
 			else
 			{
 				Type type = getType(math.charAt(i), lastType);
-				if(type.equals(Type.OPENPARENTHESIS) && lastType.equals(type))
-				{
-					
-				}
-				else if(!type.equals(lastType))
+				if(!type.equals(lastType))
 				{
 					typesUntilParen--;
 					argumentPhrase = argumentPhrase + math.substring(startIndex, i);
@@ -50,10 +54,10 @@ public class ArgumentManager
 					if(type.equals(Type.OPENPARENTHESIS))
 					{
 						threeMode = true;
-						argumentPhrase = argumentPhrase + insertArrayReference(inIndex + 1);
-						args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
-						parenthesisStartIndex.add(inIndex);
-						inIndex++;
+						argumentPhrase = argumentPhrase + insertArrayReference(args.size() - 1 + 1);
+						args.add(new Argument(args.size() - 1, phraseImportanceLevel + parenthesisLevel * 6,
+								argumentPhrase));
+						parenthesisStartIndex.add(args.size() - 1);
 						parenthesisLevel++;
 						phraseCount = 0;
 						argumentPhrase = "";
@@ -63,7 +67,8 @@ public class ArgumentManager
 					}
 					else if(phraseCount > 2)
 					{
-						args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
+						args.add(new Argument(args.size() - 1, phraseImportanceLevel + parenthesisLevel * 6,
+								argumentPhrase));
 						phraseCount = 0;
 						if(typesUntilParen == 0)
 						{
@@ -75,15 +80,15 @@ public class ArgumentManager
 						}
 						else
 						{
-							argumentPhrase = insertArrayReference(inIndex);
+							argumentPhrase = insertArrayReference(args.size() - 1);
 						}
 
-						inIndex++;
 						threeMode = false;
 					}
 					else if(phraseCount == 2 && !threeMode)
 					{
-						args.add(new Argument(inIndex, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
+						args.add(new Argument(args.size() - 1, phraseImportanceLevel + parenthesisLevel * 6,
+								argumentPhrase));
 						phraseCount = 0;
 						if(typesUntilParen == 0)
 						{
@@ -95,9 +100,8 @@ public class ArgumentManager
 						}
 						else
 						{
-							argumentPhrase = insertArrayReference(inIndex);
+							argumentPhrase = insertArrayReference(args.size() - 1);
 						}
-						inIndex++;
 					}
 				}
 				lastType = type;
