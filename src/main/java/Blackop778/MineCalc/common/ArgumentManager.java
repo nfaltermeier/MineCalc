@@ -44,7 +44,8 @@ public class ArgumentManager
 			}
 			else
 			{
-				Type type = getType(math.charAt(i), lastType);
+				char currentChar = math.charAt(i);
+				Type type = getType(currentChar, lastType);
 				if(!type.equals(lastType))
 				{
 					typesUntilParen--;
@@ -182,7 +183,7 @@ public class ArgumentManager
 		{
 			Type type = getType(string.charAt(i), lastType);
 			if(type.equals(typeToFind))
-				return differingTypes.size() - 1;
+				return differingTypes.size();
 			if(differingTypes.size() == 0)
 				differingTypes.add(type);
 			else if(!differingTypes.get(differingTypes.size() - 1).equals(type))
