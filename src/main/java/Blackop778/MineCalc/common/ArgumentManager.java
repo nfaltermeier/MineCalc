@@ -55,8 +55,8 @@ public class ArgumentManager
 					if(type.equals(Type.OPENPARENTHESIS))
 					{
 						threeMode = true;
-						argumentPhrase = argumentPhrase + insertArrayReference(args.size() - 1 + 1);
-						args.add(new Argument(args.size() - 1, phraseImportanceLevel + parenthesisLevel * 6,
+						argumentPhrase = argumentPhrase + insertArrayReference(args.size() + 1);
+						args.add(new Argument(args.size(), phraseImportanceLevel + parenthesisLevel * 6,
 								argumentPhrase));
 						parenthesisStartIndex.add(args.size() - 1);
 						parenthesisLevel++;
@@ -70,7 +70,7 @@ public class ArgumentManager
 					}
 					else if(phraseCount > 2)
 					{
-						args.add(new Argument(args.size() - 1, phraseImportanceLevel + parenthesisLevel * 6,
+						args.add(new Argument(args.size(), phraseImportanceLevel + parenthesisLevel * 6,
 								argumentPhrase));
 						phraseCount = 0;
 						if(typesUntilParen == 0)
@@ -93,7 +93,7 @@ public class ArgumentManager
 					}
 					else if(phraseCount == 2 && !threeMode)
 					{
-						args.add(new Argument(args.size() - 1, phraseImportanceLevel + parenthesisLevel * 6,
+						args.add(new Argument(args.size(), phraseImportanceLevel + parenthesisLevel * 6,
 								argumentPhrase));
 						phraseCount = 0;
 						if(typesUntilParen == 0)
@@ -193,9 +193,13 @@ public class ArgumentManager
 			if(type.equals(typeToFind))
 				return differingTypes.size();
 			if(differingTypes.size() == 0)
+			{
 				differingTypes.add(type);
+			}
 			else if(!differingTypes.get(differingTypes.size() - 1).equals(type))
+			{
 				differingTypes.add(type);
+			}
 		}
 
 		return -1;

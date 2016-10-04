@@ -5,8 +5,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-
 import Blackop778.MineCalc.MineCalc;
+import Blackop778.MineCalc.common.CalcExceptions.DivisionException;
+import Blackop778.MineCalc.common.CalcExceptions.ImaginaryNumberException;
+import Blackop778.MineCalc.common.CalcExceptions.PreviousOutputException;
+import Blackop778.MineCalc.common.CalcExceptions.SymbolException;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -242,7 +245,7 @@ public class Calculate extends CommandBase
 
 	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args,
-			 BlockPos pos)
+			BlockPos pos)
 	{
 		if(args.length % 2 != 1)
 		{
@@ -360,28 +363,4 @@ public class Calculate extends CommandBase
 	{
 		return true;
 	}
-}
-
-@SuppressWarnings("serial")
-class ImaginaryNumberException extends Exception
-{
-
-}
-
-@SuppressWarnings("serial")
-class DivisionException extends Exception
-{
-
-}
-
-@SuppressWarnings("serial")
-class SymbolException extends Exception
-{
-
-}
-
-@SuppressWarnings("serial")
-class PreviousOutputException extends Exception
-{
-
 }
