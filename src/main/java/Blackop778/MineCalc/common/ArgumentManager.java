@@ -65,6 +65,8 @@ public class ArgumentManager
 						i++;
 						startIndex++;
 						typesUntilParen--;
+						currentChar = math.charAt(i);
+						type = getType(currentChar, type);
 					}
 					else if(phraseCount > 2)
 					{
@@ -77,6 +79,9 @@ public class ArgumentManager
 							parenthesisLevel--;
 							i++;
 							startIndex++;
+							currentChar = math.charAt(i);
+							lastType = type;
+							type = getType(currentChar, lastType);
 							typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType);
 						}
 						else
@@ -97,6 +102,9 @@ public class ArgumentManager
 							parenthesisLevel--;
 							i++;
 							startIndex++;
+							currentChar = math.charAt(i);
+							lastType = type;
+							type = getType(currentChar, lastType);
 							typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType);
 						}
 						else
