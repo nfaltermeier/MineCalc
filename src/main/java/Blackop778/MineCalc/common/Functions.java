@@ -19,6 +19,12 @@ public abstract class Functions
 			public double evaluateFunction(double n1, double n2) throws CalcExceptions {
 				return n1 + n2;
 			}
+
+                        @Override
+                        public Type getHandledType()
+                        {
+                            return Type.ADDITION;
+                        }
 		});
 		
 		MineCalc.functions.add(new IFunction(){
@@ -38,6 +44,12 @@ public abstract class Functions
 			public double evaluateFunction(double n1, double n2) throws CalcExceptions {
 				return n1 - n2;
 			}
+
+                        @Override
+                        public Type getHandledType()
+                        {
+                            return Type.SUBTRACTION;
+                        }
 		});
 		
 		MineCalc.functions.add(new IFunction(){
@@ -52,6 +64,12 @@ public abstract class Functions
 			public double evaluateFunction(double n1, double n2) throws CalcExceptions {
 				return n1 * n2;
 			}
+
+                        @Override
+                        public Type getHandledType()
+                        {
+                            return Type.MULTIPLICATION;
+                        }
 		});
 		
 		MineCalc.functions.add(new IFunction(){
@@ -68,6 +86,12 @@ public abstract class Functions
 					throw new CalcExceptions.DivisionException();
 				return n1 / n2;
 			}
+
+                        @Override
+                        public Type getHandledType()
+                        {
+                            return Type.DIVISION;
+                        }
 		});
 		
 		MineCalc.functions.add(new IFunction(){
@@ -84,19 +108,25 @@ public abstract class Functions
 					throw new CalcExceptions.DivisionException();
 				return n1 % n2;
 			}
+
+                        @Override
+                        public Type getHandledType()
+                        {
+                            return Type.MODULO;
+                        }
 		});
 		
 		MineCalc.functions.add(new IFunction(){
 			@Override
 			public Type getType(Character currentChar, Type lastType) {
 				if(currentChar.equals('^'))
-					return Type.EXPONENTROOT;
+					return Type.EXPONENT;
 				return Type.JUNK;
 			}
 
 			@Override
 			public double evaluateFunction(double n1, double n2) throws CalcExceptions {
-				
+				return Math.pow(n1,n2);
 			}
 		});
 	}
