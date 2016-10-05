@@ -1,29 +1,32 @@
 package Blackop778.MineCalc.common;
 
-public class CalcExceptions
+@SuppressWarnings("serial")
+public class CalcExceptions extends Exception
 {
-	@SuppressWarnings("serial")
-	class ImaginaryNumberException extends Exception
+	public static class ImaginaryNumberException extends CalcExceptions
 	{
 
 	}
 
-	@SuppressWarnings("serial")
-	class DivisionException extends Exception
+	public static class DivisionException extends CalcExceptions
 	{
 
 	}
 
-	@SuppressWarnings("serial")
-	class SymbolException extends Exception
+	public static class SymbolException extends CalcExceptions
 	{
 
 	}
 
-	@SuppressWarnings("serial")
-	class PreviousOutputException extends Exception
+	public static class PreviousOutputException extends CalcExceptions
 	{
 
 	}
 
+	// It is encouraged to add a message because that will be displayed to the
+	// user for these Exceptions
+	public static class CustomFunctionException extends CalcExceptions
+	{
+
+	}
 }
