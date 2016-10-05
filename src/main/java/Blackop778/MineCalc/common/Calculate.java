@@ -115,7 +115,7 @@ public class Calculate extends CommandBase
 						double next = getDouble(icommandsender, arguments, i);
 						if(n < 0)
 						{
-							double num = next / next / next;
+							double num = 1 / next;
 							if(num % 2 == 0)
 								throw new ImaginaryNumberException();
 						}

@@ -2,55 +2,33 @@ package Blackop778.MineCalc.common;
 
 import java.util.Comparator;
 
-public class Argument implements Comparator<Argument>
-{
-	private int index;
-	private double importance;
-	private String contents;
+public class Argument implements Comparator<Argument> {
+    public final int index;
+    public final double importance;
+    private String contents;
 
-	public Argument(int index, double importance, String contents)
-	{
-		this.index = index;
-		this.importance = importance;
-		this.contents = contents;
-	}
+    public Argument(int index, double importance, String contents) {
+	this.index = index;
+	this.importance = importance;
+	this.contents = contents;
+    }
 
-	@Override
-	public int compare(Argument o1, Argument o2)
-	{
-		int importanceOrder = o1.getImportance().compareTo(o2.getImportance());
-		if(importanceOrder != 0)
-			return importanceOrder;
-		return -(o1.getIndex().compareTo(o2.getIndex()));
+    @Override
+    public int compare(Argument o1, Argument o2) {
+	int importanceOrder = new Double(o1.importance).compareTo(o2.importance);
+	if (importanceOrder != 0)
+	    return importanceOrder;
+	return -(new Integer(o1.index).compareTo(o2.index));
 
-	}
+    }
 
-	public Integer getIndex()
-	{
-		return new Integer(index);
-	}
+    public String getContents() {
+	return contents;
+    }
 
-	public Double getImportance()
-	{
-		return new Double(importance);
-	}
+    public Argument changeContents(String contents) {
+	this.contents = contents;
 
-	public String getContents()
-	{
-		return contents;
-	}
-
-	public Argument changeImportance(Double importance)
-	{
-		this.importance = importance;
-
-		return this;
-	}
-
-	public Argument changeContents(String contents)
-	{
-		this.contents = contents;
-
-		return this;
-	}
+	return this;
+    }
 }
