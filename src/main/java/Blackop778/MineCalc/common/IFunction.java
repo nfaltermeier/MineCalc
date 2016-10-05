@@ -15,4 +15,6 @@ public interface IFunction
 	public abstract Type getType(Character currentChar, Type lastType);
 
 	public abstract double evaluateFunction(double n1, double n2) throws CalcExceptions;
+
+        public abstract Type getHandledType();
 }
