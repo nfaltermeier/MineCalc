@@ -155,13 +155,13 @@ public class ArgumentManager
 								if(character.equals('-'))
 								{
 									if(lastType.equals(Type.DIVISION))
-										return Type.EXPONENTROOT;
+										return Type.ROOT;
 									return Type.SUBTRACTION;
 								}
 								if(character.equals('+'))
 									return Type.ADDITION;
 								if(character.equals('^'))
-									return Type.EXPONENTROOT;
+									return Type.EXPONENT;
 								return Type.JUNK;
 							}
 						}
@@ -207,7 +207,7 @@ public class ArgumentManager
 
 	public enum Type
 	{
-		NUMBER, OPENPARENTHESIS, CLOSEPARENTHESIS, DIVISION, MULTIPLICATION, ADDITION, SUBTRACTION, EXPONENTROOT, CUSTOMFUNCTION, JUNK, MODULO;
+		NUMBER, OPENPARENTHESIS, CLOSEPARENTHESIS, DIVISION, MULTIPLICATION, ADDITION, SUBTRACTION, EXPONENT, ROOT, CUSTOMFUNCTION, JUNK, MODULO;
 
 	}
 }
