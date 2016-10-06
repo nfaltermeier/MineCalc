@@ -8,28 +8,24 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-public class CommonProxy
-{
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		MCConfig.loadConfig(event.getModConfigurationDirectory());
-	}
+public class CommonProxy {
+    public void preInit(FMLPreInitializationEvent event) {
+	MCConfig.loadConfig(event.getModConfigurationDirectory());
+	Functions.addFunctions();
+    }
 
-	public void load(FMLInitializationEvent event)
-	{
+    public void load(FMLInitializationEvent event) {
 
-	}
+    }
 
-	public void postInit(FMLPostInitializationEvent event)
-	{
+    public void postInit(FMLPostInitializationEvent event) {
 
-	}
+    }
 
-	public void serverStart(FMLServerStartingEvent event)
-	{
-		MinecraftServer server = event.getServer();
-		ICommandManager command = server.getCommandManager();
-		ServerCommandManager manager = (ServerCommandManager) command;
-		manager.registerCommand(new Calculate());
-	}
+    public void serverStart(FMLServerStartingEvent event) {
+	MinecraftServer server = event.getServer();
+	ICommandManager command = server.getCommandManager();
+	ServerCommandManager manager = (ServerCommandManager) command;
+	manager.registerCommand(new Calculate());
+    }
 }

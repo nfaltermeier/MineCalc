@@ -133,5 +133,28 @@ public abstract class Functions {
 		return Type.EXPONENT;
 	    }
 	});
+
+	MineCalc.functions.add(new IFunction() {
+
+	    @Override
+	    public Type getType(Character currentChar, Type lastType) {
+		if (currentChar.equals('-') && lastType.equals(Type.DIVISION))
+		    return Type.ROOT;
+		return Type.JUNK;
+	    }
+
+	    @Override
+	    public double evaluateFunction(double n1, double n2) throws CalcExceptions {
+		if (n1 < 0 && n2 % 2 == 0)
+		    throw new ImaginaryNumberException();
+		return Math.pow(n1, 1 / n2);
+	    }
+
+	    @Override
+	    public Type getHandledType() {
+		return Type.ROOT;
+	    }
+
+	});
     }
 }
