@@ -35,7 +35,7 @@ public class ArgumentManager {
 	    // We're out of input so we have to take what we've got
 	    if (i == math.length()) {
 		argumentPhrase += math.substring(startIndex, i);
-		args.add(new Argument(args.size() - 1, phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
+		args.add(new Argument(args.size(), phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
 	    } else {
 		char currentChar = math.charAt(i);
 		Type type = getType(currentChar, lastType);
@@ -93,6 +93,8 @@ public class ArgumentManager {
 			    argumentPhrase = insertArrayReference(args.size() - 1);
 			}
 		    }
+		} else if (type.equals(Type.OPENPARENTHESIS)) {
+		    argument = 
 		}
 		lastType = type;
 	    }
