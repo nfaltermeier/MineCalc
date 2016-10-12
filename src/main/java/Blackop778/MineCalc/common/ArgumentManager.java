@@ -34,16 +34,22 @@ public class ArgumentManager {
 	for (int i = 0; i <= math.length(); i++) {
 	    // We're out of input so we have to take what we've got
 	    if (i == math.length()) {
-		argumentPhrase += math.substring(startIndex, i);
-		args.add(new Argument(args.size(), phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
+		if (!lastType.equals(Type.CLOSEPARENTHESIS)) {
+		    argumentPhrase += math.substring(startIndex, i);
+		    args.add(new Argument(args.size(), phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
+		}
 	    } else {
 		char currentChar = math.charAt(i);
 		Type type = getType(currentChar, lastType);
 		if (!type.equals(lastType)) {
-		    typesUntilParen--;
-		    argumentPhrase = argumentPhrase + math.substring(startIndex, i);
-		    startIndex = i;
-		    phraseCount++;
+		    if (lastType.equals(Type.CLOSEPARENTHESIS)) {
+			startIndex = i;
+		    } else {
+			typesUntilParen--;
+			argumentPhrase = argumentPhrase + math.substring(startIndex, i);
+			startIndex = i;
+			phraseCount++;
+		    }
 		    if (type.equals(Type.OPENPARENTHESIS)) {
 			threeMode = true;
 			argumentPhrase = argumentPhrase + insertArrayReference(args.size() + 1);
@@ -61,11 +67,6 @@ public class ArgumentManager {
 			if (typesUntilParen == 0) {
 			    argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
 			    parenthesisLevel--;
-			    i++;
-			    startIndex++;
-			    currentChar = math.charAt(i);
-			    lastType = type;
-			    type = getType(currentChar, lastType);
 			    typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType);
 			} else {
 			    argumentPhrase = insertArrayReference(args.size() - 1);
@@ -79,11 +80,6 @@ public class ArgumentManager {
 			if (typesUntilParen == 0) {
 			    argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
 			    parenthesisLevel--;
-			    i++;
-			    startIndex++;
-			    currentChar = math.charAt(i);
-			    lastType = type;
-			    type = getType(currentChar, lastType);
 			    typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType);
 			} else {
 			    argumentPhrase = insertArrayReference(args.size() - 1);
@@ -97,6 +93,9 @@ public class ArgumentManager {
 		    phraseCount = -1;
 		    argumentPhrase = "";
 		    startIndex++;
+		} else if (type.equals(Type.CLOSEPARENTHESIS)) {
+		    argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
+		    parenthesisLevel--;
 		}
 		lastType = type;
 	    }

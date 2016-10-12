@@ -7,7 +7,7 @@ public class Argument implements Comparator<Argument> {
     public final double importance;
     private String contents;
 
-    public Argument(int index, double importance, String contents) {
+    protected Argument(int index, double importance, String contents) {
 	this.index = index;
 	this.importance = importance;
 	this.contents = contents;

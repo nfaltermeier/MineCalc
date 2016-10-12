@@ -1,7 +1,7 @@
 package Blackop778.MineCalc.common;
 
 @SuppressWarnings("serial")
-public class CalcExceptions extends Exception {
+public abstract class CalcExceptions extends Exception {
     public static class ImaginaryNumberException extends CalcExceptions {
 
     }
