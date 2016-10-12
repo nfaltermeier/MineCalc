@@ -51,13 +51,9 @@ public class ArgumentManager {
 				argumentPhrase));
 			parenthesisStartIndex.add(args.size() - 1);
 			parenthesisLevel++;
-			phraseCount = 0;
+			phraseCount = -1;
 			argumentPhrase = "";
-			i++;
 			startIndex++;
-			typesUntilParen--;
-			currentChar = math.charAt(i);
-			type = getType(currentChar, type);
 		    } else if (phraseCount > 2) {
 			args.add(new Argument(args.size(), phraseImportanceLevel + parenthesisLevel * 6,
 				argumentPhrase));
@@ -94,7 +90,13 @@ public class ArgumentManager {
 			}
 		    }
 		} else if (type.equals(Type.OPENPARENTHESIS)) {
-		    argument = 
+		    argumentPhrase = "0+" + insertArrayReference(args.size() + 1);
+		    args.add(new Argument(args.size(), phraseImportanceLevel + parenthesisLevel * 6, argumentPhrase));
+		    parenthesisStartIndex.add(args.size() - 1);
+		    parenthesisLevel++;
+		    phraseCount = -1;
+		    argumentPhrase = "";
+		    startIndex++;
 		}
 		lastType = type;
 	    }
