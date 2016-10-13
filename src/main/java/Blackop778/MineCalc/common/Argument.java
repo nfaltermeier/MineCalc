@@ -2,15 +2,35 @@ package Blackop778.MineCalc.common;
 
 import java.util.Comparator;
 
+import Blackop778.MineCalc.common.ArgumentManager.Type;
+
 public class Argument implements Comparator<Argument> {
     public final int index;
     public final double importance;
-    private String contents;
+    private String firstNumber;
+    private String operator;
+    private String secondNumber;
 
     protected Argument(int index, double importance, String contents) {
 	this.index = index;
 	this.importance = importance;
-	this.contents = contents;
+	int startIndex = 0;
+	Type lastType = Type.NUMBER;
+	for (int i = 0; i < contents.length(); i++) {
+
+	}
+    }
+
+    public void getFirstNumber(Argument preArgument) {
+
+    }
+
+    public String getOperator() {
+	return operator;
+    }
+
+    public void getSecondNumber(Argument postArgument) {
+
     }
 
     @Override
@@ -20,15 +40,5 @@ public class Argument implements Comparator<Argument> {
 	    return importanceOrder;
 	return -(new Integer(o1.index).compareTo(o2.index));
 
-    }
-
-    public String getContents() {
-	return contents;
-    }
-
-    public Argument changeContents(String contents) {
-	this.contents = contents;
-
-	return this;
     }
 }
