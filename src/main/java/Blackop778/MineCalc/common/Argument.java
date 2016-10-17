@@ -2,8 +2,6 @@ package Blackop778.MineCalc.common;
 
 import java.util.Comparator;
 
-import Blackop778.MineCalc.common.ArgumentManager.Type;
-
 public class Argument implements Comparator<Argument> {
     public final int index;
     public final double importance;
@@ -15,10 +13,25 @@ public class Argument implements Comparator<Argument> {
 	this.index = index;
 	this.importance = importance;
 	int startIndex = 0;
-	Type lastType = Type.NUMBER;
+	boolean lastNumber = true;
+	Character lastChar = '7';
 	for (int i = 0; i < contents.length(); i++) {
 
 	}
+    }
+
+    private boolean isNumber(Character character, boolean lastIsNum, Character lastChar) {
+	try {
+	    Double.valueOf(String.valueOf(character));
+	} catch (NumberFormatException e) {
+	    if (character.equals('.') || character.toString().equalsIgnoreCase("l")
+		    || character.toString().equalsIgnoreCase("p") || character.toString().equalsIgnoreCase("i")
+		    || (character.equals('-') && (!lastIsNum && !lastChar.toString().equals("/"))))
+		return true;
+	    else
+		return false;
+	}
+	return true;
     }
 
     public void getFirstNumber(Argument preArgument) {
