@@ -14,9 +14,28 @@ public class Argument implements Comparator<Argument> {
 	this.importance = importance;
 	int startIndex = 0;
 	boolean lastNumber = true;
-	Character lastChar = '7';
-	for (int i = 0; i < contents.length(); i++) {
-
+	int inCount = 0;
+	for (int i = 0; i <= contents.length(); i++) {
+	    if (i == contents.length()) {
+		secondNumber = contents.substring(startIndex, i);
+	    } else {
+		boolean number;
+		if (i == 0) {
+		    number = isNumber(contents.charAt(i), lastNumber, '7');
+		} else {
+		    number = isNumber(contents.charAt(i), lastNumber, contents.charAt(i - 1));
+		}
+		if (number != lastNumber) {
+		    if (inCount == 0) {
+			firstNumber = contents.substring(startIndex, i);
+		    } else if (inCount == 1) {
+			operator = contents.substring(startIndex, i);
+		    }
+		    startIndex = i;
+		    inCount++;
+		    lastNumber = number;
+		}
+	    }
 	}
     }
 
@@ -26,7 +45,8 @@ public class Argument implements Comparator<Argument> {
 	} catch (NumberFormatException e) {
 	    if (character.equals('.') || character.toString().equalsIgnoreCase("l")
 		    || character.toString().equalsIgnoreCase("p") || character.toString().equalsIgnoreCase("i")
-		    || (character.equals('-') && (!lastIsNum && !lastChar.toString().equals("/"))))
+		    || (character.equals('-') && (!lastIsNum && !lastChar.toString().equals("/")))
+		    || character.equals('$') || (character.equals('#') && lastChar.equals('$')))
 		return true;
 	    else
 		return false;
@@ -35,7 +55,9 @@ public class Argument implements Comparator<Argument> {
     }
 
     public void getFirstNumber(Argument preArgument) {
+	if (preArgument == null) {
 
+	}
     }
 
     public String getOperator() {
