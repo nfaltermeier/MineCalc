@@ -1,11 +1,10 @@
 package Blackop778.MineCalc.common;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 import Blackop778.MineCalc.common.CalcExceptions.RecursiveLoopException;
 
-public class Argument implements Comparator<Argument> {
+public class Argument implements Comparable<Argument> {
     public static final int MAXLOOPS = 100;
 
     public final int index;
@@ -71,7 +70,7 @@ public class Argument implements Comparator<Argument> {
 	String numberS = firstNumber.replaceAll("\\$", "");
 	int number = Integer.valueOf(numberS.split("#")[1]);
 
-	return argumentList.get(number).getFirstNumber(argumentList, loopCount++);
+	return argumentList.get(number).getSecondNumber(argumentList, loopCount++);
     }
 
     public String getOperator() {
@@ -90,15 +89,19 @@ public class Argument implements Comparator<Argument> {
 	String numberS = secondNumber.replaceAll("\\$", "");
 	int number = Integer.valueOf(numberS.split("#")[1]);
 
-	return argumentList.get(number).getSecondNumber(argumentList, loopCount++);
+	return argumentList.get(number).getFirstNumber(argumentList, loopCount++);
+    }
+
+    public void updateNumbers(double value) {
+	firstNumber = String.valueOf(value);
+	secondNumber = String.valueOf(value);
     }
 
     @Override
-    public int compare(Argument o1, Argument o2) {
-	int importanceOrder = new Double(o1.importance).compareTo(o2.importance);
+    public int compareTo(Argument other) {
+	int importanceOrder = new Double(importance).compareTo(other.importance);
 	if (importanceOrder != 0)
-	    return importanceOrder;
-	return -(new Integer(o1.index).compareTo(o2.index));
-
+	    return -importanceOrder;
+	return new Integer(index).compareTo(other.index);
     }
 }

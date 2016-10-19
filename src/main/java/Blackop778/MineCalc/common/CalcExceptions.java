@@ -18,7 +18,7 @@ public abstract class CalcExceptions extends Exception {
 
     }
 
-    public static class SymbolException extends CalcExceptions {
+    public static class OperatorException extends CalcExceptions {
 
     }
 
@@ -36,5 +36,19 @@ public abstract class CalcExceptions extends Exception {
 
     public static class RecursiveLoopException extends CalcExceptions {
 
+    }
+
+    /**
+     * Not really an exception but a way to implement the old fancy remainders
+     * functionality
+     */
+    public static class FancyRemainderException extends CalcExceptions {
+	public int numerator;
+	public int denominator;
+
+	public FancyRemainderException(int numerator, int denominator) {
+	    this.numerator = numerator;
+	    this.denominator = denominator;
+	}
     }
 }

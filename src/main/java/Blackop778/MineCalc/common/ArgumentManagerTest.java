@@ -3,7 +3,15 @@ package Blackop778.MineCalc.common;
 public abstract class ArgumentManagerTest {
     public static void main(String[] args) {
 	ArgumentManager manager = new ArgumentManager(false);
-	manager.digest("4+8/3+(45*3+1+(2-1))+1-7*(6-7)");
+	manager.digest("6*6/-2");
+	Functions.addFunctions();
+	double answer = 0;
+	try {
+	    answer = manager.evaluate();
+	} catch (CalcExceptions e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
 	System.exit(0);
     }
 }
