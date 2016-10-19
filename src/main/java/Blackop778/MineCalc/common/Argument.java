@@ -1,8 +1,13 @@
 package Blackop778.MineCalc.common;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
+import Blackop778.MineCalc.common.CalcExceptions.RecursiveLoopException;
+
 public class Argument implements Comparator<Argument> {
+    public static final int MAXLOOPS = 100;
+
     public final int index;
     public final double importance;
     private String firstNumber;
@@ -54,18 +59,38 @@ public class Argument implements Comparator<Argument> {
 	return true;
     }
 
-    public void getFirstNumber(Argument preArgument) {
-	if (preArgument == null) {
+    public String getFirstNumber(ArrayList<Argument> argumentList) throws RecursiveLoopException {
+	return getFirstNumber(argumentList, 1);
+    }
 
-	}
+    public String getFirstNumber(ArrayList<Argument> argumentList, int loopCount) throws RecursiveLoopException {
+	if (!firstNumber.contains("$"))
+	    return firstNumber;
+	if (loopCount == MAXLOOPS)
+	    throw new RecursiveLoopException();
+	String numberS = firstNumber.replaceAll("\\$", "");
+	int number = Integer.valueOf(numberS.split("#")[1]);
+
+	return argumentList.get(number).getFirstNumber(argumentList, loopCount++);
     }
 
     public String getOperator() {
 	return operator;
     }
 
-    public void getSecondNumber(Argument postArgument) {
+    public String getSecondNumber(ArrayList<Argument> argumentList) throws RecursiveLoopException {
+	return getSecondNumber(argumentList, 1);
+    }
 
+    public String getSecondNumber(ArrayList<Argument> argumentList, int loopCount) throws RecursiveLoopException {
+	if (!secondNumber.contains("$"))
+	    return secondNumber;
+	if (loopCount == MAXLOOPS)
+	    throw new RecursiveLoopException();
+	String numberS = secondNumber.replaceAll("\\$", "");
+	int number = Integer.valueOf(numberS.split("#")[1]);
+
+	return argumentList.get(number).getSecondNumber(argumentList, loopCount++);
     }
 
     @Override
