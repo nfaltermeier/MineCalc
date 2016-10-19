@@ -3,7 +3,7 @@ package Blackop778.MineCalc.common;
 public abstract class ArgumentManagerTest {
     public static void main(String[] args) {
 	ArgumentManager manager = new ArgumentManager(false);
-	manager.digest("6*6/-2");
+	manager.digest("36/-2");
 	Functions.addFunctions();
 	double answer = 0;
 	try {

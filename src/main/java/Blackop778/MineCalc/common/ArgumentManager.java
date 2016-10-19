@@ -45,6 +45,8 @@ public class ArgumentManager {
 	    } else {
 		char currentChar = math.charAt(i);
 		Type type = getType(currentChar, lastType);
+		if (type.equals(Type.ROOT))
+		    lastType = type;
 		if (!type.equals(lastType)) {
 		    if (lastType.equals(Type.CLOSEPARENTHESIS)) {
 			startIndex = i;
