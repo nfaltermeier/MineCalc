@@ -12,7 +12,7 @@ public interface IFunction {
      *            the last type we received
      * @return JUNK if not recognized else the appropriate Type
      */
-    public abstract Type getType(Character currentChar, Type lastType);
+    public abstract Type getType(Character currentChar, Character lastCharacter, Type lastType);
 
     /**
      * 

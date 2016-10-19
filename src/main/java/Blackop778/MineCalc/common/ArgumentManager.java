@@ -45,8 +45,9 @@ public class ArgumentManager {
 	    } else {
 		char currentChar = math.charAt(i);
 		Type type = getType(currentChar, lastType);
-		if (type.equals(Type.ROOT))
+		if (type.equals(Type.ROOT)) {
 		    lastType = type;
+		}
 		if (!type.equals(lastType)) {
 		    if (lastType.equals(Type.CLOSEPARENTHESIS)) {
 			startIndex = i;
@@ -125,10 +126,16 @@ public class ArgumentManager {
 	    for (int n = 0; n < MineCalc.functions.size(); n++) {
 		Type type = Type.JUNK;
 		for (int x = 0; x < args[i].getOperator().length(); x++) {
-		    type = MineCalc.functions.get(n).getType(args[i].getOperator().charAt(x), type);
+		    if (x != 0) {
+			type = MineCalc.functions.get(n).getType(args[i].getOperator().charAt(x),
+				args[i].getOperator().charAt(x - 1), type);
+		    } else {
+			type = MineCalc.functions.get(n).getType(args[i].getOperator().charAt(x), '$', type);
+		    }
 		}
-		if (!type.equals(Type.JUNK))
+		if (!type.equals(Type.JUNK)) {
 		    operatorType = type;
+		}
 	    }
 	    if (!operatorType.equals(Type.CUSTOMFUNCTION)) {
 		IFunction handler = null;
@@ -221,5 +228,10 @@ public class ArgumentManager {
     public enum Type {
 	NUMBER, OPENPARENTHESIS, CLOSEPARENTHESIS, DIVISION, MULTIPLICATION, ADDITION, SUBTRACTION, EXPONENT, ROOT, CUSTOMFUNCTION, JUNK, MODULO;
 
+    }
+
+    public class FunctionType {
+	public Type type;
+	public IFunction function;
     }
 }

@@ -9,7 +9,7 @@ public abstract class Functions {
     static void addFunctions() {
 	MineCalc.functions.add(new IFunction() {
 	    @Override
-	    public Type getType(Character currentChar, Type lastType) {
+	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
 		if (currentChar.equals('+'))
 		    return Type.ADDITION;
 		return Type.JUNK;
@@ -28,7 +28,7 @@ public abstract class Functions {
 
 	MineCalc.functions.add(new IFunction() {
 	    @Override
-	    public Type getType(Character currentChar, Type lastType) {
+	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
 		if (currentChar.equals('-')) {
 		    if (lastType.equals(Type.DIVISION))
 			return Type.ROOT;
@@ -51,7 +51,7 @@ public abstract class Functions {
 
 	MineCalc.functions.add(new IFunction() {
 	    @Override
-	    public Type getType(Character currentChar, Type lastType) {
+	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
 		if (currentChar.equals('*') || currentChar.toString().equalsIgnoreCase("x"))
 		    return Type.MULTIPLICATION;
 		return Type.JUNK;
@@ -70,7 +70,7 @@ public abstract class Functions {
 
 	MineCalc.functions.add(new IFunction() {
 	    @Override
-	    public Type getType(Character currentChar, Type lastType) {
+	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
 		if (currentChar.equals('/'))
 		    return Type.DIVISION;
 		return Type.JUNK;
@@ -91,7 +91,7 @@ public abstract class Functions {
 
 	MineCalc.functions.add(new IFunction() {
 	    @Override
-	    public Type getType(Character currentChar, Type lastType) {
+	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
 		if (currentChar.equals('%'))
 		    return Type.MODULO;
 		return Type.JUNK;
@@ -112,7 +112,7 @@ public abstract class Functions {
 
 	MineCalc.functions.add(new IFunction() {
 	    @Override
-	    public Type getType(Character currentChar, Type lastType) {
+	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
 		if (currentChar.equals('^'))
 		    return Type.EXPONENT;
 		return Type.JUNK;
@@ -137,7 +137,7 @@ public abstract class Functions {
 	MineCalc.functions.add(new IFunction() {
 
 	    @Override
-	    public Type getType(Character currentChar, Type lastType) {
+	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
 		if (currentChar.equals('-') && lastType.equals(Type.DIVISION))
 		    return Type.ROOT;
 		return Type.JUNK;
