@@ -34,6 +34,8 @@ public class ArgumentManager {
 	boolean threeMode = true;
 	// How many Types until a closed parenthesis
 	int typesUntilParen = getTypesUntilTarget(math, 0, Type.CLOSEPARENTHESIS, lastType);
+	// The FunctionType for this argument
+	FunctionType argumentType;
 	for (int i = 0; i <= math.length(); i++) {
 	    // We're out of input so we have to take what we've got
 	    if (i == math.length()) {
@@ -44,11 +46,16 @@ public class ArgumentManager {
 		}
 	    } else {
 		char currentChar = math.charAt(i);
-		Type type = getType(currentChar, lastType);
-		if (type.equals(Type.ROOT)) {
-		    lastType = type;
+		char lastChar;
+		if (i < 0)
+		    lastChar = math.charAt(i - 1);
+		else
+		    lastChar = '$';
+		FunctionType functionType = getType(currentChar, lastChar, lastType);
+		if (functionType.type.equals(Type.ROOT)) {
+		    lastType = functionType.type;
 		}
-		if (!type.equals(lastType)) {
+		if (!functionType.type.equals(lastType)) {
 		    if (lastType.equals(Type.CLOSEPARENTHESIS)) {
 			startIndex = i;
 		    } else {
@@ -57,7 +64,10 @@ public class ArgumentManager {
 			startIndex = i;
 			phraseCount++;
 		    }
-		    if (type.equals(Type.OPENPARENTHESIS)) {
+		    if (phraseCount == 2) {
+			argumentType = functionType;
+		    }
+		    if (functionType.type.equals(Type.OPENPARENTHESIS)) {
 			threeMode = true;
 			argumentPhrase = argumentPhrase + insertArrayReference(arguments.size() + 1);
 			arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
@@ -92,7 +102,7 @@ public class ArgumentManager {
 			    argumentPhrase = insertArrayReference(arguments.size() - 1);
 			}
 		    }
-		} else if (type.equals(Type.OPENPARENTHESIS)) {
+		} else if (functionType.type.equals(Type.OPENPARENTHESIS)) {
 		    argumentPhrase = "0+" + insertArrayReference(arguments.size() + 1);
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
 			    argumentPhrase));
@@ -101,11 +111,11 @@ public class ArgumentManager {
 		    phraseCount = -1;
 		    argumentPhrase = "";
 		    startIndex++;
-		} else if (type.equals(Type.CLOSEPARENTHESIS)) {
+		} else if (functionType.type.equals(Type.CLOSEPARENTHESIS)) {
 		    argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
 		    parenthesisLevel--;
 		}
-		lastType = type;
+		lastType = functionType.type;
 	    }
 	}
 
@@ -122,11 +132,11 @@ public class ArgumentManager {
 	Argument[] args = arguments.toArray(new Argument[0]);
 	Arrays.sort(args);
 	for (int i = 0; i < args.length; i++) {
-	    
-		double answer = args[i]..evaluateFunction(Double.valueOf(args[i].getFirstNumber(arguments)),
-			Double.valueOf(args[i].getSecondNumber(arguments)));
-		args[i].updateNumbers(answer);
-	    
+
+	    double answer = args[i].function.evaluateFunction(Double.valueOf(args[i].getFirstNumber(arguments)),
+		    Double.valueOf(args[i].getSecondNumber(arguments)));
+	    args[i].updateNumbers(answer);
+
 	}
 	return Double.valueOf(args[args.length - 1].getSecondNumber(arguments));
     }
@@ -149,12 +159,14 @@ public class ArgumentManager {
 		    || character.toString().equalsIgnoreCase("p") || character.toString().equalsIgnoreCase("i")
 		    || (character.equals('-') && (!lastType.equals(Type.NUMBER) && !lastType.equals(Type.DIVISION))))
 		return new FunctionType(null, Type.NUMBER);
+	    FunctionType toReturn = new FunctionType(null, Type.JUNK);
 	    for (int i = 0; i < MineCalc.functions.size(); i++) {
 		FunctionType possible = MineCalc.functions.get(i).getType(character, lastCharacter, lastType);
+		if (toReturn.type.compareTo(possible.type) > 0)
+		    toReturn = possible;
 	    }
+	    return toReturn;
 	}
-
-	return new FunctionType(null, Type.JUNK);
     }
 
     /**

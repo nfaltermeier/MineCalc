@@ -13,9 +13,10 @@ public class Argument implements Comparable<Argument> {
     public final IFunction function;
     private String secondNumber;
 
-    protected Argument(int index, double importance, String contents) {
+    protected Argument(int index, double importance, String contents, IFunction function) {
 	this.index = index;
 	this.importance = importance;
+	this.function = function;
 	int startIndex = 0;
 	boolean lastNumber = true;
 	int inCount = 0;
@@ -32,8 +33,6 @@ public class Argument implements Comparable<Argument> {
 		if (number != lastNumber) {
 		    if (inCount == 0) {
 			firstNumber = contents.substring(startIndex, i);
-		    } else if (inCount == 1) {
-			operator = contents.substring(startIndex, i);
 		    }
 		    startIndex = i;
 		    inCount++;
@@ -71,10 +70,6 @@ public class Argument implements Comparable<Argument> {
 	int number = Integer.valueOf(numberS.split("#")[1]);
 
 	return argumentList.get(number).getSecondNumber(argumentList, loopCount++);
-    }
-
-    public String getOperator() {
-	return operator;
     }
 
     public String getSecondNumber(ArrayList<Argument> argumentList) throws RecursiveLoopException {
