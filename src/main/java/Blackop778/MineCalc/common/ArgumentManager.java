@@ -122,35 +122,11 @@ public class ArgumentManager {
 	Argument[] args = arguments.toArray(new Argument[0]);
 	Arrays.sort(args);
 	for (int i = 0; i < args.length; i++) {
-	    Type operatorType = Type.JUNK;
-	    for (int n = 0; n < MineCalc.functions.size(); n++) {
-		Type type = Type.JUNK;
-		for (int x = 0; x < args[i].getOperator().length(); x++) {
-		    if (x != 0) {
-			type = MineCalc.functions.get(n).getType(args[i].getOperator().charAt(x),
-				args[i].getOperator().charAt(x - 1), type);
-		    } else {
-			type = MineCalc.functions.get(n).getType(args[i].getOperator().charAt(x), '$', type);
-		    }
-		}
-		if (!type.equals(Type.JUNK)) {
-		    operatorType = type;
-		}
-	    }
-	    if (!operatorType.equals(Type.CUSTOMFUNCTION)) {
-		IFunction handler = null;
-		handlerSearch: for (int n = 0; n < MineCalc.functions.size(); n++) {
-		    if (operatorType.equals(MineCalc.functions.get(n).getHandledType())) {
-			handler = MineCalc.functions.get(n);
-			break handlerSearch;
-		    }
-		}
-		double answer = handler.evaluateFunction(Double.valueOf(args[i].getFirstNumber(arguments)),
+	    
+		double answer = args[i]..evaluateFunction(Double.valueOf(args[i].getFirstNumber(arguments)),
 			Double.valueOf(args[i].getSecondNumber(arguments)));
 		args[i].updateNumbers(answer);
-	    } else {
-
-	    }
+	    
 	}
 	return Double.valueOf(args[args.length - 1].getSecondNumber(arguments));
     }
@@ -160,42 +136,25 @@ public class ArgumentManager {
     }
 
     // TODO: Use IFunction list to get types instead
-    public static Type getType(Character character, Type lastType) {
+    public static FunctionType getType(Character character, Character lastCharacter, Type lastType) {
 	if (character.equals('('))
-	    return Type.OPENPARENTHESIS;
+	    return new FunctionType(null, Type.OPENPARENTHESIS);
 	if (character.equals(')'))
-	    return Type.CLOSEPARENTHESIS;
-	if (!character.equals('.')) {
-	    if (!character.toString().equalsIgnoreCase("l")) {
-		if (!character.toString().equalsIgnoreCase("p")) {
-		    if (!character.toString().equalsIgnoreCase("i")) {
-			if (!(character.equals('-')
-				&& (!lastType.equals(Type.NUMBER) && !lastType.equals(Type.DIVISION)))) {
-			    try {
-				Double.valueOf(String.valueOf(character));
-			    } catch (NumberFormatException e) {
-				if (character.equals('/'))
-				    return Type.DIVISION;
-				if (character.equals('*') || character.toString().equalsIgnoreCase("X"))
-				    return Type.MULTIPLICATION;
-				if (character.equals('-')) {
-				    if (lastType.equals(Type.DIVISION))
-					return Type.ROOT;
-				    return Type.SUBTRACTION;
-				}
-				if (character.equals('+'))
-				    return Type.ADDITION;
-				if (character.equals('^'))
-				    return Type.EXPONENT;
-				return Type.JUNK;
-			    }
-			}
-		    }
-		}
+	    return new FunctionType(null, Type.CLOSEPARENTHESIS);
+	try {
+	    Double.valueOf(String.valueOf(character));
+	    return new FunctionType(null, Type.NUMBER);
+	} catch (NumberFormatException e) {
+	    if (character.equals('.') || character.toString().equalsIgnoreCase("l")
+		    || character.toString().equalsIgnoreCase("p") || character.toString().equalsIgnoreCase("i")
+		    || (character.equals('-') && (!lastType.equals(Type.NUMBER) && !lastType.equals(Type.DIVISION))))
+		return new FunctionType(null, Type.NUMBER);
+	    for (int i = 0; i < MineCalc.functions.size(); i++) {
+		FunctionType possible = MineCalc.functions.get(i).getType(character, lastCharacter, lastType);
 	    }
 	}
 
-	return Type.NUMBER;
+	return new FunctionType(null, Type.JUNK);
     }
 
     /**
@@ -226,12 +185,16 @@ public class ArgumentManager {
     }
 
     public enum Type {
-	NUMBER, OPENPARENTHESIS, CLOSEPARENTHESIS, DIVISION, MULTIPLICATION, ADDITION, SUBTRACTION, EXPONENT, ROOT, CUSTOMFUNCTION, JUNK, MODULO;
-
+	JUNK, CUSTOMFUNCTION, ADDITION, SUBTRACTION, DIVISION, MODULO, MULTIPLICATION, EXPONENT, ROOT, NUMBER, OPENPARENTHESIS, CLOSEPARENTHESIS;
     }
 
-    public class FunctionType {
+    public static class FunctionType {
 	public Type type;
 	public IFunction function;
+
+	public FunctionType(IFunction function, Type type) {
+	    this.type = type;
+	    this.function = function;
+	}
     }
 }

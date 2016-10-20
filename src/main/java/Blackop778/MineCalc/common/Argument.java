@@ -10,7 +10,7 @@ public class Argument implements Comparable<Argument> {
     public final int index;
     public final double importance;
     private String firstNumber;
-    private String operator;
+    public final IFunction function;
     private String secondNumber;
 
     protected Argument(int index, double importance, String contents) {

@@ -1,6 +1,7 @@
 package Blackop778.MineCalc.common;
 
 import Blackop778.MineCalc.MineCalc;
+import Blackop778.MineCalc.common.ArgumentManager.FunctionType;
 import Blackop778.MineCalc.common.ArgumentManager.Type;
 import Blackop778.MineCalc.common.CalcExceptions.DivisionException;
 import Blackop778.MineCalc.common.CalcExceptions.ImaginaryNumberException;
@@ -9,71 +10,53 @@ public abstract class Functions {
     static void addFunctions() {
 	MineCalc.functions.add(new IFunction() {
 	    @Override
-	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
+	    public FunctionType getType(Character currentChar, Character lastCharacter, Type lastType) {
 		if (currentChar.equals('+'))
-		    return Type.ADDITION;
-		return Type.JUNK;
+		    return new FunctionType(this, Type.ADDITION);
+		return new FunctionType(null, Type.JUNK);
 	    }
 
 	    @Override
 	    public double evaluateFunction(double n1, double n2) throws CalcExceptions {
 		return n1 + n2;
 	    }
-
-	    @Override
-	    public Type getHandledType() {
-		return Type.ADDITION;
-	    }
 	});
 
 	MineCalc.functions.add(new IFunction() {
 	    @Override
-	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
-		if (currentChar.equals('-')) {
-		    if (lastType.equals(Type.DIVISION))
-			return Type.ROOT;
-		    return Type.DIVISION;
-		}
+	    public FunctionType getType(Character currentChar, Character lastCharacter, Type lastType) {
+		if (currentChar.equals('-'))
+		    return new FunctionType(this, Type.SUBTRACTION);
 
-		return Type.JUNK;
+		return new FunctionType(null, Type.JUNK);
 	    }
 
 	    @Override
 	    public double evaluateFunction(double n1, double n2) throws CalcExceptions {
 		return n1 - n2;
 	    }
-
-	    @Override
-	    public Type getHandledType() {
-		return Type.SUBTRACTION;
-	    }
 	});
 
 	MineCalc.functions.add(new IFunction() {
 	    @Override
-	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
+	    public FunctionType getType(Character currentChar, Character lastCharacter, Type lastType) {
 		if (currentChar.equals('*') || currentChar.toString().equalsIgnoreCase("x"))
-		    return Type.MULTIPLICATION;
-		return Type.JUNK;
+		    return new FunctionType(this, Type.MULTIPLICATION);
+		return new FunctionType(null, Type.JUNK);
 	    }
 
 	    @Override
 	    public double evaluateFunction(double n1, double n2) throws CalcExceptions {
 		return n1 * n2;
 	    }
-
-	    @Override
-	    public Type getHandledType() {
-		return Type.MULTIPLICATION;
-	    }
 	});
 
 	MineCalc.functions.add(new IFunction() {
 	    @Override
-	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
+	    public FunctionType getType(Character currentChar, Character lastCharacter, Type lastType) {
 		if (currentChar.equals('/'))
-		    return Type.DIVISION;
-		return Type.JUNK;
+		    return new FunctionType(this, Type.DIVISION);
+		return new FunctionType(null, Type.JUNK);
 	    }
 
 	    @Override
@@ -82,19 +65,14 @@ public abstract class Functions {
 		    throw new DivisionException();
 		return n1 / n2;
 	    }
-
-	    @Override
-	    public Type getHandledType() {
-		return Type.DIVISION;
-	    }
 	});
 
 	MineCalc.functions.add(new IFunction() {
 	    @Override
-	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
+	    public FunctionType getType(Character currentChar, Character lastCharacter, Type lastType) {
 		if (currentChar.equals('%'))
-		    return Type.MODULO;
-		return Type.JUNK;
+		    return new FunctionType(this, Type.MODULO);
+		return new FunctionType(null, Type.JUNK);
 	    }
 
 	    @Override
@@ -103,19 +81,14 @@ public abstract class Functions {
 		    throw new DivisionException();
 		return n1 % n2;
 	    }
-
-	    @Override
-	    public Type getHandledType() {
-		return Type.MODULO;
-	    }
 	});
 
 	MineCalc.functions.add(new IFunction() {
 	    @Override
-	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
+	    public FunctionType getType(Character currentChar, Character lastCharacter, Type lastType) {
 		if (currentChar.equals('^'))
-		    return Type.EXPONENT;
-		return Type.JUNK;
+		    return new FunctionType(this, Type.EXPONENT);
+		return new FunctionType(null, Type.JUNK);
 	    }
 
 	    @Override
@@ -127,20 +100,15 @@ public abstract class Functions {
 		}
 		return Math.pow(n1, n2);
 	    }
-
-	    @Override
-	    public Type getHandledType() {
-		return Type.EXPONENT;
-	    }
 	});
 
 	MineCalc.functions.add(new IFunction() {
 
 	    @Override
-	    public Type getType(Character currentChar, Character lastCharacter, Type lastType) {
-		if (currentChar.equals('-') && lastType.equals(Type.DIVISION))
-		    return Type.ROOT;
-		return Type.JUNK;
+	    public FunctionType getType(Character currentChar, Character lastCharacter, Type lastType) {
+		if (currentChar.equals('-') && lastCharacter.equals('/'))
+		    return new FunctionType(this, Type.ROOT);
+		return new FunctionType(null, Type.JUNK);
 	    }
 
 	    @Override
@@ -149,12 +117,6 @@ public abstract class Functions {
 		    throw new ImaginaryNumberException();
 		return Math.pow(n1, 1 / n2);
 	    }
-
-	    @Override
-	    public Type getHandledType() {
-		return Type.ROOT;
-	    }
-
 	});
     }
 }
