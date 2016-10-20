@@ -35,19 +35,19 @@ public class ArgumentManager {
 	// How many Types until a closed parenthesis
 	int typesUntilParen = getTypesUntilTarget(math, 0, Type.CLOSEPARENTHESIS, lastType);
 	// The FunctionType for this argument
-	FunctionType argumentType;
+	FunctionType argumentType = null;
 	for (int i = 0; i <= math.length(); i++) {
 	    // We're out of input so we have to take what we've got
 	    if (i == math.length()) {
 		if (!lastType.equals(Type.CLOSEPARENTHESIS)) {
 		    argumentPhrase += math.substring(startIndex, i);
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-			    argumentPhrase));
+			    argumentPhrase, argumentType.function));
 		}
 	    } else {
 		char currentChar = math.charAt(i);
 		char lastChar;
-		if (i < 0)
+		if (i > 0)
 		    lastChar = math.charAt(i - 1);
 		else
 		    lastChar = '$';
@@ -71,7 +71,7 @@ public class ArgumentManager {
 			threeMode = true;
 			argumentPhrase = argumentPhrase + insertArrayReference(arguments.size() + 1);
 			arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-				argumentPhrase));
+				argumentPhrase, argumentType.function));
 			parenthesisStartIndex.add(arguments.size() - 1);
 			parenthesisLevel++;
 			phraseCount = -1;
@@ -79,7 +79,7 @@ public class ArgumentManager {
 			startIndex++;
 		    } else if (phraseCount > 2) {
 			arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-				argumentPhrase));
+				argumentPhrase, argumentType.function));
 			phraseCount = 0;
 			if (typesUntilParen == 0) {
 			    argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
@@ -92,7 +92,7 @@ public class ArgumentManager {
 			threeMode = false;
 		    } else if (phraseCount == 2 && !threeMode) {
 			arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-				argumentPhrase));
+				argumentPhrase, argumentType.function));
 			phraseCount = 0;
 			if (typesUntilParen == 0) {
 			    argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
@@ -105,7 +105,7 @@ public class ArgumentManager {
 		} else if (functionType.type.equals(Type.OPENPARENTHESIS)) {
 		    argumentPhrase = "0+" + insertArrayReference(arguments.size() + 1);
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-			    argumentPhrase));
+			    argumentPhrase, argumentType.function));
 		    parenthesisStartIndex.add(arguments.size() - 1);
 		    parenthesisLevel++;
 		    phraseCount = -1;
@@ -183,7 +183,11 @@ public class ArgumentManager {
     public static int getTypesUntilTarget(String string, int index, Type typeToFind, Type lastType) {
 	ArrayList<Type> differingTypes = new ArrayList<Type>();
 	for (int i = index; i < string.length(); i++) {
-	    Type type = getType(string.charAt(i), lastType);
+	    Type type;
+	    if (i < 0)
+		type = getType(string.charAt(i), string.charAt(i - 1), lastType).type;
+	    else
+		type = getType(string.charAt(i), '$', lastType).type;
 	    if (type.equals(typeToFind))
 		return differingTypes.size();
 	    if (differingTypes.size() == 0) {
