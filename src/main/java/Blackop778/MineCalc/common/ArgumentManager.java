@@ -15,6 +15,12 @@ public class ArgumentManager {
 	this.useOOPS = useOOPS;
     }
 
+    /**
+     * Ensure that all the IFunctions have been added to the ArrayList before
+     * executing
+     * 
+     * @param math
+     */
     public void digest(String math) {
 	math = math.replaceAll("\\s", "");
 	Type lastType = Type.NUMBER;
@@ -132,7 +138,6 @@ public class ArgumentManager {
 	Argument[] args = arguments.toArray(new Argument[0]);
 	Arrays.sort(args);
 	for (int i = 0; i < args.length; i++) {
-
 	    double answer = args[i].function.evaluateFunction(Double.valueOf(args[i].getFirstNumber(arguments)),
 		    Double.valueOf(args[i].getSecondNumber(arguments)));
 	    args[i].updateNumbers(answer);
