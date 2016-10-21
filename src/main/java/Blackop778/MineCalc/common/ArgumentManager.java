@@ -67,6 +67,8 @@ public class ArgumentManager {
 			startIndex = i;
 			phraseCount++;
 		    }
+		    if (!functionType.type.equals(Type.NUMBER) && !lastType.type.equals(Type.NUMBER))
+			phraseCount--;
 		    if (phraseCount == 2) {
 			argumentType = lastType;
 		    }
