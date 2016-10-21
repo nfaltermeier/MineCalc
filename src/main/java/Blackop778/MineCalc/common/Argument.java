@@ -48,8 +48,8 @@ public class Argument implements Comparable<Argument> {
 	} catch (NumberFormatException e) {
 	    if (character.equals('.') || character.toString().equalsIgnoreCase("l")
 		    || character.toString().equalsIgnoreCase("p") || character.toString().equalsIgnoreCase("i")
-		    || (character.equals('-') && (!lastIsNum && !lastChar.toString().equals("/")))
-		    || character.equals('$') || (character.equals('#') && lastChar.equals('$')))
+		    || (character.equals('-') && (!lastIsNum && !lastChar.equals('/'))) || character.equals('$')
+		    || (character.equals('#') && lastChar.equals('$')))
 		return true;
 	    else
 		return false;

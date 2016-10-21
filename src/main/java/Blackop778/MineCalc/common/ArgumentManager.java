@@ -23,7 +23,7 @@ public class ArgumentManager {
      */
     public void digest(String math) {
 	math = math.replaceAll("\\s", "");
-	Type lastType = Type.NUMBER;
+	FunctionType lastType = new FunctionType(null, Type.NUMBER);
 	// The index of the start of the current Type
 	int startIndex = 0;
 	// How many layers of parenthesis we're in
@@ -39,13 +39,13 @@ public class ArgumentManager {
 	// Whether or not we should get 3 explicit arguments
 	boolean threeMode = true;
 	// How many Types until a closed parenthesis
-	int typesUntilParen = getTypesUntilTarget(math, 0, Type.CLOSEPARENTHESIS, lastType);
+	int typesUntilParen = getTypesUntilTarget(math, 0, Type.CLOSEPARENTHESIS, lastType.type);
 	// The FunctionType for this argument
 	FunctionType argumentType = null;
 	for (int i = 0; i <= math.length(); i++) {
 	    // We're out of input so we have to take what we've got
 	    if (i == math.length()) {
-		if (!lastType.equals(Type.CLOSEPARENTHESIS)) {
+		if (!lastType.type.equals(Type.CLOSEPARENTHESIS)) {
 		    argumentPhrase += math.substring(startIndex, i);
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
 			    argumentPhrase, argumentType.function));
@@ -57,12 +57,9 @@ public class ArgumentManager {
 		    lastChar = math.charAt(i - 1);
 		else
 		    lastChar = '$';
-		FunctionType functionType = getType(currentChar, lastChar, lastType);
-		if (functionType.type.equals(Type.ROOT)) {
-		    lastType = functionType.type;
-		}
-		if (!functionType.type.equals(lastType)) {
-		    if (lastType.equals(Type.CLOSEPARENTHESIS)) {
+		FunctionType functionType = getType(currentChar, lastChar, lastType.type);
+		if (!functionType.type.equals(lastType.type)) {
+		    if (lastType.type.equals(Type.CLOSEPARENTHESIS)) {
 			startIndex = i;
 		    } else {
 			typesUntilParen--;
@@ -71,7 +68,7 @@ public class ArgumentManager {
 			phraseCount++;
 		    }
 		    if (phraseCount == 2) {
-			argumentType = functionType;
+			argumentType = lastType;
 		    }
 		    if (functionType.type.equals(Type.OPENPARENTHESIS)) {
 			threeMode = true;
@@ -90,7 +87,7 @@ public class ArgumentManager {
 			if (typesUntilParen == 0) {
 			    argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
 			    parenthesisLevel--;
-			    typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType);
+			    typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType.type);
 			} else {
 			    argumentPhrase = insertArrayReference(arguments.size() - 1);
 			}
@@ -103,7 +100,7 @@ public class ArgumentManager {
 			if (typesUntilParen == 0) {
 			    argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
 			    parenthesisLevel--;
-			    typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType);
+			    typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType.type);
 			} else {
 			    argumentPhrase = insertArrayReference(arguments.size() - 1);
 			}
@@ -121,7 +118,7 @@ public class ArgumentManager {
 		    argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
 		    parenthesisLevel--;
 		}
-		lastType = functionType.type;
+		lastType = functionType;
 	    }
 	}
 
@@ -167,7 +164,7 @@ public class ArgumentManager {
 	    FunctionType toReturn = new FunctionType(null, Type.JUNK);
 	    for (int i = 0; i < MineCalc.functions.size(); i++) {
 		FunctionType possible = MineCalc.functions.get(i).getType(character, lastCharacter, lastType);
-		if (toReturn.type.compareTo(possible.type) > 0)
+		if (toReturn.type.compareTo(possible.type) < 0)
 		    toReturn = possible;
 	    }
 	    return toReturn;
