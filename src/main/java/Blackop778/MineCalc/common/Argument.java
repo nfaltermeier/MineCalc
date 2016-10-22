@@ -12,11 +12,13 @@ public class Argument implements Comparable<Argument> {
     private String firstNumber;
     public final IFunction function;
     private String secondNumber;
+    public final String contents;
 
     protected Argument(int index, double importance, String contents, IFunction function) {
 	this.index = index;
 	this.importance = importance;
 	this.function = function;
+	this.contents = contents;
 	int startIndex = 0;
 	boolean lastNumber = true;
 	int inCount = 0;

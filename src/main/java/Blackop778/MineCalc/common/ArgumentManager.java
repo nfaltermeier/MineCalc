@@ -59,17 +59,16 @@ public class ArgumentManager {
 		    lastChar = '$';
 		FunctionType functionType = getType(currentChar, lastChar, lastType.type);
 		if (!functionType.type.equals(lastType.type)) {
-		    if (lastType.type.equals(Type.CLOSEPARENTHESIS)) {
-			startIndex = i;
-		    } else {
-			typesUntilParen--;
-			argumentPhrase = argumentPhrase + math.substring(startIndex, i);
-			startIndex = i;
-			phraseCount++;
-		    }
-		    if (!functionType.type.equals(Type.NUMBER) && !lastType.type.equals(Type.NUMBER))
+
+		    typesUntilParen--;
+		    argumentPhrase = argumentPhrase + math.substring(startIndex, i);
+		    startIndex = i;
+		    phraseCount++;
+
+		    if (!functionType.type.equals(Type.NUMBER) && !lastType.type.equals(Type.NUMBER)
+			    && !functionType.type.equals(Type.OPENPARENTHESIS))
 			phraseCount--;
-		    if (phraseCount == 2) {
+		    if ((phraseCount == 2 && threeMode) || (phraseCount == 1 && !threeMode)) {
 			argumentType = lastType;
 		    }
 		    if (functionType.type.equals(Type.OPENPARENTHESIS)) {
@@ -119,6 +118,7 @@ public class ArgumentManager {
 		} else if (functionType.type.equals(Type.CLOSEPARENTHESIS)) {
 		    argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
 		    parenthesisLevel--;
+		    startIndex = i;
 		}
 		lastType = functionType;
 	    }
