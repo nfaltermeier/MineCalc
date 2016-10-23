@@ -107,9 +107,15 @@ public class ArgumentManager {
 			}
 		    }
 		} else if (functionType.type.equals(Type.OPENPARENTHESIS)) {
-		    argumentPhrase = "0+" + insertArrayReference(arguments.size() + 1);
+		    for (int n = 0; n < MineCalc.functions.size(); n++) {
+			FunctionType typ = MineCalc.functions.get(i).getType('+', '$', Type.NUMBER);
+			if (typ.type.equals(Type.ADDITION)) {
+			    argumentType = typ;
+			    break;
+			}
+		    }
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-			    argumentPhrase, argumentType.function));
+			    "0+" + insertArrayReference(arguments.size() + 1), argumentType.function));
 		    parenthesisStartIndex.add(arguments.size() - 1);
 		    parenthesisLevel++;
 		    phraseCount = -1;
@@ -202,6 +208,10 @@ public class ArgumentManager {
 	}
 
 	return -1;
+    }
+
+    public void clear() {
+	arguments = new ArrayList<Argument>();
     }
 
     public enum Type {
