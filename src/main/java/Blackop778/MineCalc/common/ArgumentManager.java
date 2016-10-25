@@ -155,7 +155,7 @@ public class ArgumentManager {
 			.floor(getArgumentFromIndex(args[i].index + 1).importance / 6)) {
 		    int index = parenthesisStart.pop();
 		    if (index != args[i].index)
-			args[index].updateNumbers(insertArrayReference(i));
+			args[index].updateNumbers(insertArrayReference(args[i].index));
 		}
 
 	}
