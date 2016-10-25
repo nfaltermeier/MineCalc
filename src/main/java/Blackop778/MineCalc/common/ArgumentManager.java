@@ -22,7 +22,9 @@ public class ArgumentManager {
      * @param math
      */
     public void digest(String math) {
+	// Clean the input
 	math = math.replaceAll("\\s", "");
+	math = math.replaceAll("\\$", "");
 	FunctionType lastType = new FunctionType(null, Type.NUMBER);
 	// The index of the start of the current Type
 	int startIndex = 0;
@@ -41,41 +43,36 @@ public class ArgumentManager {
 	// How many Types until a closed parenthesis
 	int typesUntilParen = getTypesUntilTarget(math, 0, Type.CLOSEPARENTHESIS, lastType.type);
 	// The FunctionType for this argument
-	FunctionType argumentType = null;
+	IFunction argumentFunction = null;
+	char lastChar = '$';
 	for (int i = 0; i <= math.length(); i++) {
 	    // We're out of input so we have to take what we've got
 	    if (i == math.length()) {
 		if (!lastType.type.equals(Type.CLOSEPARENTHESIS)) {
 		    argumentPhrase += math.substring(startIndex, i);
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-			    argumentPhrase, argumentType.function));
+			    argumentPhrase, argumentFunction));
 		}
 	    } else {
+		// TODO: Remove for release
 		char currentChar = math.charAt(i);
-		char lastChar;
-		if (i > 0)
-		    lastChar = math.charAt(i - 1);
-		else
-		    lastChar = '$';
 		FunctionType functionType = getType(currentChar, lastChar, lastType.type);
 		if (!functionType.type.equals(lastType.type)) {
-
 		    typesUntilParen--;
 		    argumentPhrase = argumentPhrase + math.substring(startIndex, i);
 		    startIndex = i;
 		    phraseCount++;
-
 		    if (!functionType.type.equals(Type.NUMBER) && !lastType.type.equals(Type.NUMBER)
 			    && !functionType.type.equals(Type.OPENPARENTHESIS))
 			phraseCount--;
 		    if ((phraseCount == 2 && threeMode) || (phraseCount == 1 && !threeMode)) {
-			argumentType = lastType;
+			argumentFunction = lastType.function;
 		    }
 		    if (functionType.type.equals(Type.OPENPARENTHESIS)) {
 			threeMode = true;
 			argumentPhrase = argumentPhrase + insertArrayReference(arguments.size() + 1);
 			arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-				argumentPhrase, argumentType.function));
+				argumentPhrase, argumentFunction));
 			parenthesisStartIndex.add(arguments.size() - 1);
 			parenthesisLevel++;
 			phraseCount = -1;
@@ -83,7 +80,7 @@ public class ArgumentManager {
 			startIndex++;
 		    } else if (phraseCount > 2) {
 			arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-				argumentPhrase, argumentType.function));
+				argumentPhrase, argumentFunction));
 			phraseCount = 0;
 			if (typesUntilParen == 0) {
 			    argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
@@ -96,7 +93,7 @@ public class ArgumentManager {
 			threeMode = false;
 		    } else if (phraseCount == 2 && !threeMode) {
 			arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-				argumentPhrase, argumentType.function));
+				argumentPhrase, argumentFunction));
 			phraseCount = 0;
 			if (typesUntilParen == 0) {
 			    argumentPhrase = insertArrayReference(parenthesisStartIndex.pop());
@@ -108,14 +105,14 @@ public class ArgumentManager {
 		    }
 		} else if (functionType.type.equals(Type.OPENPARENTHESIS)) {
 		    for (int n = 0; n < MineCalc.functions.size(); n++) {
-			FunctionType typ = MineCalc.functions.get(i).getType('+', '$', Type.NUMBER);
+			FunctionType typ = MineCalc.functions.get(n).getType('+', '$', Type.NUMBER);
 			if (typ.type.equals(Type.ADDITION)) {
-			    argumentType = typ;
+			    argumentFunction = typ.function;
 			    break;
 			}
 		    }
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-			    "0+" + insertArrayReference(arguments.size() + 1), argumentType.function));
+			    "0+" + insertArrayReference(arguments.size() + 1), argumentFunction));
 		    parenthesisStartIndex.add(arguments.size() - 1);
 		    parenthesisLevel++;
 		    phraseCount = -1;
@@ -127,6 +124,7 @@ public class ArgumentManager {
 		    startIndex = i;
 		}
 		lastType = functionType;
+		lastChar = currentChar;
 	    }
 	}
 
@@ -142,20 +140,45 @@ public class ArgumentManager {
     public double evaluate() throws CalcExceptions {
 	Argument[] args = arguments.toArray(new Argument[0]);
 	Arrays.sort(args);
+	Stack<Integer> parenthesisStart = new Stack<Integer>();
 	for (int i = 0; i < args.length; i++) {
 	    double answer = args[i].function.evaluateFunction(Double.valueOf(args[i].getFirstNumber(arguments)),
 		    Double.valueOf(args[i].getSecondNumber(arguments)));
 	    args[i].updateNumbers(answer);
+	    if (args[i].index > 0)
+		if (Math.floor(args[i].importance / 6) > Math
+			.floor(getArgumentFromIndex(args[i].index - 1).importance / 6)) {
+		    parenthesisStart.add(args[i].index);
+		}
+	    if (args[i].index + 1 < args.length)
+		if (Math.floor(args[i].importance / 6) > Math
+			.floor(getArgumentFromIndex(args[i].index + 1).importance / 6)) {
+		    int index = parenthesisStart.pop();
+		    if (index != args[i].index)
+			args[index].updateNumbers(insertArrayReference(i));
+		}
 
 	}
 	return Double.valueOf(args[args.length - 1].getSecondNumber(arguments));
     }
 
-    private String insertArrayReference(int i) {
+    public Argument getArgumentFromIndex(int index) {
+	return getArgumentFromIndex(index, arguments);
+    }
+
+    public static Argument getArgumentFromIndex(int index, ArrayList<Argument> args) {
+	for (int i = 0; i < args.size(); i++) {
+	    if (args.get(i).index == index)
+		return args.get(i);
+	}
+
+	throw new IndexOutOfBoundsException();
+    }
+
+    private final String insertArrayReference(int i) {
 	return "$#" + String.valueOf(i) + "$";
     }
 
-    // TODO: Use IFunction list to get types instead
     public static FunctionType getType(Character character, Character lastCharacter, Type lastType) {
 	if (character.equals('('))
 	    return new FunctionType(null, Type.OPENPARENTHESIS);

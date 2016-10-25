@@ -8,13 +8,14 @@ public class Argument implements Comparable<Argument> {
     public static final int MAXLOOPS = 100;
 
     public final int index;
-    public final double importance;
+    public final int importance;
     private String firstNumber;
     public final IFunction function;
     private String secondNumber;
+    // TODO: Remove for release
     public final String contents;
 
-    protected Argument(int index, double importance, String contents, IFunction function) {
+    protected Argument(int index, int importance, String contents, IFunction function) {
 	this.index = index;
 	this.importance = importance;
 	this.function = function;
@@ -71,7 +72,7 @@ public class Argument implements Comparable<Argument> {
 	String numberS = firstNumber.replaceAll("\\$", "");
 	int number = Integer.valueOf(numberS.split("#")[1]);
 
-	return argumentList.get(number).getSecondNumber(argumentList, loopCount++);
+	return ArgumentManager.getArgumentFromIndex(number, argumentList).getSecondNumber(argumentList, loopCount);
     }
 
     public String getSecondNumber(ArrayList<Argument> argumentList) throws RecursiveLoopException {
@@ -86,17 +87,21 @@ public class Argument implements Comparable<Argument> {
 	String numberS = secondNumber.replaceAll("\\$", "");
 	int number = Integer.valueOf(numberS.split("#")[1]);
 
-	return argumentList.get(number).getFirstNumber(argumentList, loopCount++);
+	return ArgumentManager.getArgumentFromIndex(number, argumentList).getFirstNumber(argumentList, loopCount);
     }
 
     public void updateNumbers(double value) {
-	firstNumber = String.valueOf(value);
-	secondNumber = String.valueOf(value);
+	updateNumbers(String.valueOf(value));
+    }
+
+    protected void updateNumbers(String value) {
+	firstNumber = value;
+	secondNumber = value;
     }
 
     @Override
     public int compareTo(Argument other) {
-	int importanceOrder = new Double(importance).compareTo(other.importance);
+	int importanceOrder = new Integer(importance).compareTo(other.importance);
 	if (importanceOrder != 0)
 	    return -importanceOrder;
 	return new Integer(index).compareTo(other.index);

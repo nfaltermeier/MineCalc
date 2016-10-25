@@ -37,7 +37,7 @@ public abstract class ArgumentManagerTest {
 	    System.out.println("Expected: 20 Recieved: " + String.valueOf(m.evaluate()));
 	    m.clear();
 	    m.digest("5*(1+1-(6/2))");
-	    System.out.println("Expected: 5 Recieved: " + String.valueOf(m.evaluate()));
+	    System.out.println("Expected: -5 Recieved: " + String.valueOf(m.evaluate()));
 	    m.clear();
 	    m.digest("6*6/-2+((-1*1)+1+(1*-1))*3");
 	    System.out.println("Expected: 15 Recieved: " + String.valueOf(m.evaluate()));
