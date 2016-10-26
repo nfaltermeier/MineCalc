@@ -14,12 +14,14 @@ public class Argument implements Comparable<Argument> {
     private String secondNumber;
     // TODO: Remove for release
     public final String contents;
+    private boolean sealed;
 
     protected Argument(int index, int importance, String contents, IFunction function) {
 	this.index = index;
 	this.importance = importance;
 	this.function = function;
 	this.contents = contents;
+	this.sealed = false;
 	int startIndex = 0;
 	boolean lastNumber = true;
 	int inCount = 0;
@@ -29,7 +31,7 @@ public class Argument implements Comparable<Argument> {
 	    } else {
 		boolean number;
 		if (i == 0) {
-		    number = isNumber(contents.charAt(i), lastNumber, '7');
+		    number = isNumber(contents.charAt(i), lastNumber, ArgumentManager.referenceIndicator);
 		} else {
 		    number = isNumber(contents.charAt(i), lastNumber, contents.charAt(i - 1));
 		}
@@ -51,8 +53,10 @@ public class Argument implements Comparable<Argument> {
 	} catch (NumberFormatException e) {
 	    if (character.equals('.') || character.toString().equalsIgnoreCase("l")
 		    || character.toString().equalsIgnoreCase("p") || character.toString().equalsIgnoreCase("i")
-		    || (character.equals('-') && (!lastIsNum && !lastChar.equals('/'))) || character.equals('$')
-		    || (character.equals('#') && lastChar.equals('$')))
+		    || (character.equals('-') && (!lastIsNum && !lastChar.equals('/')))
+		    || character.equals(ArgumentManager.referenceIndicator)
+		    || (character.equals(ArgumentManager.referenceIndexIndicator)
+			    && lastChar.equals(ArgumentManager.referenceIndicator)))
 		return true;
 	    else
 		return false;
@@ -65,7 +69,7 @@ public class Argument implements Comparable<Argument> {
     }
 
     public String getFirstNumber(ArrayList<Argument> argumentList, int loopCount) throws RecursiveLoopException {
-	if (!firstNumber.contains("$"))
+	if (!firstNumber.contains(String.valueOf(ArgumentManager.referenceIndicator)))
 	    return firstNumber;
 	if (loopCount == MAXLOOPS)
 	    throw new RecursiveLoopException();
@@ -84,19 +88,15 @@ public class Argument implements Comparable<Argument> {
 	    return secondNumber;
 	if (loopCount == MAXLOOPS)
 	    throw new RecursiveLoopException();
-	String numberS = secondNumber.replaceAll("\\$", "");
-	int number = Integer.valueOf(numberS.split("#")[1]);
+	String numberS = secondNumber.replaceAll("\\" + ArgumentManager.referenceIndicator, "");
+	int number = Integer.valueOf(numberS.split(String.valueOf(ArgumentManager.referenceIndexIndicator))[1]);
 
 	return ArgumentManager.getArgumentFromIndex(number, argumentList).getFirstNumber(argumentList, loopCount);
     }
 
-    public void updateNumbers(double value) {
-	updateNumbers(String.valueOf(value));
-    }
-
-    protected void updateNumbers(String value) {
-	firstNumber = value;
-	secondNumber = value;
+    protected void updateNumbers(double value) {
+	firstNumber = String.valueOf(value);
+	secondNumber = String.valueOf(value);
     }
 
     @Override
@@ -105,5 +105,15 @@ public class Argument implements Comparable<Argument> {
 	if (importanceOrder != 0)
 	    return -importanceOrder;
 	return new Integer(index).compareTo(other.index);
+    }
+
+    public void updateEmptyReference(String newReference) {
+	if (!sealed) {
+	    secondNumber = newReference;
+	}
+    }
+
+    public void seal() {
+	sealed = true;
     }
 }
