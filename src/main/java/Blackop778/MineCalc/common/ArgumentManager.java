@@ -92,6 +92,8 @@ public class ArgumentManager {
 			    // arg.updateNumbers(7);
 			    parenthesisLevel--;
 			    typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType.type);
+			    startIndex = i + 1;
+			    phraseCount = -1;
 			}
 			argumentPhrase = insertArgumentReference(arguments.size() - 1);
 			threeMode = false;
@@ -104,6 +106,8 @@ public class ArgumentManager {
 				    .updateEmptyReference(insertArgumentReference(arguments.size() - 1));
 			    parenthesisLevel--;
 			    typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType.type);
+			    startIndex = i + 1;
+			    phraseCount = -1;
 			}
 			argumentPhrase = insertArgumentReference(arguments.size() - 1);
 		    }

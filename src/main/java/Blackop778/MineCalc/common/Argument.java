@@ -15,6 +15,7 @@ public class Argument implements Comparable<Argument> {
     // TODO: Remove for release
     public final String contents;
     private boolean sealed;
+    static int x = 0;
 
     protected Argument(int index, int importance, String contents, IFunction function) {
 	this.index = index;
@@ -53,10 +54,10 @@ public class Argument implements Comparable<Argument> {
 	} catch (NumberFormatException e) {
 	    if (character.equals('.') || character.toString().equalsIgnoreCase("l")
 		    || character.toString().equalsIgnoreCase("p") || character.toString().equalsIgnoreCase("i")
-		    || (character.equals('-') && (!lastIsNum && !lastChar.equals('/')))
-		    || character.equals(ArgumentManager.referenceIndicator)
-		    || (character.equals(ArgumentManager.referenceIndexIndicator)
-			    && lastChar.equals(ArgumentManager.referenceIndicator)))
+		    || (character.equals('-') && (!lastIsNum && !lastChar.equals('/'))
+			    || character.equals(ArgumentManager.referenceIndicator)
+			    || (character.equals(ArgumentManager.referenceIndexIndicator)
+				    && lastChar.equals(ArgumentManager.referenceIndicator))))
 		return true;
 	    else
 		return false;
@@ -73,8 +74,8 @@ public class Argument implements Comparable<Argument> {
 	    return firstNumber;
 	if (loopCount == MAXLOOPS)
 	    throw new RecursiveLoopException();
-	String numberS = firstNumber.replaceAll("\\$", "");
-	int number = Integer.valueOf(numberS.split("#")[1]);
+	String numberS = firstNumber.replaceAll("\\" + ArgumentManager.referenceIndicator, "");
+	int number = Integer.valueOf(numberS.split(String.valueOf(ArgumentManager.referenceIndexIndicator))[1]);
 
 	return ArgumentManager.getArgumentFromIndex(number, argumentList).getSecondNumber(argumentList, loopCount);
     }
@@ -84,7 +85,9 @@ public class Argument implements Comparable<Argument> {
     }
 
     public String getSecondNumber(ArrayList<Argument> argumentList, int loopCount) throws RecursiveLoopException {
-	if (!secondNumber.contains("$"))
+	System.out.println(x);
+	x++;
+	if (!secondNumber.contains(String.valueOf(ArgumentManager.referenceIndicator)))
 	    return secondNumber;
 	if (loopCount == MAXLOOPS)
 	    throw new RecursiveLoopException();
