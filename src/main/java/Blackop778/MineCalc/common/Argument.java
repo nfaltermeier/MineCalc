@@ -15,7 +15,6 @@ public class Argument implements Comparable<Argument> {
     // TODO: Remove for release
     public final String contents;
     private boolean sealed;
-    static int x = 0;
 
     protected Argument(int index, int importance, String contents, IFunction function) {
 	this.index = index;
@@ -85,8 +84,6 @@ public class Argument implements Comparable<Argument> {
     }
 
     public String getSecondNumber(ArrayList<Argument> argumentList, int loopCount) throws RecursiveLoopException {
-	System.out.println(x);
-	x++;
 	if (!secondNumber.contains(String.valueOf(ArgumentManager.referenceIndicator)))
 	    return secondNumber;
 	if (loopCount == MAXLOOPS)

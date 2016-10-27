@@ -91,7 +91,8 @@ public class ArgumentManager {
 			    arg.updateEmptyReference(reference);
 			    // arg.updateNumbers(7);
 			    parenthesisLevel--;
-			    typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType.type);
+			    typesUntilParen = getTypesUntilTarget(math, i + 1, Type.CLOSEPARENTHESIS, lastType.type)
+				    + 1;
 			    startIndex = i + 1;
 			    phraseCount = -1;
 			}
@@ -105,7 +106,8 @@ public class ArgumentManager {
 			    getArgumentFromIndex(parenthesisStartIndex.pop())
 				    .updateEmptyReference(insertArgumentReference(arguments.size() - 1));
 			    parenthesisLevel--;
-			    typesUntilParen = getTypesUntilTarget(math, i, Type.CLOSEPARENTHESIS, lastType.type);
+			    typesUntilParen = getTypesUntilTarget(math, i + 1, Type.CLOSEPARENTHESIS, lastType.type)
+				    + 1;
 			    startIndex = i + 1;
 			    phraseCount = -1;
 			}
