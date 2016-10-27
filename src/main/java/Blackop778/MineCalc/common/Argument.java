@@ -23,18 +23,15 @@ public class Argument implements Comparable<Argument> {
 	this.contents = contents;
 	this.sealed = false;
 	int startIndex = 0;
-	boolean lastNumber = true;
-	int inCount = 0;
+	boolean lastNumber = false;
+	int inCount = -1;
+	char lastChar = '$';
 	for (int i = 0; i <= contents.length(); i++) {
 	    if (i == contents.length()) {
 		secondNumber = contents.substring(startIndex, i);
 	    } else {
 		boolean number;
-		if (i == 0) {
-		    number = isNumber(contents.charAt(i), lastNumber, ArgumentManager.referenceIndicator);
-		} else {
-		    number = isNumber(contents.charAt(i), lastNumber, contents.charAt(i - 1));
-		}
+		number = isNumber(contents.charAt(i), lastNumber, lastChar);
 		if (number != lastNumber) {
 		    if (inCount == 0) {
 			firstNumber = contents.substring(startIndex, i);
@@ -43,6 +40,7 @@ public class Argument implements Comparable<Argument> {
 		    inCount++;
 		    lastNumber = number;
 		}
+		lastChar = contents.charAt(i);
 	    }
 	}
     }
@@ -108,7 +106,11 @@ public class Argument implements Comparable<Argument> {
     }
 
     public void updateEmptyReference(String newReference) {
-	if (!sealed) {
+	if (!sealed
+		&& secondNumber.equals(new StringBuilder().append(ArgumentManager.referenceIndicator)
+			.append(ArgumentManager.referenceIndicator).toString())
+		&& newReference.contains(new StringBuilder().append(ArgumentManager.referenceIndicator)
+			.append(ArgumentManager.referenceIndexIndicator))) {
 	    secondNumber = newReference;
 	}
     }

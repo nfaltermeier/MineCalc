@@ -120,13 +120,14 @@ public class ArgumentManager {
 			}
 		    }
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-			    "0+" + insertArgumentReference(arguments.size() + 1), argumentFunction));
+			    "0+" + insertEmptyArgumentReference(), argumentFunction));
 		    parenthesisStartIndex.add(arguments.size() - 1);
 		    parenthesisLevel++;
 		    phraseCount = -1;
 		    argumentPhrase = "";
 		    startIndex++;
 		} else if (functionType.type.equals(Type.CLOSEPARENTHESIS)) {
+		    // TODO: Add '0+$#x$ to nested closing parenthesis
 		    getArgumentFromIndex(parenthesisStartIndex.pop())
 			    .updateEmptyReference(insertArgumentReference(arguments.size() - 1));
 		    parenthesisLevel--;
