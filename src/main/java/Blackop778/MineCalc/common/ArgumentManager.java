@@ -65,9 +65,14 @@ public class ArgumentManager {
 		    argumentPhrase = argumentPhrase + math.substring(startIndex, i);
 		    startIndex = i;
 		    phraseCount++;
+		    if (lastType.equals(Type.CLOSEPARENTHESIS)) {
+			getArgumentFromIndex(parenthesisStartIndex.pop())
+				.updateEmptyReference(insertArgumentReference(arguments.size() - 1));
+		    }
 		    if (!functionType.type.equals(Type.NUMBER) && !lastType.type.equals(Type.NUMBER)
-			    && !functionType.type.equals(Type.OPENPARENTHESIS))
+			    && !functionType.type.equals(Type.OPENPARENTHESIS)) {
 			phraseCount--;
+		    }
 		    if ((phraseCount == 2 && threeMode) || (phraseCount == 1 && !threeMode)) {
 			argumentFunction = lastType.function;
 		    }
@@ -102,8 +107,6 @@ public class ArgumentManager {
 				argumentPhrase, argumentFunction));
 			phraseCount = 0;
 			if (typesUntilParen == 0) {
-			    getArgumentFromIndex(parenthesisStartIndex.pop())
-				    .updateEmptyReference(insertArgumentReference(arguments.size() - 1));
 			    parenthesisLevel--;
 			    typesUntilParen = getTypesUntilTarget(math, i + 1, Type.CLOSEPARENTHESIS, lastType.type)
 				    + 1;
@@ -128,6 +131,15 @@ public class ArgumentManager {
 		    startIndex++;
 		} else if (functionType.type.equals(Type.CLOSEPARENTHESIS)) {
 		    // TODO: Add '0+$#x$ to nested closing parenthesis
+		    for (int n = 0; n < MineCalc.functions.size(); n++) {
+			FunctionType typ = MineCalc.functions.get(n).getType('+', referenceIndicator, Type.NUMBER);
+			if (typ.type.equals(Type.ADDITION)) {
+			    argumentFunction = typ.function;
+			    break;
+			}
+		    }
+		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
+			    "0+" + insertArgumentReference(arguments.size() - 1), argumentFunction));
 		    getArgumentFromIndex(parenthesisStartIndex.pop())
 			    .updateEmptyReference(insertArgumentReference(arguments.size() - 1));
 		    parenthesisLevel--;
@@ -199,8 +211,9 @@ public class ArgumentManager {
 	    FunctionType toReturn = new FunctionType(null, Type.JUNK);
 	    for (int i = 0; i < MineCalc.functions.size(); i++) {
 		FunctionType possible = MineCalc.functions.get(i).getType(character, lastCharacter, lastType);
-		if (toReturn.type.compareTo(possible.type) < 0)
+		if (toReturn.type.compareTo(possible.type) < 0) {
 		    toReturn = possible;
+		}
 	    }
 	    return toReturn;
 	}
@@ -221,10 +234,11 @@ public class ArgumentManager {
 	ArrayList<Type> differingTypes = new ArrayList<Type>();
 	for (int i = index; i < string.length(); i++) {
 	    Type type;
-	    if (i < 0)
+	    if (i < 0) {
 		type = getType(string.charAt(i), string.charAt(i - 1), lastType).type;
-	    else
+	    } else {
 		type = getType(string.charAt(i), referenceIndicator, lastType).type;
+	    }
 	    if (type.equals(typeToFind))
 		return differingTypes.size();
 	    if (differingTypes.size() == 0) {
