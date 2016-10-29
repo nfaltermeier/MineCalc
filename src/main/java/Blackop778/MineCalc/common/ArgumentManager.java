@@ -91,10 +91,6 @@ public class ArgumentManager {
 				argumentPhrase, argumentFunction));
 			phraseCount = 0;
 			if (typesUntilParen == 0) {
-			    Argument arg = getArgumentFromIndex(parenthesisStartIndex.pop());
-			    String reference = insertArgumentReference(arguments.size() - 1);
-			    arg.updateEmptyReference(reference);
-			    // arg.updateNumbers(7);
 			    parenthesisLevel--;
 			    typesUntilParen = getTypesUntilTarget(math, i + 1, Type.CLOSEPARENTHESIS, lastType.type)
 				    + 1;
@@ -139,9 +135,9 @@ public class ArgumentManager {
 			}
 		    }
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-			    "0+" + insertArgumentReference(arguments.size() - 1), argumentFunction));
-		    getArgumentFromIndex(parenthesisStartIndex.pop())
-			    .updateEmptyReference(insertArgumentReference(arguments.size() - 1));
+			    insertArgumentReference(parenthesisStartIndex.pop()) + "+"
+				    + insertArgumentReference(arguments.size() - 1),
+			    argumentFunction));
 		    parenthesisLevel--;
 		    startIndex = i;
 		}
