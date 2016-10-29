@@ -55,6 +55,9 @@ public class ArgumentManager {
 		    argumentPhrase += math.substring(startIndex, i);
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
 			    argumentPhrase, argumentFunction));
+		} else {
+		    getArgumentFromIndex(parenthesisStartIndex.pop())
+			    .updateEmptyReference(insertArgumentReference(arguments.size() - 1));
 		}
 	    } else {
 		// TODO: Remove for release
@@ -127,17 +130,20 @@ public class ArgumentManager {
 		    startIndex++;
 		} else if (functionType.type.equals(Type.CLOSEPARENTHESIS)) {
 		    // TODO: Add '0+$#x$ to nested closing parenthesis
-		    for (int n = 0; n < MineCalc.functions.size(); n++) {
-			FunctionType typ = MineCalc.functions.get(n).getType('+', referenceIndicator, Type.NUMBER);
-			if (typ.type.equals(Type.ADDITION)) {
-			    argumentFunction = typ.function;
-			    break;
-			}
-		    }
-		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-			    insertArgumentReference(parenthesisStartIndex.pop()) + "+"
-				    + insertArgumentReference(arguments.size() - 1),
-			    argumentFunction));
+		    /**
+		     * for (int n = 0; n < MineCalc.functions.size(); n++) {
+		     * FunctionType typ = MineCalc.functions.get(n).getType('+',
+		     * referenceIndicator, Type.NUMBER); if
+		     * (typ.type.equals(Type.ADDITION)) { argumentFunction =
+		     * typ.function; break; } } arguments.add(new
+		     * Argument(arguments.size(), phraseImportanceLevel +
+		     * parenthesisLevel * 6,
+		     * insertArgumentReference(parenthesisStartIndex.pop()) +
+		     * "+" + insertArgumentReference(arguments.size() - 1),
+		     * argumentFunction));
+		     */
+		    getArgumentFromIndex(parenthesisStartIndex.pop())
+			    .updateEmptyReference(insertArgumentReference(arguments.size() - 1));
 		    parenthesisLevel--;
 		    startIndex = i;
 		}
