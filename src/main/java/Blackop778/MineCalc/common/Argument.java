@@ -112,6 +112,8 @@ public class Argument implements Comparable<Argument> {
 		&& newReference.contains(new StringBuilder().append(ArgumentManager.referenceIndicator)
 			.append(ArgumentManager.referenceIndexIndicator))) {
 	    secondNumber = newReference;
+	    contents.replace(new StringBuilder().append(ArgumentManager.referenceIndicator)
+		    .append(ArgumentManager.referenceIndicator).toString(), newReference);
 	}
     }
 
