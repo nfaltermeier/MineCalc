@@ -68,7 +68,7 @@ public class ArgumentManager {
 		    argumentPhrase = argumentPhrase + math.substring(startIndex, i);
 		    startIndex = i;
 		    phraseCount++;
-		    if (lastType.equals(Type.CLOSEPARENTHESIS)) {
+		    if (lastType.type.equals(Type.CLOSEPARENTHESIS)) {
 			getArgumentFromIndex(parenthesisStartIndex.pop())
 				.updateEmptyReference(insertArgumentReference(arguments.size() - 1));
 		    }
