@@ -27,7 +27,7 @@ public class ArgumentManager {
 	// Clean the input
 	math = math.replaceAll("\\s", "");
 	math = math.replaceAll("\\" + referenceIndicator, "");
-	math = math.replaceAll("\\" + referenceIndexIndicator, "");
+	math = math.replaceAll(new StringBuilder().append(referenceIndexIndicator).toString(), "");
 	FunctionType lastType = new FunctionType(null, Type.NUMBER);
 	// The index of the start of the current Type
 	int startIndex = 0;
@@ -136,11 +136,11 @@ public class ArgumentManager {
 			    break;
 			}
 		    }
+		    parenthesisLevel--;
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
 			    insertArgumentReference(parenthesisStartIndex.peek()) + "+0", argumentFunction));
 		    getArgumentFromIndex(parenthesisStartIndex.pop())
 			    .updateEmptyReference(insertArgumentReference(arguments.size() - 2));
-		    parenthesisLevel--;
 		    startIndex = i;
 		}
 		lastType = functionType;
@@ -164,6 +164,7 @@ public class ArgumentManager {
 	Argument[] args = arguments.toArray(new Argument[0]);
 	Arrays.sort(args);
 	for (int i = 0; i < args.length; i++) {
+	    String contents = args[i].contents;
 	    double answer = args[i].function.evaluateFunction(Double.valueOf(args[i].getFirstNumber(arguments)),
 		    Double.valueOf(args[i].getSecondNumber(arguments)));
 	    args[i].updateNumbers(answer);

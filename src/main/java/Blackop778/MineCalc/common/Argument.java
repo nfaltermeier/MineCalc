@@ -13,7 +13,7 @@ public class Argument implements Comparable<Argument> {
     public final IFunction function;
     private String secondNumber;
     // TODO: Remove for release
-    public final String contents;
+    public String contents;
     private boolean sealed;
 
     protected Argument(int index, int importance, String contents, IFunction function) {
@@ -112,7 +112,7 @@ public class Argument implements Comparable<Argument> {
 		&& newReference.contains(new StringBuilder().append(ArgumentManager.referenceIndicator)
 			.append(ArgumentManager.referenceIndexIndicator))) {
 	    secondNumber = newReference;
-	    contents.replace(new StringBuilder().append(ArgumentManager.referenceIndicator)
+	    contents = contents.replace(new StringBuilder().append(ArgumentManager.referenceIndicator)
 		    .append(ArgumentManager.referenceIndicator).toString(), newReference);
 	}
     }
