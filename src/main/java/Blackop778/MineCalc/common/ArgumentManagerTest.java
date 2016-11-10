@@ -11,7 +11,6 @@ public abstract class ArgumentManagerTest {
 	    try {
 		answer = manager.evaluate();
 	    } catch (CalcExceptions e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	    }
 	    System.out.println(answer);

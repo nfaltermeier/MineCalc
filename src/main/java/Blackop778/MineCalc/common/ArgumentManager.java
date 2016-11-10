@@ -75,6 +75,7 @@ public class ArgumentManager {
 		    if (!functionType.type.equals(Type.NUMBER) && !lastType.type.equals(Type.NUMBER)
 			    && !functionType.type.equals(Type.OPENPARENTHESIS)) {
 			phraseCount--;
+			typesUntilParen--;
 		    }
 		    if ((phraseCount == 2 && threeMode) || (phraseCount == 1 && !threeMode)) {
 			argumentFunction = lastType.function;
@@ -98,8 +99,10 @@ public class ArgumentManager {
 			    typesUntilParen = getTypesUntilTarget(math, i + 1, Type.CLOSEPARENTHESIS, lastType.type)
 				    + 1;
 			    startIndex = i + 1;
+			    argumentPhrase = insertArgumentReference(parenthesisStartIndex.peek());
+			} else {
+			    argumentPhrase = insertArgumentReference(arguments.size() - 1);
 			}
-			argumentPhrase = insertArgumentReference(arguments.size() - 1);
 			threeMode = false;
 		    } else if (phraseCount == 2 && !threeMode) {
 			arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
@@ -110,8 +113,11 @@ public class ArgumentManager {
 			    typesUntilParen = getTypesUntilTarget(math, i + 1, Type.CLOSEPARENTHESIS, lastType.type)
 				    + 1;
 			    startIndex = i + 1;
+			    argumentPhrase = insertArgumentReference(parenthesisStartIndex.peek());
+			} else {
+			    argumentPhrase = insertArgumentReference(arguments.size() - 1);
 			}
-			argumentPhrase = insertArgumentReference(arguments.size() - 1);
+
 		    }
 		} else if (functionType.type.equals(Type.OPENPARENTHESIS)) {
 		    for (int n = 0; n < MineCalc.functions.size(); n++) {
@@ -138,7 +144,7 @@ public class ArgumentManager {
 		    }
 		    parenthesisLevel--;
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
-			    insertArgumentReference(parenthesisStartIndex.peek()) + "+0", argumentFunction));
+			    "0+" + insertArgumentReference(parenthesisStartIndex.peek()), argumentFunction));
 		    getArgumentFromIndex(parenthesisStartIndex.pop())
 			    .updateEmptyReference(insertArgumentReference(arguments.size() - 2));
 		    startIndex = i;
