@@ -1,22 +1,23 @@
 package Blackop778.MineCalc.common;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import Blackop778.MineCalc.common.CalcExceptions.RecursiveLoopException;
 
-public class Argument implements Comparable<Argument> {
+public class Argument implements Comparable<Argument>, Comparator<Argument> {
     public static final int MAXLOOPS = 100;
 
     public final int index;
     public final int importance;
     private String firstNumber;
-    public final IFunction function;
+    public final IOperation function;
     private String secondNumber;
     // TODO: Remove for release
     public String contents;
     private boolean sealed;
 
-    protected Argument(int index, int importance, String contents, IFunction function) {
+    protected Argument(int index, int importance, String contents, IOperation function) {
 	this.index = index;
 	this.importance = importance;
 	this.function = function;
@@ -43,6 +44,13 @@ public class Argument implements Comparable<Argument> {
 		lastChar = contents.charAt(i);
 	    }
 	}
+    }
+
+    protected Argument(int index, int importance, String contents) {
+	this.index = index;
+	this.importance = importance;
+	this.contents = contents;
+	function = null;
     }
 
     private boolean isNumber(Character character, boolean lastIsNum, Character lastChar) {
@@ -119,5 +127,13 @@ public class Argument implements Comparable<Argument> {
 
     public void seal() {
 	sealed = true;
+    }
+
+    @Override
+    public int compare(Argument first, Argument second) {
+	int importanceOrder = new Integer(first.importance).compareTo(second.importance);
+	if (importanceOrder != 0)
+	    return -importanceOrder;
+	return new Integer(first.index).compareTo(second.index);
     }
 }

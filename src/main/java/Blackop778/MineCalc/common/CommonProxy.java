@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
 	MCConfig.loadConfig(event.getModConfigurationDirectory());
-	Functions.addFunctions();
+	Operations.addOperations();
     }
 
     public void load(FMLInitializationEvent event) {

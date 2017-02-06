@@ -3,7 +3,8 @@ package Blackop778.MineCalc.common;
 public abstract class ArgumentManagerTest {
     @SuppressWarnings("unused")
     public static void main(String[] args) {
-	Functions.addFunctions();
+	Operations.addOperations();
+	SimpleArgumentManager.evaluate("6*6/-2+((-1*1)+1+(1*-1))*3", false);
 	if (false) {
 	    ArgumentManager manager = new ArgumentManager(false);
 	    manager.digest("6*6/-2+((-1*1)+1+(1*-1))*3");

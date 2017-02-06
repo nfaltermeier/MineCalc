@@ -46,7 +46,7 @@ public class ArgumentManager {
 	// How many Types until a closed parenthesis
 	int typesUntilParen = getTypesUntilTarget(math, 0, Type.CLOSEPARENTHESIS, lastType.type);
 	// The FunctionType for this argument
-	IFunction argumentFunction = null;
+	IOperation argumentFunction = null;
 	char lastChar = referenceIndicator;
 	for (int i = 0; i <= math.length(); i++) {
 	    // We're out of input so we have to take what we've got
@@ -120,12 +120,14 @@ public class ArgumentManager {
 
 		    }
 		} else if (functionType.type.equals(Type.OPENPARENTHESIS)) {
-		    for (int n = 0; n < MineCalc.functions.size(); n++) {
-			FunctionType typ = MineCalc.functions.get(n).getType('+', referenceIndicator, Type.NUMBER);
-			if (typ.type.equals(Type.ADDITION)) {
-			    argumentFunction = typ.function;
-			    break;
-			}
+		    for (int n = 0; n < MineCalc.operations.size(); n++) {
+			/**
+			 * FunctionType typ =
+			 * MineCalc.functions.get(n).getType('+',
+			 * referenceIndicator, Type.NUMBER); if
+			 * (typ.type.equals(Type.ADDITION)) { argumentFunction =
+			 * typ.function; break; }
+			 */
 		    }
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
 			    "0+" + insertEmptyArgumentReference(), argumentFunction));
@@ -135,12 +137,14 @@ public class ArgumentManager {
 		    argumentPhrase = "";
 		    startIndex++;
 		} else if (functionType.type.equals(Type.CLOSEPARENTHESIS)) {
-		    for (int n = 0; n < MineCalc.functions.size(); n++) {
-			FunctionType typ = MineCalc.functions.get(n).getType('+', referenceIndicator, Type.NUMBER);
-			if (typ.type.equals(Type.ADDITION)) {
-			    argumentFunction = typ.function;
-			    break;
-			}
+		    for (int n = 0; n < MineCalc.operations.size(); n++) {
+			/**
+			 * FunctionType typ =
+			 * MineCalc.functions.get(n).getType('+',
+			 * referenceIndicator, Type.NUMBER); if
+			 * (typ.type.equals(Type.ADDITION)) { argumentFunction =
+			 * typ.function; break; }
+			 */
 		    }
 		    parenthesisLevel--;
 		    arguments.add(new Argument(arguments.size(), phraseImportanceLevel + parenthesisLevel * 6,
@@ -171,9 +175,12 @@ public class ArgumentManager {
 	Arrays.sort(args);
 	for (int i = 0; i < args.length; i++) {
 	    String contents = args[i].contents;
-	    double answer = args[i].function.evaluateFunction(Double.valueOf(args[i].getFirstNumber(arguments)),
-		    Double.valueOf(args[i].getSecondNumber(arguments)));
-	    args[i].updateNumbers(answer);
+	    /**
+	     * double answer =
+	     * args[i].function.evaluateFunction(Double.valueOf(args[i].getFirstNumber(arguments)),
+	     * Double.valueOf(args[i].getSecondNumber(arguments)));
+	     */
+	    args[i].updateNumbers(0);
 	}
 	return Double.valueOf(args[args.length - 1].getSecondNumber(arguments));
     }
@@ -214,11 +221,13 @@ public class ArgumentManager {
 		    || (character.equals('-') && (!lastType.equals(Type.NUMBER) && !lastType.equals(Type.DIVISION))))
 		return new FunctionType(null, Type.NUMBER);
 	    FunctionType toReturn = new FunctionType(null, Type.JUNK);
-	    for (int i = 0; i < MineCalc.functions.size(); i++) {
-		FunctionType possible = MineCalc.functions.get(i).getType(character, lastCharacter, lastType);
-		if (toReturn.type.compareTo(possible.type) < 0) {
-		    toReturn = possible;
-		}
+	    for (int i = 0; i < MineCalc.operations.size(); i++) {
+		/**
+		 * FunctionType possible =
+		 * MineCalc.functions.get(i).getType(character, lastCharacter,
+		 * lastType); if (toReturn.type.compareTo(possible.type) < 0) {
+		 * toReturn = possible; }
+		 */
 	    }
 	    return toReturn;
 	}
@@ -266,9 +275,9 @@ public class ArgumentManager {
 
     public static class FunctionType {
 	public Type type;
-	public IFunction function;
+	public IOperation function;
 
-	public FunctionType(IFunction function, Type type) {
+	public FunctionType(IOperation function, Type type) {
 	    this.type = type;
 	    this.function = function;
 	}
