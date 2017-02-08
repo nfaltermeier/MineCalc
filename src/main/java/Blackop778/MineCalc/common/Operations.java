@@ -17,6 +17,11 @@ public abstract class Operations {
 	    public double evaluateFunction(int num1, int num2) throws CalcExceptions {
 		return num1 + num2;
 	    }
+
+	    @Override
+	    public int getImportance() {
+		return 2;
+	    }
 	});
 
 	MineCalc.operations.add(new IOperation() {
@@ -30,6 +35,11 @@ public abstract class Operations {
 	    public double evaluateFunction(int num1, int num2) throws CalcExceptions {
 		return num1 - num2;
 	    }
+
+	    @Override
+	    public int getImportance() {
+		return 2;
+	    }
 	});
 
 	MineCalc.operations.add(new IOperation() {
@@ -42,6 +52,11 @@ public abstract class Operations {
 	    @Override
 	    public double evaluateFunction(int num1, int num2) throws CalcExceptions {
 		return num1 * num2;
+	    }
+
+	    @Override
+	    public int getImportance() {
+		return 4;
 	    }
 	});
 
@@ -58,6 +73,11 @@ public abstract class Operations {
 		    throw new DivisionException();
 		return num1 / num2;
 	    }
+
+	    @Override
+	    public int getImportance() {
+		return 4;
+	    }
 	});
 
 	MineCalc.operations.add(new IOperation() {
@@ -72,6 +92,11 @@ public abstract class Operations {
 		if (num2 == 0)
 		    throw new DivisionException();
 		return num1 % num2;
+	    }
+
+	    @Override
+	    public int getImportance() {
+		return 4;
 	    }
 	});
 
@@ -91,6 +116,11 @@ public abstract class Operations {
 		}
 		return Math.pow(num1, num2);
 	    }
+
+	    @Override
+	    public int getImportance() {
+		return 6;
+	    }
 	});
 
 	MineCalc.operations.add(new IOperation() {
@@ -105,6 +135,11 @@ public abstract class Operations {
 		if (num1 < 0 && num2 % 2 == 0)
 		    throw new ImaginaryNumberException();
 		return Math.pow(num1, 1 / num2);
+	    }
+
+	    @Override
+	    public int getImportance() {
+		return 6;
 	    }
 	});
     }
