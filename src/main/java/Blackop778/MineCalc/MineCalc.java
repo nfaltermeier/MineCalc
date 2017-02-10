@@ -1,12 +1,10 @@
 package Blackop778.MineCalc;
 
-import java.util.ArrayList;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import Blackop778.MineCalc.common.CommonProxy;
-import Blackop778.MineCalc.common.IOperation;
+import Blackop778.MineCalc.common.OperationHolder;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -22,7 +20,7 @@ public class MineCalc {
     public static final String MODVER = "3.1.4";
     public static final Logger Logger = LogManager.getLogger(MODID);
     public static final String UPDATEJSONURL = "https://raw.githubusercontent.com/Blackop778/ModUpdateJsons/master/MineCalc.json";
-    public static ArrayList<IOperation> operations = new ArrayList<IOperation>();
+    public static OperationHolder operations = new OperationHolder();
 
     @SidedProxy(clientSide = "Blackop778.MineCalc.client.ClientProxy", serverSide = "Blackop778.MineCalc.common.CommonProxy")
     public static CommonProxy proxy;
