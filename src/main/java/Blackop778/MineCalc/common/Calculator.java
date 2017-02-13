@@ -1,6 +1,7 @@
 package Blackop778.MineCalc.common;
 
 import java.util.Stack;
+import java.util.regex.Pattern;
 
 import Blackop778.MineCalc.MineCalc;
 
@@ -52,6 +53,29 @@ public abstract class Calculator {
 		if (op != null)
 		    break;
 	    }
+
+	    String contents = arguments.get(0).contents;
+	    // Remove beginning and ending parenthesis first
+	    findNeighboringNumbers(contents.substring(1, contents.length() - 1), operator, index - 1);
+	}
+    }
+
+    public static void findNeighboringNumbers(String math, String symbol, int symbolStartIndex) {
+	int index = 0;
+	int lastIndex = 0;
+	while (index != symbolStartIndex) {
+	    lastIndex = index;
+	    index = math.indexOf(symbol, lastIndex);
+	}
+	if (lastIndex != 0)
+	    math = math.substring(lastIndex + symbol.length(), math.length());
+	String[] maths = math.split(Pattern.quote(symbol));
+	System.out.println(maths);
+    }
+
+    public static boolean isNumber(Character current, char last) {
+	if (current.toString().matches("//d/|.")) {
+
 	}
     }
 }
