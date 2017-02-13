@@ -73,9 +73,9 @@ public abstract class Calculator {
 	System.out.println(maths);
     }
 
-    public static boolean isNumber(Character current, char last) {
-	if (current.toString().matches("//d/|.")) {
-
+    public static boolean isNumber(Character current, Character last, Character lastLast) {
+	if (current.toString().matches("//d|//.|[lpiLPI]")) {
+	    return true;
 	}
     }
 }
