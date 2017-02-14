@@ -70,12 +70,30 @@ public abstract class Calculator {
 	if (lastIndex != 0)
 	    math = math.substring(lastIndex + symbol.length(), math.length());
 	String[] maths = math.split(Pattern.quote(symbol));
-	System.out.println(maths);
+	String math2 = maths[1];
+
+    }
+
+    /**
+     * Gets the character at index in string, and returns null instead of
+     * StringIndexOutOfBoundsException
+     */
+    public static Character tryCharAt(String string, int index) {
+	try {
+	    return string.charAt(index);
+	} catch (StringIndexOutOfBoundsException e) {
+	    return null;
+	}
     }
 
     public static boolean isNumber(Character current, Character last, Character lastLast) {
 	if (current.toString().matches("//d|//.|[lpiLPI]")) {
 	    return true;
+	} else if (current.equals('-')
+		&& ((new Character('-').equals(last) || last == null) && !(new Character('/').equals(lastLast)))) {
+	    return true;
 	}
+
+	return false;
     }
 }
