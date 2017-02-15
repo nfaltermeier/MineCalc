@@ -12,7 +12,7 @@ public interface IOperation {
      * @throws CalcExceptions
      *             Problems we may encounter. Should be a subclass.
      */
-    public abstract double evaluateFunction(int num1, int num2) throws CalcExceptions;
+    public abstract double evaluateFunction(double numbers, double numbers2) throws CalcExceptions;
 
     /**
      * Gets the Order of Operations importance of this function. Should only be

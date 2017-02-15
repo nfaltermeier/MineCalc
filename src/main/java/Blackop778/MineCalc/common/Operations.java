@@ -14,7 +14,7 @@ public abstract class Operations {
 	    }
 
 	    @Override
-	    public double evaluateFunction(int num1, int num2) throws CalcExceptions {
+	    public double evaluateFunction(double num1, double num2) throws CalcExceptions {
 		return num1 + num2;
 	    }
 
@@ -32,7 +32,7 @@ public abstract class Operations {
 	    }
 
 	    @Override
-	    public double evaluateFunction(int num1, int num2) throws CalcExceptions {
+	    public double evaluateFunction(double num1, double num2) throws CalcExceptions {
 		return num1 - num2;
 	    }
 
@@ -50,7 +50,7 @@ public abstract class Operations {
 	    }
 
 	    @Override
-	    public double evaluateFunction(int num1, int num2) throws CalcExceptions {
+	    public double evaluateFunction(double num1, double num2) throws CalcExceptions {
 		return num1 * num2;
 	    }
 
@@ -68,7 +68,7 @@ public abstract class Operations {
 	    }
 
 	    @Override
-	    public double evaluateFunction(int num1, int num2) throws CalcExceptions {
+	    public double evaluateFunction(double num1, double num2) throws CalcExceptions {
 		if (num2 == 0)
 		    throw new DivisionException();
 		return num1 / num2;
@@ -88,7 +88,7 @@ public abstract class Operations {
 	    }
 
 	    @Override
-	    public double evaluateFunction(int num1, int num2) throws CalcExceptions {
+	    public double evaluateFunction(double num1, double num2) throws CalcExceptions {
 		if (num2 == 0)
 		    throw new DivisionException();
 		return num1 % num2;
@@ -108,7 +108,7 @@ public abstract class Operations {
 	    }
 
 	    @Override
-	    public double evaluateFunction(int num1, int num2) throws CalcExceptions {
+	    public double evaluateFunction(double num1, double num2) throws CalcExceptions {
 		if (num1 < 0) {
 		    double num3 = 1 / num2;
 		    if (num3 % 2 == 0)
@@ -131,7 +131,7 @@ public abstract class Operations {
 	    }
 
 	    @Override
-	    public double evaluateFunction(int num1, int num2) throws CalcExceptions {
+	    public double evaluateFunction(double num1, double num2) throws CalcExceptions {
 		if (num1 < 0 && num2 % 2 == 0)
 		    throw new ImaginaryNumberException();
 		return Math.pow(num1, 1 / num2);

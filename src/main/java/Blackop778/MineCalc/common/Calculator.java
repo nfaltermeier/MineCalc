@@ -6,13 +6,16 @@ import java.util.regex.Pattern;
 import Blackop778.MineCalc.MineCalc;
 
 public abstract class Calculator {
-    public static void evaluate(String math, boolean useOOPS) {
+    public static final Argument SORTING_HAT = new Argument(0, 0, "f");
+
+    public static double evaluate(String math, boolean useOOPS) throws CalcExceptions {
 	math = math.replaceAll("\\s", "");
 	ArgumentManager arguments = new ArgumentManager();
 	Stack<Integer> parenthesisStartIndex = new Stack<Integer>();
 	parenthesisStartIndex.add(0);
 	int parenthesisLevel = 0;
 
+	// Divide into arguments by parenthesis
 	for (int i = 0; i <= math.length(); i++) {
 	    if (i == math.length()) {
 		arguments.add(new Argument(arguments.size(), parenthesisLevel,
@@ -30,8 +33,9 @@ public abstract class Calculator {
 	    }
 	}
 
-	arguments.sort(new Argument(0, 0, "f"));
+	arguments.sort(SORTING_HAT);
 
+	// Solve everything
 	while (true) {
 	    IOperation op = null;
 	    int index = 999;
@@ -56,22 +60,56 @@ public abstract class Calculator {
 
 	    String contents = arguments.get(0).contents;
 	    // Remove beginning and ending parenthesis first
-	    findNeighboringNumbers(contents.substring(1, contents.length() - 1), operator, index - 1);
+	    if (contents.startsWith("(") && contents.endsWith(")")) {
+		contents = contents.substring(1, contents.length() - 1);
+	    }
+	    String trimmedContents = trimToOperation(contents, operator, index - 1);
+	    String[] numbersS = trimmedContents.split(Pattern.quote(operator));
+	    double[] numbers = { Double.valueOf(numbersS[0]), Double.valueOf(numbersS[1]) };
+	    double answer = op.evaluateFunction(numbers[0], numbers[1]);
+	    if (contents.equals("(" + trimmedContents + ")"))
+		trimmedContents = contents;
+	    if (arguments.updateMath(trimmedContents, String.valueOf(answer)))
+		break;
 	}
+
+	return Double.valueOf(arguments.get(0).contents);
     }
 
-    public static void findNeighboringNumbers(String math, String symbol, int symbolStartIndex) {
+    public static String trimToOperation(String math, String operationSymbol, int symbolStartIndex) {
 	int index = 0;
 	int lastIndex = 0;
-	while (index != symbolStartIndex) {
-	    lastIndex = index;
-	    index = math.indexOf(symbol, lastIndex);
-	}
-	if (lastIndex != 0)
-	    math = math.substring(lastIndex + symbol.length(), math.length());
-	String[] maths = math.split(Pattern.quote(symbol));
-	String math2 = maths[1];
+	// Eliminate other instances of operationSymbol
+	/**
+	 * while (index != symbolStartIndex) { lastIndex = index; index =
+	 * math.indexOf(operationSymbol, lastIndex); } if (lastIndex != 0) math
+	 * = math.substring(lastIndex + operationSymbol.length(),
+	 * math.length());
+	 */
+	String[] maths = math.split(Pattern.quote(operationSymbol));
 
+	// Isolate the first number
+	String math1 = maths[0];
+	lastIndex = math1.length() - 1;
+	for (index = lastIndex; index > -1; index--) {
+	    if (!isNumber(math1.charAt(index), tryCharAt(math1, index - 1), tryCharAt(math1, index - 2)))
+		break;
+	}
+	if (lastIndex != math1.length() - 1) {
+	    math1 = math1.substring(index, lastIndex);
+	}
+
+	// Isolate the second number
+	String math2 = maths[1];
+	lastIndex = 0;
+	for (index = lastIndex; index < math2.length(); index++) {
+	    if (!isNumber(math2.charAt(index), tryCharAt(math2, index - 1), tryCharAt(math2, index - 2)))
+		break;
+	}
+	if (index != math2.length() - 1) {
+	    math2 = math2.substring(lastIndex, index);
+	}
+	return math1 + operationSymbol + math2;
     }
 
     /**
@@ -87,7 +125,7 @@ public abstract class Calculator {
     }
 
     public static boolean isNumber(Character current, Character last, Character lastLast) {
-	if (current.toString().matches("//d|//.|[lpiLPI]")) {
+	if (current.toString().matches("\\d|\\.|[lpiLPI]")) {
 	    return true;
 	} else if (current.equals('-')
 		&& ((new Character('-').equals(last) || last == null) && !(new Character('/').equals(lastLast)))) {
