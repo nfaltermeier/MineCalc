@@ -67,8 +67,8 @@ public abstract class Calculator {
 	    String[] numbersS = trimmedContents.split(Pattern.quote(operator));
 	    double[] numbers = { Double.valueOf(numbersS[0]), Double.valueOf(numbersS[1]) };
 	    double answer = op.evaluateFunction(numbers[0], numbers[1]);
-	    if (contents.equals("(" + trimmedContents + ")"))
-		trimmedContents = contents;
+	    if (arguments.get(0).contents.equals("(" + trimmedContents + ")"))
+		trimmedContents = arguments.get(0).contents;
 	    if (arguments.updateMath(trimmedContents, String.valueOf(answer)))
 		break;
 	}
@@ -90,12 +90,17 @@ public abstract class Calculator {
 
 	// Isolate the first number
 	String math1 = maths[0];
-	lastIndex = math1.length() - 1;
-	for (index = lastIndex; index > -1; index--) {
-	    if (!isNumber(math1.charAt(index), tryCharAt(math1, index - 1), tryCharAt(math1, index - 2)))
+	lastIndex = math1.length();
+	for (index = lastIndex - 1; index > -1; index--) {
+	    if (!isNumber(math1.charAt(index), tryCharAt(math1, index - 1), tryCharAt(math1, index - 2))) {
+		index++;
 		break;
+	    }
+
 	}
-	if (lastIndex != math1.length() - 1) {
+	if (index == -1)
+	    index++;
+	if (index != math1.length() - 1) {
 	    math1 = math1.substring(index, lastIndex);
 	}
 
