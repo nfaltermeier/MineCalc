@@ -41,7 +41,7 @@ public abstract class Calculator {
 	    int index = 999;
 	    String operator = "";
 	    // Cycle through the OOPS levels
-	    for (int i = 6; i > -1; i--) {
+	    for (int i = 6; i > 0; i--) {
 		IOperation[] level = MineCalc.operations.getLevel(i);
 		// Cycle through the operations in the OOPS level
 		for (int n = 0; n < level.length; n++) {
@@ -75,7 +75,7 @@ public abstract class Calculator {
 		    }
 		}
 
-		if (op != null)
+		if (op != null && (useOOPS || i == 0))
 		    break;
 	    }
 
@@ -121,9 +121,7 @@ public abstract class Calculator {
 	}
 	if (index == -1)
 	    index++;
-	if (index != math1.length() - 1) {
-	    math1 = math1.substring(index, lastIndex);
-	}
+	math1 = math1.substring(index, lastIndex);
 
 	// Isolate the second number
 	String math2 = maths[1];

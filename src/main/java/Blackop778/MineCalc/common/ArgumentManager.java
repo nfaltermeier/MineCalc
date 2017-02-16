@@ -37,7 +37,6 @@ public class ArgumentManager {
 	    Argument arg = it.next();
 	    if (!arg.contents.equals(oldMath)) {
 		arg.contents = arg.contents.replaceAll(Pattern.quote(oldMath), answer);
-		int i = 1 + 1;
 	    } else if (arguments.size() == 1) {
 		arg.contents = arg.contents.replaceAll(Pattern.quote(oldMath), answer);
 		return true;
