@@ -19,7 +19,7 @@ public abstract class ArgumentManagerTest {
     public static void diagnostic() {
 	try {
 	    System.out.println("Expected: 45 Recieved: " + Calculator.evaluate("3+(4+3)*6", true));
-	    System.out.println("Expected: 3 Recieved: " + Calculator.evaluate("6*6/--2+((-1*1)+1+(1*-1))*3", true));
+	    System.out.println("Expected: 3 Recieved: " + Calculator.evaluate("(6*6)/--2+((-1*1)+1+(1*-1))*3", true));
 	} catch (CalcExceptions e) {
 	    e.printStackTrace();
 	}

@@ -40,16 +40,37 @@ public abstract class Calculator {
 	    IOperation op = null;
 	    int index = 999;
 	    String operator = "";
+	    // Cycle through the OOPS levels
 	    for (int i = 6; i > -1; i--) {
 		IOperation[] level = MineCalc.operations.getLevel(i);
+		// Cycle through the operations in the OOPS level
 		for (int n = 0; n < level.length; n++) {
 		    String[] current = level[n].getOperators();
+		    // Cycle through the operation strings for the given
+		    // operation
 		    for (int x = 0; x < current.length; x++) {
-			int newIndex = arguments.get(0).contents.indexOf(current[x]);
-			if (newIndex > -1 && newIndex < index) {
-			    index = newIndex;
-			    op = level[n];
-			    operator = current[x];
+			boolean run = true;
+			int startIndex = 0;
+			while (run) {
+			    run = false;
+			    int newIndex = arguments.get(0).contents.indexOf(current[x], startIndex);
+			    updateOP: if (newIndex > -1 && newIndex < index) {
+				if (current[x].equals("-")) {
+				    String currentMath = arguments.get(0).contents;
+				    if (currentMath.startsWith("(") && currentMath.endsWith(")")) {
+					currentMath = currentMath.substring(1, currentMath.length() - 1);
+				    }
+				    if (isNumber(currentMath.charAt(newIndex - 1), tryCharAt(currentMath, newIndex - 2),
+					    tryCharAt(currentMath, newIndex - 3))) {
+					run = true;
+					startIndex = newIndex + 1;
+					break updateOP;
+				    }
+				}
+				index = newIndex;
+				op = level[n];
+				operator = current[x];
+			    }
 			}
 		    }
 		}
@@ -132,9 +153,11 @@ public abstract class Calculator {
     public static boolean isNumber(Character current, Character last, Character lastLast) {
 	if (current.toString().matches("\\d|\\.|[lpiLPI]")) {
 	    return true;
-	} else if (current.equals('-')
-		&& ((new Character('-').equals(last) || last == null) && !(new Character('/').equals(lastLast)))) {
-	    return true;
+	} else if (current.equals('-') && !(new Character('/').equals(lastLast))) {
+	    if (last == null)
+		return true;
+	    else if (!last.toString().matches("\\d|\\.|[lpiLPI]"))
+		return true;
 	}
 
 	return false;
