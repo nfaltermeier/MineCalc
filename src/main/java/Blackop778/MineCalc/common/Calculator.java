@@ -75,8 +75,9 @@ public abstract class Calculator {
 		    }
 		}
 
-		if (op != null && (useOOPS || i == 0))
+		if (op != null && (useOOPS || i == 0)) {
 		    break;
+		}
 	    }
 
 	    String contents = arguments.get(0).contents;
@@ -84,14 +85,22 @@ public abstract class Calculator {
 	    if (contents.startsWith("(") && contents.endsWith(")")) {
 		contents = contents.substring(1, contents.length() - 1);
 	    }
+	    String replacer;
+	    if (op.equals("-")) {
+		String[] temp = takeMinuses(contents, index);
+		contents = temp[0];
+		replacer = temp[1];
+	    }
 	    String trimmedContents = trimToOperation(contents, operator, index - 1);
 	    String[] numbersS = trimmedContents.split(Pattern.quote(operator));
 	    double[] numbers = { Double.valueOf(numbersS[0]), Double.valueOf(numbersS[1]) };
 	    double answer = op.evaluateFunction(numbers[0], numbers[1]);
-	    if (arguments.get(0).contents.equals("(" + trimmedContents + ")"))
+	    if (arguments.get(0).contents.equals("(" + trimmedContents + ")")) {
 		trimmedContents = arguments.get(0).contents;
-	    if (arguments.updateMath(trimmedContents, String.valueOf(answer)))
+	    }
+	    if (arguments.updateMath(trimmedContents, String.valueOf(answer))) {
 		break;
+	    }
 	}
 
 	return Double.valueOf(arguments.get(0).contents);
@@ -119,16 +128,18 @@ public abstract class Calculator {
 	    }
 
 	}
-	if (index == -1)
+	if (index == -1) {
 	    index++;
+	}
 	math1 = math1.substring(index, lastIndex);
 
 	// Isolate the second number
 	String math2 = maths[1];
 	lastIndex = 0;
 	for (index = lastIndex; index < math2.length(); index++) {
-	    if (!isNumber(math2.charAt(index), tryCharAt(math2, index - 1), tryCharAt(math2, index - 2)))
+	    if (!isNumber(math2.charAt(index), tryCharAt(math2, index - 1), tryCharAt(math2, index - 2))) {
 		break;
+	    }
 	}
 	if (index != math2.length() - 1) {
 	    math2 = math2.substring(lastIndex, index);
@@ -149,9 +160,9 @@ public abstract class Calculator {
     }
 
     public static boolean isNumber(Character current, Character last, Character lastLast) {
-	if (current.toString().matches("\\d|\\.|[lpiLPI]")) {
+	if (current.toString().matches("\\d|\\.|[lpiLPI]"))
 	    return true;
-	} else if (current.equals('-') && !(new Character('/').equals(lastLast))) {
+	else if (current.equals('-') && !(new Character('/').equals(lastLast))) {
 	    if (last == null)
 		return true;
 	    else if (!last.toString().matches("\\d|\\.|[lpiLPI]"))
@@ -159,5 +170,33 @@ public abstract class Calculator {
 	}
 
 	return false;
+    }
+
+    /**
+     * 
+     * @param toChange
+     * @param unchangedIndex
+     * @return the changed string followed by the char the extra minus signs
+     *         were replaced by
+     */
+    public static String[] takeMinuses(String toChange, int unchangedIndex) {
+	String[] potentialReplacements = { "$", "#", "@", "'", ";", ":", "?", "&", "[", "{", "]", "}", "|" };
+	String current = "";
+	for (int i = 0; i < potentialReplacements.length; i++) {
+	    current = potentialReplacements[i];
+	    if (toChange.contains(current)) {
+		break;
+	    }
+	}
+
+	toChange = toChange.replaceAll(Pattern.quote("-"), current);
+	toChange = toChange.substring(0, unchangedIndex) + "-"
+		+ toChange.substring(unchangedIndex + 1, toChange.length());
+
+	return new String[] { toChange, current };
+    }
+
+    public static String addMinus(String math, String minusReplacer) {
+	return math.replaceAll(Pattern.quote(minusReplacer), "-");
     }
 }
