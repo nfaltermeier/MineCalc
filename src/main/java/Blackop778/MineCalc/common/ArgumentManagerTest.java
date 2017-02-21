@@ -1,8 +1,8 @@
 package Blackop778.MineCalc.common;
 
-import Blackop778.MineCalc.common.Calculator.AllStandinsUsedException;
-
 public abstract class ArgumentManagerTest {
+    public static boolean debug = false;
+
     @SuppressWarnings("unused")
     public static void main(String[] args) {
 	Operations.addOperations();
@@ -13,8 +13,6 @@ public abstract class ArgumentManagerTest {
 		System.out.println(Calculator.evaluate("5%3*9", true));
 		System.out.println(Calculator.evaluate("6*6/--2+((-1*1)+1+(1*-1))*3", false));
 	    } catch (CalcExceptions e) {
-		e.printStackTrace();
-	    } catch (AllStandinsUsedException e) {
 		e.printStackTrace();
 	    }
 	}
@@ -29,11 +27,29 @@ public abstract class ArgumentManagerTest {
 	    System.out.println("Expected: 2.5 Recieved: " + Calculator.evaluate("1.25*4/2", true));
 	    System.out.println("Expected: -5 Recieved: " + Calculator.evaluate("5*(1+1-(6/2))", true));
 	    System.out.println("Expected: 11  Recieved: " + Calculator.evaluate("5--6", false));
+	    System.out.println("Expected: 11  Recieved: " + Calculator.evaluate("5y6", false));
 	} catch (CalcExceptions e) {
 	    e.printStackTrace();
-	} catch (AllStandinsUsedException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	}
+    }
+
+    public static boolean testMath(String math, boolean useOOPS, Object answer) {
+	Object result;
+	try {
+	    result = Calculator.evaluate(math, useOOPS);
+	} catch (CalcExceptions e) {
+	    result = e;
+	}
+
+	boolean success;
+	if (result instanceof CalcExceptions) {
+	    success = result.getClass().equals(answer.getClass());
+	} else {
+	    success = result == answer;
+	}
+
+	if (!success || debug) {
+
 	}
     }
 }

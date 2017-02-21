@@ -1,17 +1,23 @@
 package Blackop778.MineCalc.common;
 
+import java.util.HashMap;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import Blackop778.MineCalc.MineCalc;
+import Blackop778.MineCalc.common.CalcExceptions.AllStandinsUsedException;
+import Blackop778.MineCalc.common.CalcExceptions.OperatorException;
+import Blackop778.MineCalc.common.CalcExceptions.PreviousOutputException;
+import net.minecraft.command.ICommandSender;
 
 public abstract class Calculator {
     public static final Character[] standInChars = { '$', '#', '@', '"', ';', ':', '?', '&', '[', '{', ']', '}', '|',
 	    '!' };
+    public static HashMap<String, Double> lastMap = new HashMap<String, Double>();
     public static final Argument SORTING_HAT = new Argument(0, 0, "f");
 
-    public static double evaluate(String math, boolean useOOPS) throws CalcExceptions, AllStandinsUsedException {
+    public static double evaluate(String math, boolean useOOPS) throws CalcExceptions {
 	math = math.replaceAll("\\s", "");
 	ArgumentManager arguments = new ArgumentManager();
 	Stack<Integer> parenthesisStartIndex = new Stack<Integer>();
@@ -82,6 +88,9 @@ public abstract class Calculator {
 		    break;
 		}
 	    }
+	    if (index == 999) {
+		throw new OperatorException();
+	    }
 
 	    String contents = arguments.get(0).contents;
 	    // Remove beginning and ending parenthesis first
@@ -112,6 +121,28 @@ public abstract class Calculator {
 	}
 
 	return Double.valueOf(arguments.get(0).contents);
+    }
+
+    public static double getDoubleValue(String number, ICommandSender sender) throws PreviousOutputException {
+	boolean negative = false;
+	double toReturn;
+	if (number.startsWith("-")) {
+	    negative = true;
+	    number = number.substring(1);
+	}
+
+	if (number.equalsIgnoreCase("pi")) {
+	    toReturn = Math.PI;
+	} else if (number.equalsIgnoreCase("l")) {
+	    if (lastMap.containsKey(sender.getName()))
+		toReturn = lastMap.get(sender.getName());
+	    else
+		throw new PreviousOutputException();
+	} else {
+	    toReturn = Double.valueOf(number);
+	}
+
+	return negative ? -toReturn : toReturn;
     }
 
     public static String trimToOperation(String math, String operationSymbol, int symbolStartIndex)
@@ -216,14 +247,6 @@ public abstract class Calculator {
 	    chars.append("'").append(c).append("', ");
 	}
 	throw new AllStandinsUsedException(chars.toString().substring(0, chars.toString().length() - 2));
-    }
-
-    public static class AllStandinsUsedException extends Exception {
-	private static final long serialVersionUID = 682745941841678365L;
-
-	public AllStandinsUsedException(String standins) {
-	    super(standins);
-	}
     }
 
     /**

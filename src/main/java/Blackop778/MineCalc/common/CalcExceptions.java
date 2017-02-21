@@ -51,4 +51,10 @@ public abstract class CalcExceptions extends Exception {
 	    this.denominator = denominator;
 	}
     }
+
+    public static class AllStandinsUsedException extends CalcExceptions {
+	public AllStandinsUsedException(String standins) {
+	    super(standins);
+	}
+    }
 }
