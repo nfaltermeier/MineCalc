@@ -1,5 +1,10 @@
 package Blackop778.MineCalc.common;
 
+import Blackop778.MineCalc.common.CalcExceptions.DivisionException;
+import Blackop778.MineCalc.common.CalcExceptions.ImaginaryNumberException;
+import Blackop778.MineCalc.common.CalcExceptions.OperatorException;
+import Blackop778.MineCalc.common.CalcExceptions.PreviousOutputException;
+
 public abstract class ArgumentManagerTest {
     public static boolean debug = false;
 
@@ -10,8 +15,8 @@ public abstract class ArgumentManagerTest {
 	    diagnostic();
 	} else {
 	    try {
-		System.out.println(Calculator.evaluate("5%3*9", true));
-		System.out.println(Calculator.evaluate("6*6/--2+((-1*1)+1+(1*-1))*3", false));
+		System.out.println(Calculator.evaluate("5%3*9", true, null));
+		System.out.println(Calculator.evaluate("6*6/--2+((-1*1)+1+(1*-1))*3", false, null));
 	    } catch (CalcExceptions e) {
 		e.printStackTrace();
 	    }
@@ -19,24 +24,32 @@ public abstract class ArgumentManagerTest {
     }
 
     public static void diagnostic() {
-	try {
-	    System.out.println("Expected: 45 Recieved: " + Calculator.evaluate("3+(4+3)*6", true));
-	    System.out.println("Expected: 3 Recieved: " + Calculator.evaluate("(6*6)/--2+((-1*1)+1+(1*-1))*3", true));
-	    System.out.println("Expected: 14 Recieved: " + Calculator.evaluate("2+3*4", true));
-	    System.out.println("Expected: 20 Recieved: " + Calculator.evaluate("2+3*4", false));
-	    System.out.println("Expected: 2.5 Recieved: " + Calculator.evaluate("1.25*4/2", true));
-	    System.out.println("Expected: -5 Recieved: " + Calculator.evaluate("5*(1+1-(6/2))", true));
-	    System.out.println("Expected: 11  Recieved: " + Calculator.evaluate("5--6", false));
-	    System.out.println("Expected: 11  Recieved: " + Calculator.evaluate("5y6", false));
-	} catch (CalcExceptions e) {
-	    e.printStackTrace();
+	String[] questions = { "3+(4+3)*6", "(6*6)/--2+((-1*1)+1+(1*-1))*3", "2+3*4", "2+3*4", "1.25*4/2",
+		"5*(1+1-(6/2))", "5--6", "5y6", "80/0", "-5/--2", "6*l", "2^3^2", "3^(2+1)", "0/5", "2^-2",
+		"(1/2)^(1+1)", "-8^(1/2)", "-8^(1/3)" };
+	boolean[] useOOPSs = { true, true, true, false, true, true, false, false, true, true, true, true, true, true,
+		true, true, true, true };
+	Object[] answers = { 45.0, 3.0, 14.0, 20.0, 2.5, -5.0, 11.0, new OperatorException(), new DivisionException(),
+		new ImaginaryNumberException(), new PreviousOutputException(), 64.0, 27.0, 0.0, .25, .25,
+		new ImaginaryNumberException(), -2.0 };
+	int fails = 0;
+	for (int i = 0; i < questions.length; i++) {
+	    if (!testMath(questions[i], useOOPSs[i], answers[i])) {
+		fails++;
+	    }
+	}
+
+	if (fails == 0) {
+	    System.out.println("All tests succeeded");
+	} else {
+	    System.out.println(fails + " tests failed");
 	}
     }
 
     public static boolean testMath(String math, boolean useOOPS, Object answer) {
 	Object result;
 	try {
-	    result = Calculator.evaluate(math, useOOPS);
+	    result = Calculator.evaluate(math, useOOPS, null);
 	} catch (CalcExceptions e) {
 	    result = e;
 	}
@@ -45,11 +58,14 @@ public abstract class ArgumentManagerTest {
 	if (result instanceof CalcExceptions) {
 	    success = result.getClass().equals(answer.getClass());
 	} else {
-	    success = result == answer;
+	    success = result.equals(answer);
 	}
 
 	if (!success || debug) {
-
+	    System.out.println(
+		    (success ? "Success" : "Failure") + ": " + math + " returned " + result + " Expected: " + answer);
 	}
+
+	return success;
     }
 }

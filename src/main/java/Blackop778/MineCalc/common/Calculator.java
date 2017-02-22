@@ -17,7 +17,7 @@ public abstract class Calculator {
     public static HashMap<String, Double> lastMap = new HashMap<String, Double>();
     public static final Argument SORTING_HAT = new Argument(0, 0, "f");
 
-    public static double evaluate(String math, boolean useOOPS) throws CalcExceptions {
+    public static double evaluate(String math, boolean useOOPS, ICommandSender sender) throws CalcExceptions {
 	math = math.replaceAll("\\s", "");
 	ArgumentManager arguments = new ArgumentManager();
 	Stack<Integer> parenthesisStartIndex = new Stack<Integer>();
@@ -110,7 +110,7 @@ public abstract class Calculator {
 		numbersS[1] = addMinus(numbersS[1], replacer);
 		trimmedContents = addMinus(trimmedContents, replacer);
 	    }
-	    double[] numbers = { Double.valueOf(numbersS[0]), Double.valueOf(numbersS[1]) };
+	    double[] numbers = { getDoubleValue(numbersS[0], sender), getDoubleValue(numbersS[1], sender) };
 	    double answer = op.evaluateFunction(numbers[0], numbers[1]);
 	    if (arguments.get(0).contents.equals("(" + trimmedContents + ")")) {
 		trimmedContents = arguments.get(0).contents;
@@ -134,7 +134,7 @@ public abstract class Calculator {
 	if (number.equalsIgnoreCase("pi")) {
 	    toReturn = Math.PI;
 	} else if (number.equalsIgnoreCase("l")) {
-	    if (lastMap.containsKey(sender.getName()))
+	    if (sender != null && lastMap.containsKey(sender.getName()))
 		toReturn = lastMap.get(sender.getName());
 	    else
 		throw new PreviousOutputException();
@@ -154,13 +154,6 @@ public abstract class Calculator {
 	    Character numberStandin) throws AllStandinsUsedException {
 	int index = 0;
 	int lastIndex = 0;
-	// Eliminate other instances of operationSymbol
-	/**
-	 * while (index != symbolStartIndex) { lastIndex = index; index =
-	 * math.indexOf(operationSymbol, lastIndex); } if (lastIndex != 0) math
-	 * = math.substring(lastIndex + operationSymbol.length(),
-	 * math.length());
-	 */
 	String[] maths = math.split(Pattern.quote(operationSymbol));
 
 	// Isolate the first number
