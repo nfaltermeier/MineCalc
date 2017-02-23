@@ -34,10 +34,6 @@ public abstract class CalcExceptions extends Exception {
 	}
     }
 
-    public static class RecursiveLoopException extends CalcExceptions {
-
-    }
-
     /**
      * Not really an exception but a way to implement the old fancy remainders
      * functionality
@@ -56,5 +52,9 @@ public abstract class CalcExceptions extends Exception {
 	public AllStandinsUsedException(String standins) {
 	    super(standins);
 	}
+    }
+
+    public static class MultiplePointsException extends CalcExceptions {
+
     }
 }

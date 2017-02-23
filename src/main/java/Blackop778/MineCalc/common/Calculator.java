@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import Blackop778.MineCalc.MineCalc;
 import Blackop778.MineCalc.common.CalcExceptions.AllStandinsUsedException;
+import Blackop778.MineCalc.common.CalcExceptions.MultiplePointsException;
 import Blackop778.MineCalc.common.CalcExceptions.OperatorException;
 import Blackop778.MineCalc.common.CalcExceptions.PreviousOutputException;
 import net.minecraft.command.ICommandSender;
@@ -123,7 +124,8 @@ public abstract class Calculator {
 	return Double.valueOf(arguments.get(0).contents);
     }
 
-    public static double getDoubleValue(String number, ICommandSender sender) throws PreviousOutputException {
+    public static double getDoubleValue(String number, ICommandSender sender)
+	    throws PreviousOutputException, MultiplePointsException {
 	boolean negative = false;
 	double toReturn;
 	if (number.startsWith("-")) {
@@ -139,7 +141,14 @@ public abstract class Calculator {
 	    else
 		throw new PreviousOutputException();
 	} else {
-	    toReturn = Double.valueOf(number);
+	    try {
+		toReturn = Double.valueOf(number);
+	    } catch (NumberFormatException e) {
+		if (e.getMessage().equals("multiple points")) {
+		    throw new MultiplePointsException();
+		} else
+		    throw e;
+	    }
 	}
 
 	return negative ? -toReturn : toReturn;

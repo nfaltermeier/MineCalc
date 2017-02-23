@@ -108,13 +108,19 @@ public abstract class Operations {
 	    }
 
 	    @Override
-	    public double evaluateFunction(double num1, double num2) throws CalcExceptions {
-		if (num1 < 0) {
+	    public double evaluateFunction(double base, double num2) throws CalcExceptions {
+		boolean negative = false;
+		if (base < 0) {
 		    double num3 = 1 / num2;
 		    if (num3 % 2 == 0)
 			throw new ImaginaryNumberException();
+		    else {
+			base = -base;
+			negative = true;
+		    }
 		}
-		return Math.pow(num1, num2);
+		double answer = Math.pow(base, num2);
+		return negative ? -answer : answer;
 	    }
 
 	    @Override
@@ -131,10 +137,16 @@ public abstract class Operations {
 	    }
 
 	    @Override
-	    public double evaluateFunction(double num1, double num2) throws CalcExceptions {
-		if (num1 < 0 && num2 % 2 == 0)
-		    throw new ImaginaryNumberException();
-		return Math.pow(num1, 1 / num2);
+	    public double evaluateFunction(double base, double num2) throws CalcExceptions {
+		boolean negative = false;
+		if (base < 0)
+		    if (num2 % 2 == 0)
+			throw new ImaginaryNumberException();
+		    else {
+			base = -base;
+		    }
+		double answer = Math.pow(base, 1 / num2);
+		return negative ? -answer : answer;
 	    }
 
 	    @Override
