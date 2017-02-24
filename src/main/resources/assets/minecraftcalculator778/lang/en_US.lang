@@ -1,8 +1,6 @@
 #'/calc' should NOT be translated
 minecalc.calc.help=/calc <number><symbol><number>[symbol][number]
-minecalc.calc.powerZeroWarning=Warning: Anything to the power of 0 is 1
-minecalc.calc.multZeroWarning=Warning: Anything times 0 is 0
-minecalc.calc.numberFormatException=Error: Could not be interpreted as a double:
+minecalc.calc.numberFormatException=Error: One of the inputed numbers could not be interpreted as a number
 minecalc.calc.imaginaryException=Error: Imaginary numbers are not supported
 minecalc.calc.divZeroException=Error: Cannot divide by 0
 minecalc.calc.symbolException=Error: Valid symbols are '+, -, *, /,
@@ -11,3 +9,4 @@ minecalc.calc.multiplePointsException=Error: A number may only have one decimal 
 minecalc.calc.previousOutputException=Error: There is no previous output to insert
 #'/calc' should NOT be translated
 minecalc.calc.usage=Usage: /calc <number><symbol><number>[symbol][number]
+minecalc.calc.standInsException=Error: Please exclude one of the following symbols:

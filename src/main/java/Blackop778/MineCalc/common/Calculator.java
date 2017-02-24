@@ -5,11 +5,13 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Blackop778.MineCalc.MineCalc;
 import Blackop778.MineCalc.common.CalcExceptions.AllStandinsUsedException;
+import Blackop778.MineCalc.common.CalcExceptions.FancyRemainderException;
+import Blackop778.MineCalc.common.CalcExceptions.InvalidNumberException;
 import Blackop778.MineCalc.common.CalcExceptions.MultiplePointsException;
 import Blackop778.MineCalc.common.CalcExceptions.OperatorException;
 import Blackop778.MineCalc.common.CalcExceptions.PreviousOutputException;
+import Blackop778.MineCalc.common.CalcExceptions.UsageException;
 import net.minecraft.command.ICommandSender;
 
 public abstract class Calculator {
@@ -17,6 +19,7 @@ public abstract class Calculator {
 	    '!' };
     public static HashMap<String, Double> lastMap = new HashMap<String, Double>();
     public static final Argument SORTING_HAT = new Argument(0, 0, "f");
+    public static OperationHolder operations = new OperationHolder();
 
     public static double evaluate(String math, boolean useOOPS, ICommandSender sender) throws CalcExceptions {
 	math = math.replaceAll("\\s", "");
@@ -52,7 +55,7 @@ public abstract class Calculator {
 	    String operator = "";
 	    // Cycle through the OOPS levels
 	    for (int i = 6; i > 0; i--) {
-		IOperation[] level = MineCalc.operations.getLevel(i);
+		IOperation[] level = operations.getLevel(i);
 		// Cycle through the operations in the OOPS level
 		for (int n = 0; n < level.length; n++) {
 		    String[] current = level[n].getOperators();
@@ -67,11 +70,14 @@ public abstract class Calculator {
 			    updateOP: if (newIndex > -1 && newIndex < index) {
 				if (current[x].equals("-")) {
 				    String currentMath = arguments.get(0).contents;
+				    int effectiveIndex = newIndex;
 				    if (currentMath.startsWith("(") && currentMath.endsWith(")")) {
 					currentMath = currentMath.substring(1, currentMath.length() - 1);
+					effectiveIndex--;
 				    }
-				    if (isNumber(currentMath.charAt(newIndex - 1), tryCharAt(currentMath, newIndex - 2),
-					    tryCharAt(currentMath, newIndex - 3))) {
+				    if (isNumber(currentMath.charAt(effectiveIndex),
+					    tryCharAt(currentMath, effectiveIndex - 1),
+					    tryCharAt(currentMath, effectiveIndex - 2))) {
 					run = true;
 					startIndex = newIndex + 1;
 					break updateOP;
@@ -97,6 +103,7 @@ public abstract class Calculator {
 	    // Remove beginning and ending parenthesis first
 	    if (contents.startsWith("(") && contents.endsWith(")")) {
 		contents = contents.substring(1, contents.length() - 1);
+		index--;
 	    }
 	    Character replacer = findUnusedStandin(contents);
 	    if (operator.equals("-")) {
@@ -104,7 +111,7 @@ public abstract class Calculator {
 		contents = temp[0];
 		replacer = temp[1].charAt(0);
 	    }
-	    String trimmedContents = trimToOperation(contents, operator, index - 1, replacer);
+	    String trimmedContents = trimToOperation(contents, operator, index, replacer);
 	    String[] numbersS = trimmedContents.split(Pattern.quote(operator));
 	    if (operator.equals("-")) {
 		numbersS[0] = addMinus(numbersS[0], replacer);
@@ -112,6 +119,11 @@ public abstract class Calculator {
 		trimmedContents = addMinus(trimmedContents, replacer);
 	    }
 	    double[] numbers = { getDoubleValue(numbersS[0], sender), getDoubleValue(numbersS[1], sender) };
+	    if (operator.equals("%") && arguments.size() == 1
+		    && (arguments.get(0).contents.equals("(" + trimmedContents + ")")
+			    || arguments.get(0).contents.equals(trimmedContents))) {
+		throw new FancyRemainderException(numbers[0], numbers[1]);
+	    }
 	    double answer = op.evaluateFunction(numbers[0], numbers[1]);
 	    if (arguments.get(0).contents.equals("(" + trimmedContents + ")")) {
 		trimmedContents = arguments.get(0).contents;
@@ -125,7 +137,7 @@ public abstract class Calculator {
     }
 
     public static double getDoubleValue(String number, ICommandSender sender)
-	    throws PreviousOutputException, MultiplePointsException {
+	    throws PreviousOutputException, MultiplePointsException, InvalidNumberException {
 	boolean negative = false;
 	double toReturn;
 	if (number.startsWith("-")) {
@@ -135,6 +147,8 @@ public abstract class Calculator {
 
 	if (number.equalsIgnoreCase("pi")) {
 	    toReturn = Math.PI;
+	} else if (number.equalsIgnoreCase("e")) {
+	    toReturn = Math.E;
 	} else if (number.equalsIgnoreCase("l")) {
 	    if (sender != null && lastMap.containsKey(sender.getName()))
 		toReturn = lastMap.get(sender.getName());
@@ -147,7 +161,7 @@ public abstract class Calculator {
 		if (e.getMessage().equals("multiple points")) {
 		    throw new MultiplePointsException();
 		} else
-		    throw e;
+		    throw new InvalidNumberException();
 	    }
 	}
 
@@ -155,45 +169,50 @@ public abstract class Calculator {
     }
 
     public static String trimToOperation(String math, String operationSymbol, int symbolStartIndex)
-	    throws AllStandinsUsedException {
+	    throws AllStandinsUsedException, UsageException {
 	return trimToOperation(math, operationSymbol, symbolStartIndex, findUnusedStandin(math));
     }
 
     public static String trimToOperation(String math, String operationSymbol, int symbolStartIndex,
-	    Character numberStandin) throws AllStandinsUsedException {
+	    Character numberStandin) throws AllStandinsUsedException, UsageException {
 	int index = 0;
 	int lastIndex = 0;
 	String[] maths = math.split(Pattern.quote(operationSymbol));
 
-	// Isolate the first number
-	String math1 = maths[0];
-	lastIndex = math1.length();
-	for (index = lastIndex - 1; index > -1; index--) {
-	    if (!isNumber(math1.charAt(index), tryCharAt(math1, index - 1), tryCharAt(math1, index - 2),
-		    numberStandin)) {
+	try {
+	    // Isolate the first number
+	    String math1 = maths[0];
+	    lastIndex = math1.length();
+	    for (index = lastIndex - 1; index > -1; index--) {
+		if (!isNumber(math1.charAt(index), tryCharAt(math1, index - 1), tryCharAt(math1, index - 2),
+			numberStandin)) {
+		    index++;
+		    break;
+		}
+
+	    }
+	    if (index == -1) {
 		index++;
-		break;
 	    }
+	    math1 = math1.substring(index, lastIndex);
 
-	}
-	if (index == -1) {
-	    index++;
-	}
-	math1 = math1.substring(index, lastIndex);
+	    // Isolate the second number
+	    String math2 = maths[1];
 
-	// Isolate the second number
-	String math2 = maths[1];
-	lastIndex = 0;
-	for (index = lastIndex; index < math2.length(); index++) {
-	    if (!isNumber(math2.charAt(index), tryCharAt(math2, index - 1), tryCharAt(math2, index - 2),
-		    numberStandin)) {
-		break;
+	    lastIndex = 0;
+	    for (index = lastIndex; index < math2.length(); index++) {
+		if (!isNumber(math2.charAt(index), tryCharAt(math2, index - 1), tryCharAt(math2, index - 2),
+			numberStandin)) {
+		    break;
+		}
 	    }
+	    if (index != math2.length() - 1) {
+		math2 = math2.substring(lastIndex, index);
+	    }
+	    return math1 + operationSymbol + math2;
+	} catch (ArrayIndexOutOfBoundsException e) {
+	    throw new UsageException();
 	}
-	if (index != math2.length() - 1) {
-	    math2 = math2.substring(lastIndex, index);
-	}
-	return math1 + operationSymbol + math2;
     }
 
     /**
@@ -226,12 +245,12 @@ public abstract class Calculator {
     }
 
     public static boolean isNumber(Character current, Character last, Character lastLast, Character numberStandIn) {
-	if (current.toString().matches("\\d|\\.|[lpiLPI]|" + Pattern.quote(numberStandIn.toString())))
+	if (current.toString().matches("\\d|\\.|[lpieLPIE]|" + Pattern.quote(numberStandIn.toString())))
 	    return true;
 	else if (current.equals('-') && !(new Character('/').equals(lastLast))) {
 	    if (last == null)
 		return true;
-	    else if (!last.toString().matches("\\d|\\.|[lpiLPI]|" + Pattern.quote(numberStandIn.toString())))
+	    else if (!last.toString().matches("\\d|\\.|[lpieLPIE]|" + Pattern.quote(numberStandIn.toString())))
 		return true;
 	}
 
@@ -263,8 +282,8 @@ public abstract class Calculator {
 	Character replacement = findUnusedStandin(toChange);
 
 	toChange = toChange.replaceAll(Pattern.quote("-"), Matcher.quoteReplacement(replacement.toString()));
-	toChange = toChange.substring(0, unchangedIndex - 1) + "-"
-		+ toChange.substring(unchangedIndex, toChange.length());
+	toChange = toChange.substring(0, unchangedIndex) + "-"
+		+ toChange.substring(unchangedIndex + 1, toChange.length());
 
 	return new String[] { toChange, replacement.toString() };
     }

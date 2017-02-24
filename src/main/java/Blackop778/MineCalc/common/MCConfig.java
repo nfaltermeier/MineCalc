@@ -30,8 +30,6 @@ public class MCConfig {
 	returnInput = config.getBoolean("Prepend Input to Output", Configuration.CATEGORY_GENERAL, true, null);
 	fancyRemainders = config.getBoolean("Display remainders with a fancy output", Configuration.CATEGORY_GENERAL,
 		true, "Looks like: 5 % 2 = 2R1 versus 5 % 2 = 1");
-	zeroMultWarns = config.getBoolean("Display warnings when multiplying by 0", Configuration.CATEGORY_GENERAL,
-		true, "Also applied to power of 0");
 
 	config.save();
     }
@@ -45,7 +43,6 @@ public class MCConfig {
 
     public static boolean returnInput;
     public static boolean fancyRemainders;
-    public static boolean zeroMultWarns;
 
     public static Configuration getConfig() {
 	return config;

@@ -1,8 +1,6 @@
 #'/calc' should NOT be translated
 minecalc.calc.help=[ɹǝqɯnu][loqɯʎs]<ɹǝqɯnu><loqɯʎs><ɹǝqɯnu> ɔlɐɔ/
-minecalc.calc.powerZeroWarning=Ɩ sᴉ 0 ɟo ɹǝʍod ǝɥʇ oʇ ƃuᴉɥʇʎu∀ :ƃuᴉuɹɐM
-minecalc.calc.multZeroWarning=0 sᴉ 0 sǝɯᴉʇ ƃuᴉɥʇʎu∀ :ƃuᴉuɹɐM
-minecalc.calc.numberFormatException=:ǝlqnop ɐ sɐ pǝʇǝɹdɹǝʇuᴉ ǝq ʇou plnoƆ :ɹoɹɹƎ
+minecalc.calc.numberFormatException=ɹǝqɯnu ɐ sɐ pǝʇǝɹdɹǝʇuᴉ ǝq ʇou plnoɔ sɹǝqɯnu pǝʇnduᴉ ǝɥʇ ɟo ǝuO
 minecalc.calc.imaginaryException=pǝʇɹoddns ʇou ǝɹɐ sɹǝqɯnu ʎɹɐuᴉƃɐɯI :ɹoɹɹƎ
 minecalc.calc.divZeroException=0 ʎq ǝpᴉʌᴉp ʇouuɐƆ :ɹoɹɹƎ
 minecalc.calc.symbolException=,-/ '^ '
@@ -11,3 +9,4 @@ minecalc.calc.multiplePointsException=ʇuᴉod lɐɯᴉɔǝp ǝuo ǝʌɐɥ ʎluo
 minecalc.calc.previousOutputException=ʇɹǝsuᴉ oʇ ʇndʇno snoᴉʌǝɹd ou sᴉ ǝɹǝɥ┴ :ɹoɹɹƎ
 #'/calc' should NOT be translated
 minecalc.calc.usage=[ɹǝqɯnu][loqɯʎs]<ɹǝqɯnu><loqɯʎs><ɹǝqɯnu> ɔlɐɔ/ :ǝƃɐs∩
+minecalc.calc.standInsException=:sloqɯʎs ƃuᴉʍolloɟ ǝɥʇ ɟo ǝuo ǝpnlɔxǝ ǝsɐǝlԀ :ɹoɹɹƎ

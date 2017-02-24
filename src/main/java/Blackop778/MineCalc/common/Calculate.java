@@ -2,7 +2,6 @@ package Blackop778.MineCalc.common;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import Blackop778.MineCalc.MineCalc;
@@ -11,9 +10,11 @@ import Blackop778.MineCalc.common.CalcExceptions.CustomFunctionException;
 import Blackop778.MineCalc.common.CalcExceptions.DivisionException;
 import Blackop778.MineCalc.common.CalcExceptions.FancyRemainderException;
 import Blackop778.MineCalc.common.CalcExceptions.ImaginaryNumberException;
+import Blackop778.MineCalc.common.CalcExceptions.InvalidNumberException;
 import Blackop778.MineCalc.common.CalcExceptions.MultiplePointsException;
 import Blackop778.MineCalc.common.CalcExceptions.OperatorException;
 import Blackop778.MineCalc.common.CalcExceptions.PreviousOutputException;
+import Blackop778.MineCalc.common.CalcExceptions.UsageException;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -30,7 +31,6 @@ import net.minecraft.util.text.translation.I18n;
 @SuppressWarnings("deprecation")
 public class Calculate extends CommandBase {
 
-    static HashMap<String, Double> lastMap = new HashMap<String, Double>();
     public static final Style redStyle = new Style().setColor(TextFormatting.RED);;
 
     @Override
@@ -51,19 +51,22 @@ public class Calculate extends CommandBase {
 	double answer;
 
 	useOOPS = Boolean.valueOf(args[0]);
+	if (args[0].equalsIgnoreCase("true") || args[0].equalsIgnoreCase("false")) {
+	    args[0] = "";
+	}
+	String condensedMath = "";
+	for (String s : args) {
+	    condensedMath += s;
+	}
 	try {
-	    answer = Calculator.evaluate("", useOOPS, sender);
+	    answer = Calculator.evaluate(condensedMath, useOOPS, sender);
+	    Calculator.lastMap.put(sender.getName(), answer);
 	    if (answer % 1 == 0) {
 		int i = (int) answer;
 		print = new TextComponentString(String.valueOf(i));
 	    } else {
 		print = new TextComponentString(String.valueOf(answer));
 	    }
-	} catch (NumberFormatException e) {
-	    if (e.getMessage().equals("multiple points"))
-		return new TextComponentTranslation("minecalc.calc.multiplePointsException").setStyle(redStyle);
-	    return new TextComponentTranslation("minecalc.calc.numberFormatException").setStyle(redStyle)
-		    .appendSibling(new TextComponentString(e.getMessage().substring(17, e.getMessage().length())));
 	} catch (ImaginaryNumberException er) {
 	    return new TextComponentTranslation("minecalc.calc.imaginaryException").setStyle(redStyle);
 	} catch (DivisionException err) {
@@ -75,27 +78,28 @@ public class Calculate extends CommandBase {
 	} catch (PreviousOutputException error) {
 	    return new TextComponentTranslation("minecalc.calc.previousOutputException").setStyle(redStyle);
 	} catch (CustomFunctionException errors) {
-
+	    return new TextComponentString(errors.getMessage()).setStyle(redStyle);
 	} catch (FancyRemainderException errorsA) {
-
+	    int num1 = (int) (errorsA.numerator / errorsA.denominator);
+	    double num2 = errorsA.numerator % errorsA.denominator;
+	    print = new TextComponentString(num1 + "R" + num2);
+	    Calculator.lastMap.put(sender.getName(), num2);
 	} catch (AllStandinsUsedException errorsAr) {
-
+	    return new TextComponentTranslation("minecalc.calc.standInsException").setStyle(redStyle)
+		    .appendSibling(new TextComponentString(errorsAr.getMessage()));
 	} catch (MultiplePointsException errorsAre) {
-
+	    return new TextComponentTranslation("minecalc.calc.multiplePointsException").setStyle(redStyle);
+	} catch (UsageException errorsAreF) {
+	    return new TextComponentTranslation("minecalc.calc.usage").setStyle(redStyle);
+	} catch (InvalidNumberException errorsAreFu) {
+	    return new TextComponentTranslation("minecalc.calc.numberFormatException").setStyle(redStyle);
 	} catch (CalcExceptions e) {
 	    e.printStackTrace();
 	}
 
 	// Prepend the arguments to the output, if configured to
-	if (MCConfig.returnInput) {
-	    String tempPrint;
-	    tempPrint = args[0];
-	    for (int i = 1; i < args.length; i++) {
-		tempPrint = tempPrint + " " + args[i];
-	    }
-	    tempPrint = tempPrint + " = ";
-	    print = new TextComponentString(tempPrint).appendSibling(print);
-	}
+	if (MCConfig.returnInput)
+	    print = new TextComponentString(condensedMath + "=").appendSibling(print);
 
 	return print;
     }
@@ -111,23 +115,10 @@ public class Calculate extends CommandBase {
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args,
 	    BlockPos pos) {
 	if (args.length % 2 != 1) {
-	    ArrayList<String> options = new ArrayList<String>(Arrays.asList("+", "-", "*", "/", "%", "^", "/-"));
+	    ArrayList<String> options = new ArrayList<String>(Arrays.asList("+", "-", "*", "/", "%", "^", "/--"));
 	    return options;
 	} else
 	    return null;
-    }
-
-    public double getDouble(ICommandSender sender, String[] args, int i)
-	    throws NumberFormatException, PreviousOutputException {
-	if (args[i].equalsIgnoreCase("pi"))
-	    return Math.PI;
-	else if (args[i].equalsIgnoreCase("l")) {
-	    if (lastMap.containsKey(sender.getName()))
-		return lastMap.get(sender.getName());
-	    else
-		throw new PreviousOutputException();
-	} else
-	    return Double.valueOf(args[i]);
     }
 
     @Override
@@ -145,26 +136,6 @@ public class Calculate extends CommandBase {
 		player.addChatMessage(output);
 	    }
 	}
-    }
-
-    public static boolean isNumber(Character character, boolean lastIsNum, Character lastChar) {
-	if (!character.equals('.')) {
-	    if (!character.toString().equalsIgnoreCase("l")) {
-		if (!character.toString().equalsIgnoreCase("p")) {
-		    if (!character.toString().equalsIgnoreCase("i")) {
-			if (!(character.equals('-') && (!lastIsNum && !lastChar.toString().equals("/")))) {
-			    try {
-				Double.valueOf(String.valueOf(character));
-			    } catch (NumberFormatException e) {
-				return false;
-			    }
-			}
-		    }
-		}
-	    }
-	}
-
-	return true;
     }
 
     @Override

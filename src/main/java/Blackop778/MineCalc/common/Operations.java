@@ -1,12 +1,11 @@
 package Blackop778.MineCalc.common;
 
-import Blackop778.MineCalc.MineCalc;
 import Blackop778.MineCalc.common.CalcExceptions.DivisionException;
 import Blackop778.MineCalc.common.CalcExceptions.ImaginaryNumberException;
 
 public abstract class Operations {
     static void addOperations() {
-	MineCalc.operations.add(new IOperation() {
+	Calculator.operations.add(new IOperation() {
 
 	    @Override
 	    public String[] getOperators() {
@@ -24,7 +23,7 @@ public abstract class Operations {
 	    }
 	});
 
-	MineCalc.operations.add(new IOperation() {
+	Calculator.operations.add(new IOperation() {
 
 	    @Override
 	    public String[] getOperators() {
@@ -42,7 +41,7 @@ public abstract class Operations {
 	    }
 	});
 
-	MineCalc.operations.add(new IOperation() {
+	Calculator.operations.add(new IOperation() {
 
 	    @Override
 	    public String[] getOperators() {
@@ -60,7 +59,7 @@ public abstract class Operations {
 	    }
 	});
 
-	MineCalc.operations.add(new IOperation() {
+	Calculator.operations.add(new IOperation() {
 
 	    @Override
 	    public String[] getOperators() {
@@ -80,7 +79,7 @@ public abstract class Operations {
 	    }
 	});
 
-	MineCalc.operations.add(new IOperation() {
+	Calculator.operations.add(new IOperation() {
 
 	    @Override
 	    public String[] getOperators() {
@@ -100,7 +99,7 @@ public abstract class Operations {
 	    }
 	});
 
-	MineCalc.operations.add(new IOperation() {
+	Calculator.operations.add(new IOperation() {
 
 	    @Override
 	    public String[] getOperators() {
@@ -129,7 +128,7 @@ public abstract class Operations {
 	    }
 	});
 
-	MineCalc.operations.add(new IOperation() {
+	Calculator.operations.add(new IOperation() {
 
 	    @Override
 	    public String[] getOperators() {

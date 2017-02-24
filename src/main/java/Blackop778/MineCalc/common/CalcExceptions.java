@@ -26,8 +26,10 @@ public abstract class CalcExceptions extends Exception {
 
     }
 
-    // It is encouraged to add a message because that will be displayed to the
-    // user for these Exceptions
+    /**
+     * It is required to add a message because that will be displayed to the
+     * user for these Exceptions
+     */
     public static class CustomFunctionException extends CalcExceptions {
 	public CustomFunctionException(String message) {
 	    super(message);
@@ -39,12 +41,12 @@ public abstract class CalcExceptions extends Exception {
      * functionality
      */
     public static class FancyRemainderException extends CalcExceptions {
-	public int numerator;
-	public int denominator;
+	public double numerator;
+	public double denominator;
 
-	public FancyRemainderException(int numerator, int denominator) {
-	    this.numerator = numerator;
-	    this.denominator = denominator;
+	public FancyRemainderException(double numbers, double numbers2) {
+	    this.numerator = numbers;
+	    this.denominator = numbers2;
 	}
     }
 
@@ -55,6 +57,14 @@ public abstract class CalcExceptions extends Exception {
     }
 
     public static class MultiplePointsException extends CalcExceptions {
+
+    }
+
+    public static class UsageException extends CalcExceptions {
+
+    }
+
+    public static class InvalidNumberException extends CalcExceptions {
 
     }
 }
