@@ -67,34 +67,34 @@ public class Calculate extends CommandBase {
 	    } else {
 		print = new TextComponentString(String.valueOf(answer));
 	    }
-	} catch (ImaginaryNumberException er) {
+	} catch (ImaginaryNumberException e) {
 	    return new TextComponentTranslation("minecalc.calc.imaginaryException").setStyle(redStyle);
-	} catch (DivisionException err) {
+	} catch (DivisionException er) {
 	    return new TextComponentTranslation("minecalc.calc.divZeroException").setStyle(redStyle);
-	} catch (OperatorException erro) {
+	} catch (OperatorException err) {
 	    return new TextComponentTranslation("minecalc.calc.symbolException").setStyle(redStyle)
 		    .appendSibling(new TextComponentString(" %"))
 		    .appendSibling(new TextComponentTranslation("minecalc.calc.symbolExceptionPartTwo"));
-	} catch (PreviousOutputException error) {
+	} catch (PreviousOutputException erro) {
 	    return new TextComponentTranslation("minecalc.calc.previousOutputException").setStyle(redStyle);
-	} catch (CustomFunctionException errors) {
-	    return new TextComponentString(errors.getMessage()).setStyle(redStyle);
-	} catch (FancyRemainderException errorsA) {
-	    int num1 = (int) (errorsA.numerator / errorsA.denominator);
-	    double num2 = errorsA.numerator % errorsA.denominator;
+	} catch (CustomFunctionException error) {
+	    return new TextComponentString(error.getMessage()).setStyle(redStyle);
+	} catch (FancyRemainderException errors) {
+	    int num1 = (int) (errors.numerator / errors.denominator);
+	    double num2 = errors.numerator % errors.denominator;
 	    print = new TextComponentString(num1 + "R" + num2);
 	    Calculator.lastMap.put(sender.getName(), num2);
-	} catch (AllStandinsUsedException errorsAr) {
+	} catch (AllStandinsUsedException errorsA) {
 	    return new TextComponentTranslation("minecalc.calc.standInsException").setStyle(redStyle)
-		    .appendSibling(new TextComponentString(errorsAr.getMessage()));
-	} catch (MultiplePointsException errorsAre) {
+		    .appendSibling(new TextComponentString(errorsA.getMessage()));
+	} catch (MultiplePointsException errorsAr) {
 	    return new TextComponentTranslation("minecalc.calc.multiplePointsException").setStyle(redStyle);
-	} catch (UsageException errorsAreF) {
+	} catch (UsageException errorsAre) {
 	    return new TextComponentTranslation("minecalc.calc.usage").setStyle(redStyle);
-	} catch (InvalidNumberException errorsAreFu) {
+	} catch (InvalidNumberException errorsAreF) {
 	    return new TextComponentTranslation("minecalc.calc.numberFormatException").setStyle(redStyle);
-	} catch (CalcExceptions e) {
-	    e.printStackTrace();
+	} catch (CalcExceptions errorsAreFu) {
+	    errorsAreFu.printStackTrace();
 	}
 
 	// Prepend the arguments to the output, if configured to
