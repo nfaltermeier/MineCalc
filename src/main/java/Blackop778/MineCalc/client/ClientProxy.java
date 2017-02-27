@@ -9,9 +9,13 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 public class ClientProxy extends CommonProxy {
+
+    private static boolean isClientSide = false;
+
     @Override
     public void preInit(FMLPreInitializationEvent event) {
 	super.preInit(event);
+	isClientSide = true;
 	MinecraftForge.EVENT_BUS.register(new MCConfig());
     }
 
@@ -28,5 +32,9 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void serverStart(FMLServerStartingEvent event) {
 	super.serverStart(event);
+    }
+
+    public static boolean isClientSide() {
+	return isClientSide;
     }
 }

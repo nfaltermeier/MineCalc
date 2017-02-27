@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import Blackop778.MineCalc.MineCalc;
+import Blackop778.MineCalc.client.ClientProxy;
 import Blackop778.MineCalc.common.CalcExceptions.AllStandinsUsedException;
 import Blackop778.MineCalc.common.CalcExceptions.CustomFunctionException;
 import Blackop778.MineCalc.common.CalcExceptions.DivisionException;
@@ -45,7 +46,7 @@ public class Calculate extends CommandBase {
     @Override
     public String getCommandUsage(ICommandSender icommandsender) {
 	// What is shown when "/help Calculate" is typed in
-	return "minecalc.calc.help";
+	return I18n.translateToLocal("minecalc.calc.help");
     }
 
     public static ITextComponent calculate(MinecraftServer server, ICommandSender sender, String[] args) {
@@ -101,8 +102,9 @@ public class Calculate extends CommandBase {
 	}
 
 	// Prepend the arguments to the output, if configured to
-	if (MCConfig.returnInput)
+	if (MCConfig.returnInput) {
 	    print = new TextComponentString(condensedMath + "=").appendSibling(print);
+	}
 
 	return print;
     }
@@ -130,6 +132,7 @@ public class Calculate extends CommandBase {
 	    MineCalc.Logger.warn("Command blocks cannot use /calc");
 	} else {
 	    ITextComponent output = calculate(server, sender, args);
+	    output = translateCheck(sender, output);
 
 	    // Send the message back to the user
 	    if (sender.getName().equals("Server")) {
@@ -147,7 +150,8 @@ public class Calculate extends CommandBase {
     }
 
     public static ITextComponent translateCheck(ICommandSender sender, ITextComponent toOutput) {
-	if (hasMod.contains(sender.getDisplayName()) || !sender.getEntityWorld().isRemote)
+	HashSet set = hasMod;
+	if (hasMod.contains(sender.getDisplayName().getUnformattedText()) || ClientProxy.isClientSide())
 	    return toOutput;
 	else {
 	    Iterator<ITextComponent> it = toOutput.iterator();
@@ -155,18 +159,20 @@ public class Calculate extends CommandBase {
 	    while (it.hasNext()) {
 		ITextComponent current = it.next();
 		if (current instanceof TextComponentString) {
-		    if (toReturn == null)
+		    if (toReturn == null) {
 			toReturn = new TextComponentString(current.getUnformattedText()).setStyle(current.getStyle());
-		    else
+		    } else {
 			toReturn.appendSibling(new TextComponentString(current.getUnformattedComponentText())
 				.setStyle(current.getStyle()));
+		    }
 		} else {
 		    TextComponentTranslation tran = (TextComponentTranslation) current;
 		    String text = I18n.translateToLocal(tran.getKey());
-		    if (toReturn == null)
+		    if (toReturn == null) {
 			toReturn = new TextComponentString(text).setStyle(tran.getStyle());
-		    else
+		    } else {
 			toReturn.appendSibling(new TextComponentString(text).setStyle(tran.getStyle()));
+		    }
 		}
 	    }
 
