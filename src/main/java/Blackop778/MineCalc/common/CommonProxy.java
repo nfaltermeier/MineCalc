@@ -1,10 +1,10 @@
 package Blackop778.MineCalc.common;
 
-import Blackop778.MineCalc.MineCalc;
 import Blackop778.MineCalc.common.net.HasModMessage;
 import Blackop778.MineCalc.common.net.HasModMessage.HasModMessageHandler;
 import Blackop778.MineCalc.common.net.ModCheckMessage;
 import Blackop778.MineCalc.common.net.ModCheckMessage.ModCheckMessageHandler;
+import Blackop778.MineCalc.common.net.NetHub;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
@@ -18,10 +18,10 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
 	MCConfig.loadConfig(event.getModConfigurationDirectory());
 	Operations.addOperations();
-	MineCalc.NETWORKWRAPPER.registerMessage(ModCheckMessageHandler.class, ModCheckMessage.class,
-		MineCalc.packetDiscriminator++, Side.CLIENT);
-	MineCalc.NETWORKWRAPPER.registerMessage(HasModMessageHandler.class, HasModMessage.class,
-		MineCalc.packetDiscriminator++, Side.SERVER);
+	NetHub.NETWORKWRAPPER.registerMessage(ModCheckMessageHandler.class, ModCheckMessage.class,
+		NetHub.packetDiscriminator++, Side.CLIENT);
+	NetHub.NETWORKWRAPPER.registerMessage(HasModMessageHandler.class, HasModMessage.class,
+		NetHub.packetDiscriminator++, Side.SERVER);
     }
 
     public void load(FMLInitializationEvent event) {

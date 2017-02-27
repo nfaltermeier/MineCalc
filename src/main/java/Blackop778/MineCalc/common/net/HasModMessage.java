@@ -15,11 +15,16 @@ public class HasModMessage implements IMessage {
 	this.name = name;
     }
 
+    public HasModMessage() {
+
+    }
+
     public static class HasModMessageHandler implements IMessageHandler<HasModMessage, IMessage> {
 
 	@Override
 	public IMessage onMessage(HasModMessage message, MessageContext ctx) {
-	    MineCalc.Logger.error("Got Has Mod Message");
+	    MineCalc.Logger.info("Got Has Mod Message");
+	    MineCalc.Logger.info(message.name);
 	    return null;
 	}
 

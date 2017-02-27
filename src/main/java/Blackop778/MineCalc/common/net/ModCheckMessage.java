@@ -15,12 +15,17 @@ public class ModCheckMessage implements IMessage {
 	this.name = name;
     }
 
+    public ModCheckMessage() {
+
+    }
+
     public static class ModCheckMessageHandler implements IMessageHandler<ModCheckMessage, HasModMessage> {
 
 	@Override
 	public HasModMessage onMessage(ModCheckMessage message, MessageContext ctx) {
-	    MineCalc.Logger.error("ModCheckMessage recieved");
-	    return new HasModMessage("");
+	    MineCalc.Logger.info("ModCheckMessage recieved");
+	    MineCalc.Logger.info(message.name);
+	    return new HasModMessage(message.name);
 	}
 
     }
