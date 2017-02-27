@@ -67,4 +67,8 @@ public abstract class CalcExceptions extends Exception {
     public static class InvalidNumberException extends CalcExceptions {
 
     }
+
+    public static class TooManyParenthesisException extends CalcExceptions {
+
+    }
 }

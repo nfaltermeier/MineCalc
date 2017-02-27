@@ -1,6 +1,7 @@
 package Blackop778.MineCalc.common.net;
 
 import Blackop778.MineCalc.MineCalc;
+import Blackop778.MineCalc.common.Calculate;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -25,6 +26,7 @@ public class HasModMessage implements IMessage {
 	public IMessage onMessage(HasModMessage message, MessageContext ctx) {
 	    MineCalc.Logger.info("Got Has Mod Message");
 	    MineCalc.Logger.info(message.name);
+	    Calculate.hasMod.add(message.name);
 	    return null;
 	}
 

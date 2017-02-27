@@ -291,4 +291,15 @@ public abstract class Calculator {
     public static String addMinus(String math, Character minusReplacer) {
 	return math.replaceAll(Pattern.quote(minusReplacer.toString()), "-");
     }
+
+    public static int countAppearances(String container, char toCount) {
+	int count = 0;
+	char[] cont = container.toCharArray();
+	for (char c : cont) {
+	    if (c == toCount)
+		count++;
+	}
+
+	return count;
+    }
 }
