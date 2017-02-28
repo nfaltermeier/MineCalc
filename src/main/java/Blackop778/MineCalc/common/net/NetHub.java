@@ -17,7 +17,7 @@ public class NetHub {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-	MineCalc.Logger.info("Player joined");
+	MineCalc.LOGGER.info("Player joined");
 	NETWORKWRAPPER.sendTo(new ModCheckMessage(event.player.getName()), (EntityPlayerMP) event.player);
     }
 

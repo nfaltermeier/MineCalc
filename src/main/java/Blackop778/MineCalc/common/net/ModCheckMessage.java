@@ -23,8 +23,7 @@ public class ModCheckMessage implements IMessage {
 
 	@Override
 	public HasModMessage onMessage(ModCheckMessage message, MessageContext ctx) {
-	    MineCalc.Logger.info("ModCheckMessage recieved");
-	    MineCalc.Logger.info(message.name);
+	    MineCalc.LOGGER.info("Server has MineCalc installed");
 	    return new HasModMessage(message.name);
 	}
 

@@ -43,10 +43,15 @@ public class Calculate extends CommandBase {
 	return "calc";
     }
 
+    /**
+     * What is shown when "/help Calculate" is typed in
+     */
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
-	// What is shown when "/help Calculate" is typed in
-	return I18n.translateToLocal("minecalc.calc.help");
+    public String getCommandUsage(ICommandSender sender) {
+	if (hasMod.contains(sender.getDisplayName().getUnformattedText()) || ClientProxy.isClientSide())
+	    return "minecalc.calc.help";
+	else
+	    return I18n.translateToLocal("minecalc.calc.help");
     }
 
     public static ITextComponent calculate(MinecraftServer server, ICommandSender sender, String[] args) {
@@ -129,14 +134,14 @@ public class Calculate extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 	if (sender.getName().equals("@")) {
-	    MineCalc.Logger.warn("Command blocks cannot use /calc");
+	    MineCalc.LOGGER.warn("Command blocks cannot use /calc");
 	} else {
 	    ITextComponent output = calculate(server, sender, args);
 	    output = translateCheck(sender, output);
 
 	    // Send the message back to the user
 	    if (sender.getName().equals("Server")) {
-		MineCalc.Logger.info(output.getUnformattedText());
+		MineCalc.LOGGER.info(output.getUnformattedText());
 	    } else {
 		EntityPlayer player = (EntityPlayer) sender;
 		player.addChatMessage(output);
@@ -150,7 +155,6 @@ public class Calculate extends CommandBase {
     }
 
     public static ITextComponent translateCheck(ICommandSender sender, ITextComponent toOutput) {
-	HashSet set = hasMod;
 	if (hasMod.contains(sender.getDisplayName().getUnformattedText()) || ClientProxy.isClientSide())
 	    return toOutput;
 	else {

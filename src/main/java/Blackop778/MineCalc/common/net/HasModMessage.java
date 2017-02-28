@@ -24,8 +24,7 @@ public class HasModMessage implements IMessage {
 
 	@Override
 	public IMessage onMessage(HasModMessage message, MessageContext ctx) {
-	    MineCalc.Logger.info("Got Has Mod Message");
-	    MineCalc.Logger.info(message.name);
+	    MineCalc.LOGGER.info(message.name + " returned HasModMessage");
 	    Calculate.hasMod.add(message.name);
 	    return null;
 	}

@@ -16,8 +16,8 @@ public class MCConfig {
 	    try {
 		configFile.createNewFile();
 	    } catch (Exception e) {
-		MineCalc.Logger.error("Couldn't create a new config file. Reason:");
-		MineCalc.Logger.error(e.getLocalizedMessage());
+		MineCalc.LOGGER.error("Couldn't create a new config file. Reason:");
+		MineCalc.LOGGER.error(e.getLocalizedMessage());
 	    }
 	}
 	config = new Configuration(configFile);

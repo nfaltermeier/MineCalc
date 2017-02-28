@@ -17,7 +17,7 @@ public class MineCalc {
     public static final String MODID = "minecraftcalculator778";
     public static final String MODNAME = "MineCalc";
     public static final String MODVER = "4.0.0";
-    public static final Logger Logger = LogManager.getLogger(MODID);
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
     public static final String UPDATEJSONURL = "https://raw.githubusercontent.com/Blackop778/ModUpdateJsons/master/MineCalc.json";
 
     @SidedProxy(clientSide = "Blackop778.MineCalc.client.ClientProxy", serverSide = "Blackop778.MineCalc.server.ServerProxy")
