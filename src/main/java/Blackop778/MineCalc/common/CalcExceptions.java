@@ -68,7 +68,11 @@ public abstract class CalcExceptions extends Exception {
 
     }
 
-    public static class TooManyParenthesisException extends CalcExceptions {
+    public static class ParenthesisException extends CalcExceptions {
+	public final boolean tooMany;
 
+	public ParenthesisException(boolean tooMany) {
+	    this.tooMany = tooMany;
+	}
     }
 }

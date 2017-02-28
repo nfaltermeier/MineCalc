@@ -10,6 +10,7 @@ import Blackop778.MineCalc.common.CalcExceptions.FancyRemainderException;
 import Blackop778.MineCalc.common.CalcExceptions.InvalidNumberException;
 import Blackop778.MineCalc.common.CalcExceptions.MultiplePointsException;
 import Blackop778.MineCalc.common.CalcExceptions.OperatorException;
+import Blackop778.MineCalc.common.CalcExceptions.ParenthesisException;
 import Blackop778.MineCalc.common.CalcExceptions.PreviousOutputException;
 import Blackop778.MineCalc.common.CalcExceptions.UsageException;
 import net.minecraft.command.ICommandSender;
@@ -42,9 +43,13 @@ public abstract class Calculator {
 		    arguments.add(new Argument(arguments.size(), parenthesisLevel,
 			    math.substring(parenthesisStartIndex.pop(), i + 1)));
 		    parenthesisLevel--;
+		    if (parenthesisLevel < 0)
+			throw new ParenthesisException(false);
 		}
 	    }
 	}
+	if (parenthesisLevel > 0)
+	    throw new ParenthesisException(true);
 
 	arguments.sort(SORTING_HAT);
 

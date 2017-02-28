@@ -16,6 +16,7 @@ import Blackop778.MineCalc.common.CalcExceptions.ImaginaryNumberException;
 import Blackop778.MineCalc.common.CalcExceptions.InvalidNumberException;
 import Blackop778.MineCalc.common.CalcExceptions.MultiplePointsException;
 import Blackop778.MineCalc.common.CalcExceptions.OperatorException;
+import Blackop778.MineCalc.common.CalcExceptions.ParenthesisException;
 import Blackop778.MineCalc.common.CalcExceptions.PreviousOutputException;
 import Blackop778.MineCalc.common.CalcExceptions.UsageException;
 import net.minecraft.command.CommandBase;
@@ -102,8 +103,13 @@ public class Calculate extends CommandBase {
 	    return new TextComponentTranslation("minecalc.calc.usage").setStyle(redStyle);
 	} catch (InvalidNumberException errorsAreF) {
 	    return new TextComponentTranslation("minecalc.calc.numberFormatException").setStyle(redStyle);
-	} catch (CalcExceptions errorsAreFu) {
-	    errorsAreFu.printStackTrace();
+	} catch (ParenthesisException errorsAreFu) {
+	    if (errorsAreFu.tooMany)
+		return new TextComponentTranslation("minecalc.calc.manyParenthesisException").setStyle(redStyle);
+	    else
+		return new TextComponentTranslation("minecalc.calc.fewParenthesisException").setStyle(redStyle);
+	} catch (CalcExceptions errorsAreFun) {
+	    errorsAreFun.printStackTrace();
 	}
 
 	// Prepend the arguments to the output, if configured to
