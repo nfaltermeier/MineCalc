@@ -2,6 +2,7 @@ package Blackop778.MineCalc.client;
 
 import Blackop778.MineCalc.common.CommonProxy;
 import Blackop778.MineCalc.common.MCConfig;
+import Blackop778.MineCalc.common.net.NetHub;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -17,6 +18,7 @@ public class ClientProxy extends CommonProxy {
 	super.preInit(event);
 	isClientSide = true;
 	MinecraftForge.EVENT_BUS.register(new MCConfig());
+	MinecraftForge.EVENT_BUS.register(new NetHub());
     }
 
     @Override

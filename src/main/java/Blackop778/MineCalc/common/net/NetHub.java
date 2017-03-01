@@ -2,7 +2,6 @@ package Blackop778.MineCalc.common.net;
 
 import Blackop778.MineCalc.MineCalc;
 import Blackop778.MineCalc.common.Calculate;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
@@ -18,7 +17,8 @@ public class NetHub {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
 	MineCalc.LOGGER.info("Player joined");
-	NETWORKWRAPPER.sendTo(new ModCheckMessage(event.player.getName()), (EntityPlayerMP) event.player);
+	// NETWORKWRAPPER.sendTo(new ModCheckMessage(event.player.getName()),
+	// (EntityPlayerMP) event.player);
     }
 
     @SubscribeEvent
