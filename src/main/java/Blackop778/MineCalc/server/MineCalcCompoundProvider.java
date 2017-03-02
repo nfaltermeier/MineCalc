@@ -8,37 +8,36 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
-public class LastNumberProvider implements ICapabilitySerializable<NBTBase> {
+public class MineCalcCompoundProvider implements ICapabilitySerializable<NBTBase> {
 
-    @CapabilityInject(HasMineCalc.class)
-    public static final Capability<LastNumber> LN_CAP = null;
-    public static final ResourceLocation LN_RL = new ResourceLocation(MineCalc.MODID, "HMC");
+    @CapabilityInject(MineCalcCompound.class)
+    public static final Capability<IMineCalcCompound> MCC_CAP = null;
+    public static final ResourceLocation MCC_RL = new ResourceLocation(MineCalc.MODID, "HMC");
 
-    private LastNumber instance = null;
+    private static IMineCalcCompound instance = null;
+
+    static {
+	instance = MCC_CAP.getDefaultInstance();
+    }
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-	return capability == LN_CAP;
+	return capability == MCC_CAP;
     }
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-	return capability == LN_CAP ? LN_CAP.<T>cast(getInstance()) : null;
+	return capability == MCC_CAP ? MCC_CAP.<T>cast(instance) : null;
     }
 
     @Override
     public NBTBase serializeNBT() {
-	return LN_CAP.getStorage().writeNBT(LN_CAP, getInstance(), null);
+	return MCC_CAP.writeNBT(instance, null);
     }
 
     @Override
     public void deserializeNBT(NBTBase nbt) {
-	LN_CAP.getStorage().readNBT(LN_CAP, getInstance(), null, nbt);
+	MCC_CAP.readNBT(instance, null, nbt);
     }
 
-    private LastNumber getInstance() {
-	if (instance == null)
-	    instance = LN_CAP.getDefaultInstance();
-	return instance;
-    }
 }
