@@ -1,8 +1,9 @@
 package Blackop778.MineCalc.server;
 
 import Blackop778.MineCalc.common.CommonProxy;
-import Blackop778.MineCalc.common.net.NetHub;
+import Blackop778.MineCalc.server.HasMineCalc.HasMineCalcStorage;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -12,7 +13,8 @@ public class ServerProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
 	super.preInit(event);
-	MinecraftForge.EVENT_BUS.register(new NetHub());
+	MinecraftForge.EVENT_BUS.register(new HasMineCalcProvider());
+	CapabilityManager.INSTANCE.register(HasMineCalc.class, new HasMineCalcStorage(), HasMineCalc.class);
     }
 
     @Override

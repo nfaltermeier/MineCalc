@@ -13,7 +13,6 @@ public abstract class ArgumentManagerTest {
     public static boolean debug = false;
 
     public static void main(String[] args) {
-	Operations.addOperations();
 	diagnostic();
     }
 

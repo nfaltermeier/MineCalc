@@ -2,9 +2,10 @@ package Blackop778.MineCalc.common;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import Blackop778.MineCalc.MineCalc;
 import Blackop778.MineCalc.client.ClientProxy;
@@ -19,9 +20,11 @@ import Blackop778.MineCalc.common.CalcExceptions.OperatorException;
 import Blackop778.MineCalc.common.CalcExceptions.ParenthesisException;
 import Blackop778.MineCalc.common.CalcExceptions.PreviousOutputException;
 import Blackop778.MineCalc.common.CalcExceptions.UsageException;
+import Blackop778.MineCalc.server.HasMineCalcProvider;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -36,7 +39,6 @@ import net.minecraft.util.text.translation.I18n;
 public class Calculate extends CommandBase {
 
     public static final Style redStyle = new Style().setColor(TextFormatting.RED);
-    public static final HashSet<String> hasMod = new HashSet<String>();
 
     @Override
     public String getCommandName() {
@@ -49,7 +51,7 @@ public class Calculate extends CommandBase {
      */
     @Override
     public String getCommandUsage(ICommandSender sender) {
-	if (hasMod.contains(sender.getDisplayName().getUnformattedText()) || ClientProxy.isClientSide())
+	if (playerHasMod(sender.getCommandSenderEntity()))
 	    return "minecalc.calc.help";
 	else
 	    return I18n.translateToLocal("minecalc.calc.help");
@@ -160,8 +162,8 @@ public class Calculate extends CommandBase {
 	return true;
     }
 
-    public static ITextComponent translateCheck(ICommandSender sender, ITextComponent toOutput) {
-	if (hasMod.contains(sender.getDisplayName().getUnformattedText()) || ClientProxy.isClientSide())
+    private static ITextComponent translateCheck(ICommandSender sender, ITextComponent toOutput) {
+	if (playerHasMod(sender.getCommandSenderEntity()))
 	    return toOutput;
 	else {
 	    Iterator<ITextComponent> it = toOutput.iterator();
@@ -188,5 +190,13 @@ public class Calculate extends CommandBase {
 
 	    return toReturn;
 	}
+    }
+
+    private static boolean playerHasMod(@Nullable Entity ent) {
+	if (ClientProxy.isClientSide())
+	    return true;
+	if (ent == null)
+	    return false;
+	return ent.getCapability(HasMineCalcProvider.HMC_CAP, null).getHasMineCalc();
     }
 }
