@@ -4,8 +4,6 @@ import java.io.File;
 
 import Blackop778.MineCalc.MineCalc;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MCConfig {
     private static Configuration config;
@@ -32,13 +30,6 @@ public class MCConfig {
 		true, "Looks like: 5 % 2 = 2R1 versus 5 % 2 = 1");
 
 	config.save();
-    }
-
-    @SubscribeEvent
-    public void onConfigChanged(OnConfigChangedEvent event) {
-	if (event.getModID().equalsIgnoreCase(MineCalc.MODID)) {
-	    syncConfig();
-	}
     }
 
     public static boolean returnInput;

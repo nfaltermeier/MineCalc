@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import Blackop778.MineCalc.MineCalc;
 import Blackop778.MineCalc.client.ClientProxy;
 import Blackop778.MineCalc.common.CalcExceptions.AllStandinsUsedException;
@@ -192,7 +190,7 @@ public class Calculate extends CommandBase {
 	}
     }
 
-    private static boolean playerHasMod(@Nullable Entity ent) {
+    private static boolean playerHasMod(Entity ent) {
 	if (ClientProxy.isClientSide())
 	    return true;
 	if (ent == null)
