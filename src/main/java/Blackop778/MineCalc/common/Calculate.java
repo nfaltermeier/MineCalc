@@ -8,7 +8,6 @@ import java.util.List;
 import Blackop778.MineCalc.MineCalc;
 import Blackop778.MineCalc.client.ClientProxy;
 import Blackop778.MineCalc.core.CalcExceptions;
-import Blackop778.MineCalc.core.Calculator;
 import Blackop778.MineCalc.core.CalcExceptions.AllStandinsUsedException;
 import Blackop778.MineCalc.core.CalcExceptions.CustomFunctionException;
 import Blackop778.MineCalc.core.CalcExceptions.DivisionException;
@@ -20,6 +19,7 @@ import Blackop778.MineCalc.core.CalcExceptions.OperatorException;
 import Blackop778.MineCalc.core.CalcExceptions.ParenthesisException;
 import Blackop778.MineCalc.core.CalcExceptions.PreviousOutputException;
 import Blackop778.MineCalc.core.CalcExceptions.UsageException;
+import Blackop778.MineCalc.core.Calculator;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -72,8 +72,8 @@ public class Calculate extends CommandBase {
 	    condensedMath += s;
 	}
 	try {
-	    answer = Calculator.evaluate(condensedMath, useOOPS, sender);
-	    Calculator.setLastOutput(sender, answer);
+	    answer = Calculator.evaluate(condensedMath, useOOPS, getLastOutput(sender));
+	    setLastOutput(sender, answer);
 	    if (answer % 1 == 0) {
 		int i = (int) answer;
 		print = new TextComponentString(String.valueOf(i));
@@ -96,7 +96,7 @@ public class Calculate extends CommandBase {
 	    int num1 = (int) (errors.numerator / errors.denominator);
 	    double num2 = errors.numerator % errors.denominator;
 	    print = new TextComponentString(num1 + "R" + num2);
-	    Calculator.setLastOutput(sender, num2);
+	    setLastOutput(sender, num2);
 	} catch (AllStandinsUsedException errorsA) {
 	    return new TextComponentTranslation("minecalc.calc.standInsException").setStyle(redStyle)
 		    .appendSibling(new TextComponentString(errorsA.getMessage()));
@@ -121,6 +121,49 @@ public class Calculate extends CommandBase {
 	}
 
 	return print;
+    }
+
+    /**
+     * @param sender
+     *            Can be null
+     * @return The last output the user received
+     * @throws PreviousOutputException
+     *             If there was no previous output
+     */
+    public static double getLastOutput(ICommandSender sender) throws PreviousOutputException {
+	if (sender == null)
+	    if (Calculator.consoleLastOutput == null)
+		throw new PreviousOutputException();
+	    else
+		return Calculator.consoleLastOutput;
+	else {
+	    Entity e = sender.getCommandSenderEntity();
+	    if (e == null)
+		if (Calculator.consoleLastOutput == null)
+		    throw new PreviousOutputException();
+		else
+		    return Calculator.consoleLastOutput;
+	    IMineCalcCompound comp = e.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
+	    Double last = comp.getLastNumber();
+	    if (last.isNaN())
+		throw new PreviousOutputException();
+	    else
+		return last;
+	}
+    }
+
+    public static void setLastOutput(ICommandSender sender, double newOutput) {
+	if (sender == null)
+	    Calculator.consoleLastOutput = newOutput;
+	else {
+	    Entity e = sender.getCommandSenderEntity();
+	    if (e == null)
+		Calculator.consoleLastOutput = newOutput;
+	    else {
+		IMineCalcCompound comp = e.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
+		comp.setLastNumber(newOutput);
+	    }
+	}
     }
 
     @Override

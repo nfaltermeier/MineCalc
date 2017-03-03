@@ -4,8 +4,6 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Blackop778.MineCalc.common.IMineCalcCompound;
-import Blackop778.MineCalc.common.MineCalcCompoundProvider;
 import Blackop778.MineCalc.core.CalcExceptions.AllStandinsUsedException;
 import Blackop778.MineCalc.core.CalcExceptions.FancyRemainderException;
 import Blackop778.MineCalc.core.CalcExceptions.InvalidNumberException;
@@ -14,8 +12,6 @@ import Blackop778.MineCalc.core.CalcExceptions.OperatorException;
 import Blackop778.MineCalc.core.CalcExceptions.ParenthesisException;
 import Blackop778.MineCalc.core.CalcExceptions.PreviousOutputException;
 import Blackop778.MineCalc.core.CalcExceptions.UsageException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.Entity;
 
 public abstract class Calculator {
     public static final Character[] STANDINCHARS = { '$', '#', '@', '"', ';', ':', '?', '&', '[', '{', ']', '}', '|',
@@ -24,7 +20,7 @@ public abstract class Calculator {
     public static OperationHolder operations = new OperationHolder();
     public static Double consoleLastOutput = null;
 
-    public static double evaluate(String math, boolean useOOPS, ICommandSender sender) throws CalcExceptions {
+    public static double evaluate(String math, boolean useOOPS, Double last) throws CalcExceptions {
 	math = math.replaceAll("\\s", "");
 	ArgumentManager arguments = new ArgumentManager();
 	Stack<Integer> parenthesisStartIndex = new Stack<Integer>();
@@ -125,7 +121,7 @@ public abstract class Calculator {
 		numbersS[1] = addMinus(numbersS[1], replacer);
 		trimmedContents = addMinus(trimmedContents, replacer);
 	    }
-	    double[] numbers = { getDoubleValue(numbersS[0], sender), getDoubleValue(numbersS[1], sender) };
+	    double[] numbers = { getDoubleValue(numbersS[0], last), getDoubleValue(numbersS[1], last) };
 	    if (operator.equals("%") && arguments.size() == 1
 		    && (arguments.get(0).contents.equals("(" + trimmedContents + ")")
 			    || arguments.get(0).contents.equals(trimmedContents))) {
@@ -143,7 +139,7 @@ public abstract class Calculator {
 	return Double.valueOf(arguments.get(0).contents);
     }
 
-    public static double getDoubleValue(String number, ICommandSender sender)
+    public static double getDoubleValue(String number, Double last)
 	    throws PreviousOutputException, MultiplePointsException, InvalidNumberException {
 	boolean negative = false;
 	double toReturn;
@@ -157,7 +153,10 @@ public abstract class Calculator {
 	} else if (number.equalsIgnoreCase("e")) {
 	    toReturn = Math.E;
 	} else if (number.equalsIgnoreCase("l")) {
-	    toReturn = getLastOutput(sender);
+	    if (last == null)
+		throw new PreviousOutputException();
+	    else
+		toReturn = last;
 	} else {
 	    try {
 		toReturn = Double.valueOf(number);
@@ -170,49 +169,6 @@ public abstract class Calculator {
 	}
 
 	return negative ? -toReturn : toReturn;
-    }
-
-    /**
-     * @param sender
-     *            Can be null
-     * @return The last output the user received
-     * @throws PreviousOutputException
-     *             If there was no previous output
-     */
-    public static double getLastOutput(ICommandSender sender) throws PreviousOutputException {
-	if (sender == null)
-	    if (consoleLastOutput == null)
-		throw new PreviousOutputException();
-	    else
-		return consoleLastOutput;
-	else {
-	    Entity e = sender.getCommandSenderEntity();
-	    if (e == null)
-		if (consoleLastOutput == null)
-		    throw new PreviousOutputException();
-		else
-		    return consoleLastOutput;
-	    IMineCalcCompound comp = e.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
-	    Double last = comp.getLastNumber();
-	    if (last.isNaN())
-		throw new PreviousOutputException();
-	    else
-		return last;
-	}
-    }
-
-    public static void setLastOutput(ICommandSender sender, double newOutput) {
-	if (sender == null)
-	    consoleLastOutput = newOutput;
-	else {
-	    Entity e = sender.getCommandSenderEntity();
-	    if (e == null)
-		consoleLastOutput = newOutput;
-	    else {
-		IMineCalcCompound comp = e.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
-		comp.setLastNumber(newOutput);
-	    }
-	}
     }
 
     public static String trimToOperation(String math, String operationSymbol, int symbolStartIndex)
