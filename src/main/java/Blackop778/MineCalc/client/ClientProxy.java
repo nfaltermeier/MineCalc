@@ -1,5 +1,6 @@
 package Blackop778.MineCalc.client;
 
+import Blackop778.MineCalc.client.ClientEventHandlers.SubEvent;
 import Blackop778.MineCalc.common.CommonProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -16,6 +17,7 @@ public class ClientProxy extends CommonProxy {
 	super.preInit(event);
 	isClientSide = true;
 	MinecraftForge.EVENT_BUS.register(new ClientEventHandlers());
+	MinecraftForge.EVENT_BUS.register(new SubEvent());
     }
 
     @Override

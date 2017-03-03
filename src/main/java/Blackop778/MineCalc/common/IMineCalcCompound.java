@@ -1,4 +1,4 @@
-package Blackop778.MineCalc.server;
+package Blackop778.MineCalc.common;
 
 public interface IMineCalcCompound {
 

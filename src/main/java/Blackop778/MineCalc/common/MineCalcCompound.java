@@ -1,4 +1,4 @@
-package Blackop778.MineCalc.server;
+package Blackop778.MineCalc.common;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,6 +12,10 @@ public class MineCalcCompound implements IMineCalcCompound {
     private double lastNumber;
     private static final String hasMineCalcKey = "HasMineCalc";
     private static final String lastNumberKey = "LastNumber";
+
+    public MineCalcCompound() {
+	lastNumber = Double.NaN;
+    }
 
     @Override
     public boolean getHasMineCalc() {

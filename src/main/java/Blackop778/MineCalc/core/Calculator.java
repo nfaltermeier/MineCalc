@@ -1,26 +1,28 @@
-package Blackop778.MineCalc.common;
+package Blackop778.MineCalc.core;
 
-import java.util.HashMap;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Blackop778.MineCalc.common.CalcExceptions.AllStandinsUsedException;
-import Blackop778.MineCalc.common.CalcExceptions.FancyRemainderException;
-import Blackop778.MineCalc.common.CalcExceptions.InvalidNumberException;
-import Blackop778.MineCalc.common.CalcExceptions.MultiplePointsException;
-import Blackop778.MineCalc.common.CalcExceptions.OperatorException;
-import Blackop778.MineCalc.common.CalcExceptions.ParenthesisException;
-import Blackop778.MineCalc.common.CalcExceptions.PreviousOutputException;
-import Blackop778.MineCalc.common.CalcExceptions.UsageException;
+import Blackop778.MineCalc.common.IMineCalcCompound;
+import Blackop778.MineCalc.common.MineCalcCompoundProvider;
+import Blackop778.MineCalc.core.CalcExceptions.AllStandinsUsedException;
+import Blackop778.MineCalc.core.CalcExceptions.FancyRemainderException;
+import Blackop778.MineCalc.core.CalcExceptions.InvalidNumberException;
+import Blackop778.MineCalc.core.CalcExceptions.MultiplePointsException;
+import Blackop778.MineCalc.core.CalcExceptions.OperatorException;
+import Blackop778.MineCalc.core.CalcExceptions.ParenthesisException;
+import Blackop778.MineCalc.core.CalcExceptions.PreviousOutputException;
+import Blackop778.MineCalc.core.CalcExceptions.UsageException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 
 public abstract class Calculator {
-    public static final Character[] standInChars = { '$', '#', '@', '"', ';', ':', '?', '&', '[', '{', ']', '}', '|',
+    public static final Character[] STANDINCHARS = { '$', '#', '@', '"', ';', ':', '?', '&', '[', '{', ']', '}', '|',
 	    '!' };
-    public static HashMap<String, Double> lastMap = new HashMap<String, Double>();
     public static final Argument SORTING_HAT = new Argument(0, 0, "f");
     public static OperationHolder operations = new OperationHolder();
+    public static Double consoleLastOutput = null;
 
     public static double evaluate(String math, boolean useOOPS, ICommandSender sender) throws CalcExceptions {
 	math = math.replaceAll("\\s", "");
@@ -155,10 +157,7 @@ public abstract class Calculator {
 	} else if (number.equalsIgnoreCase("e")) {
 	    toReturn = Math.E;
 	} else if (number.equalsIgnoreCase("l")) {
-	    if (sender != null && lastMap.containsKey(sender.getName()))
-		toReturn = lastMap.get(sender.getName());
-	    else
-		throw new PreviousOutputException();
+	    toReturn = getLastOutput(sender);
 	} else {
 	    try {
 		toReturn = Double.valueOf(number);
@@ -171,6 +170,49 @@ public abstract class Calculator {
 	}
 
 	return negative ? -toReturn : toReturn;
+    }
+
+    /**
+     * @param sender
+     *            Can be null
+     * @return The last output the user received
+     * @throws PreviousOutputException
+     *             If there was no previous output
+     */
+    public static double getLastOutput(ICommandSender sender) throws PreviousOutputException {
+	if (sender == null)
+	    if (consoleLastOutput == null)
+		throw new PreviousOutputException();
+	    else
+		return consoleLastOutput;
+	else {
+	    Entity e = sender.getCommandSenderEntity();
+	    if (e == null)
+		if (consoleLastOutput == null)
+		    throw new PreviousOutputException();
+		else
+		    return consoleLastOutput;
+	    IMineCalcCompound comp = e.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
+	    Double last = comp.getLastNumber();
+	    if (last.isNaN())
+		throw new PreviousOutputException();
+	    else
+		return last;
+	}
+    }
+
+    public static void setLastOutput(ICommandSender sender, double newOutput) {
+	if (sender == null)
+	    consoleLastOutput = newOutput;
+	else {
+	    Entity e = sender.getCommandSenderEntity();
+	    if (e == null)
+		consoleLastOutput = newOutput;
+	    else {
+		IMineCalcCompound comp = e.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
+		comp.setLastNumber(newOutput);
+	    }
+	}
     }
 
     public static String trimToOperation(String math, String operationSymbol, int symbolStartIndex)
@@ -263,13 +305,13 @@ public abstract class Calculator {
     }
 
     public static Character findUnusedStandin(String text) throws AllStandinsUsedException {
-	for (Character c : standInChars) {
+	for (Character c : STANDINCHARS) {
 	    if (!text.contains(new StringBuilder().append(c).toString()))
 		return c;
 	}
 
 	StringBuilder chars = new StringBuilder();
-	for (Character c : standInChars) {
+	for (Character c : STANDINCHARS) {
 	    chars.append("'").append(c).append("', ");
 	}
 	throw new AllStandinsUsedException(chars.toString().substring(0, chars.toString().length() - 2));

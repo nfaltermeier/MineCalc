@@ -1,25 +1,13 @@
 package Blackop778.MineCalc.server;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
+import Blackop778.MineCalc.common.CommonEventHandlers;
+import Blackop778.MineCalc.common.MineCalcCompoundProvider;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
-public class ServerEventHandlers {
+public class ServerEventHandlers extends CommonEventHandlers {
     @SubscribeEvent
-    public void attachCapability(AttachCapabilitiesEvent.Entity event) {
-	if (!(event.getEntity() instanceof EntityPlayer))
-	    return;
-	event.addCapability(MineCalcCompoundProvider.MCC_RL, new MineCalcCompoundProvider());
-    }
-
-    @SubscribeEvent
-    public void onPlayerClone(PlayerEvent.Clone event) {
-	if (event.isWasDeath()) {
-	    EntityPlayer old = event.getOriginal();
-	    EntityPlayer new_ = event.getEntityPlayer();
-	    boolean hasMC = old.getCapability(HasMineCalcProvider.HMC_CAP, null).getHasMineCalc();
-	    new_.getCapability(HasMineCalcProvider.HMC_CAP, null).setHasMineCalc(hasMC);
-	}
+    public void onPlayerLeave(PlayerLoggedOutEvent event) {
+	event.player.getCapability(MineCalcCompoundProvider.MCC_CAP, null).setHasMineCalc(false);
     }
 }

@@ -7,18 +7,19 @@ import java.util.List;
 
 import Blackop778.MineCalc.MineCalc;
 import Blackop778.MineCalc.client.ClientProxy;
-import Blackop778.MineCalc.common.CalcExceptions.AllStandinsUsedException;
-import Blackop778.MineCalc.common.CalcExceptions.CustomFunctionException;
-import Blackop778.MineCalc.common.CalcExceptions.DivisionException;
-import Blackop778.MineCalc.common.CalcExceptions.FancyRemainderException;
-import Blackop778.MineCalc.common.CalcExceptions.ImaginaryNumberException;
-import Blackop778.MineCalc.common.CalcExceptions.InvalidNumberException;
-import Blackop778.MineCalc.common.CalcExceptions.MultiplePointsException;
-import Blackop778.MineCalc.common.CalcExceptions.OperatorException;
-import Blackop778.MineCalc.common.CalcExceptions.ParenthesisException;
-import Blackop778.MineCalc.common.CalcExceptions.PreviousOutputException;
-import Blackop778.MineCalc.common.CalcExceptions.UsageException;
-import Blackop778.MineCalc.server.HasMineCalcProvider;
+import Blackop778.MineCalc.core.CalcExceptions;
+import Blackop778.MineCalc.core.Calculator;
+import Blackop778.MineCalc.core.CalcExceptions.AllStandinsUsedException;
+import Blackop778.MineCalc.core.CalcExceptions.CustomFunctionException;
+import Blackop778.MineCalc.core.CalcExceptions.DivisionException;
+import Blackop778.MineCalc.core.CalcExceptions.FancyRemainderException;
+import Blackop778.MineCalc.core.CalcExceptions.ImaginaryNumberException;
+import Blackop778.MineCalc.core.CalcExceptions.InvalidNumberException;
+import Blackop778.MineCalc.core.CalcExceptions.MultiplePointsException;
+import Blackop778.MineCalc.core.CalcExceptions.OperatorException;
+import Blackop778.MineCalc.core.CalcExceptions.ParenthesisException;
+import Blackop778.MineCalc.core.CalcExceptions.PreviousOutputException;
+import Blackop778.MineCalc.core.CalcExceptions.UsageException;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -55,11 +56,13 @@ public class Calculate extends CommandBase {
 	    return I18n.translateToLocal("minecalc.calc.help");
     }
 
-    public static ITextComponent calculate(MinecraftServer server, ICommandSender sender, String[] args) {
+    public ITextComponent calculate(MinecraftServer server, ICommandSender sender, String[] args) {
 	ITextComponent print = null;
 	boolean useOOPS;
 	double answer;
 
+	if (args.length == 0)
+	    return new TextComponentTranslation("minecalc.calc.usage").setStyle(redStyle);
 	useOOPS = Boolean.valueOf(args[0]);
 	if (args[0].equalsIgnoreCase("true") || args[0].equalsIgnoreCase("false")) {
 	    args[0] = "";
@@ -70,7 +73,7 @@ public class Calculate extends CommandBase {
 	}
 	try {
 	    answer = Calculator.evaluate(condensedMath, useOOPS, sender);
-	    Calculator.lastMap.put(sender.getName(), answer);
+	    Calculator.setLastOutput(sender, answer);
 	    if (answer % 1 == 0) {
 		int i = (int) answer;
 		print = new TextComponentString(String.valueOf(i));
@@ -93,7 +96,7 @@ public class Calculate extends CommandBase {
 	    int num1 = (int) (errors.numerator / errors.denominator);
 	    double num2 = errors.numerator % errors.denominator;
 	    print = new TextComponentString(num1 + "R" + num2);
-	    Calculator.lastMap.put(sender.getName(), num2);
+	    Calculator.setLastOutput(sender, num2);
 	} catch (AllStandinsUsedException errorsA) {
 	    return new TextComponentTranslation("minecalc.calc.standInsException").setStyle(redStyle)
 		    .appendSibling(new TextComponentString(errorsA.getMessage()));
@@ -160,7 +163,7 @@ public class Calculate extends CommandBase {
 	return true;
     }
 
-    private static ITextComponent translateCheck(ICommandSender sender, ITextComponent toOutput) {
+    private ITextComponent translateCheck(ICommandSender sender, ITextComponent toOutput) {
 	if (playerHasMod(sender.getCommandSenderEntity()))
 	    return toOutput;
 	else {
@@ -190,11 +193,11 @@ public class Calculate extends CommandBase {
 	}
     }
 
-    private static boolean playerHasMod(Entity ent) {
+    private boolean playerHasMod(Entity ent) {
 	if (ClientProxy.isClientSide())
 	    return true;
 	if (ent == null)
-	    return false;
-	return ent.getCapability(HasMineCalcProvider.HMC_CAP, null).getHasMineCalc();
+	    return true;
+	return ent.getCapability(MineCalcCompoundProvider.MCC_CAP, null).getHasMineCalc();
     }
 }

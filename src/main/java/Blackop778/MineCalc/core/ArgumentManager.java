@@ -1,4 +1,4 @@
-package Blackop778.MineCalc.common;
+package Blackop778.MineCalc.core;
 
 import java.util.ArrayList;
 import java.util.Comparator;

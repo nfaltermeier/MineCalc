@@ -2,6 +2,7 @@ package Blackop778.MineCalc.common.net;
 
 import Blackop778.MineCalc.MineCalc;
 import Blackop778.MineCalc.client.ClientProxy;
+import Blackop778.MineCalc.common.MineCalcCompoundProvider;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -20,9 +21,8 @@ public class HasModMessage implements IMessage {
 	public IMessage onMessage(HasModMessage message, MessageContext ctx) {
 	    if (!ClientProxy.isClientSide()) {
 		NetHandlerPlayServer server = ctx.getServerHandler();
-		// ctx.getServerHandler().playerEntity.getCapability(HasMineCalcProvider.HMC_CAP,
-		// null)
-		// .setHasMineCalc(true);
+		ctx.getServerHandler().playerEntity.getCapability(MineCalcCompoundProvider.MCC_CAP, null)
+			.setHasMineCalc(true);
 		MineCalc.LOGGER.info(server.playerEntity.getDisplayNameString() + " sent HasModMessage");
 	    }
 	    return null;

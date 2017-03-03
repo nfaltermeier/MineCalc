@@ -1,4 +1,4 @@
-package Blackop778.MineCalc.common;
+package Blackop778.MineCalc.core;
 
 @SuppressWarnings("serial")
 public abstract class CalcExceptions extends Exception {

@@ -1,11 +1,11 @@
-package Blackop778.MineCalc.common;
+package Blackop778.MineCalc.core;
 
-import Blackop778.MineCalc.common.CalcExceptions.DivisionException;
-import Blackop778.MineCalc.common.CalcExceptions.ImaginaryNumberException;
+import Blackop778.MineCalc.core.CalcExceptions.DivisionException;
+import Blackop778.MineCalc.core.CalcExceptions.ImaginaryNumberException;
 
 public abstract class Operations {
 
-    static {
+    public static void addOperations() {
 	Calculator.operations.add(new Addition());
 	Calculator.operations.add(new Subtraction());
 	Calculator.operations.add(new Multiplication());

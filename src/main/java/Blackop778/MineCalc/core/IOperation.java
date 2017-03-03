@@ -1,4 +1,4 @@
-package Blackop778.MineCalc.common;
+package Blackop778.MineCalc.core;
 
 public interface IOperation {
     /**
