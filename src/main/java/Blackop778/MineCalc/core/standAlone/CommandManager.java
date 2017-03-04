@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import Blackop778.MineCalc.core.standAlone.commands.CalculateSA;
+import Blackop778.MineCalc.core.standAlone.commands.Version;
+
 public class CommandManager implements ICommandManagerSA {
     private ArrayList<ICommandSA> commands;
 
     public CommandManager() {
 	commands = new ArrayList<ICommandSA>();
-	commands.add(new Help());
+	commands.add(new Version());
 	commands.add(new CalculateSA());
+	commands.add(new Help());
     }
 
     @Override
@@ -66,7 +70,7 @@ public class CommandManager implements ICommandManagerSA {
 
 	@Override
 	public String getUsage() {
-	    return "help - Displays this message";
+	    return "help <command name>";
 	}
 
 	@Override
@@ -88,7 +92,7 @@ public class CommandManager implements ICommandManagerSA {
 		    names.add(cmd.getTrigger());
 		    for (String current : names) {
 			if (current.equals(args[0]))
-			    return "Usage: " + cmd.getUsage();
+			    return "Usage: " + cmd.getUsage() + "\n    " + cmd.getEffect();
 		    }
 		}
 	    }
@@ -99,6 +103,11 @@ public class CommandManager implements ICommandManagerSA {
 	    }
 
 	    return toOutput;
+	}
+
+	@Override
+	public String getEffect() {
+	    return "No args - Lists commands\n    [command name] - displays info for command";
 	}
 
     }

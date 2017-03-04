@@ -1,4 +1,4 @@
-package Blackop778.MineCalc.core.standAlone;
+package Blackop778.MineCalc.core.standAlone.commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,12 +18,13 @@ import Blackop778.MineCalc.core.CalcExceptions.ParenthesisException;
 import Blackop778.MineCalc.core.CalcExceptions.PreviousOutputException;
 import Blackop778.MineCalc.core.CalcExceptions.UsageException;
 import Blackop778.MineCalc.core.Calculator;
+import Blackop778.MineCalc.core.standAlone.ICommandSA;
 
 public class CalculateSA implements ICommandSA {
 
     @Override
     public String getUsage() {
-	return "calc [number][operator][number]<operator><number>";
+	return "calc <boolean: use OOPS> [number][operator][number]<operator><number>";
     }
 
     @Override
@@ -107,6 +108,11 @@ public class CalculateSA implements ICommandSA {
 	}
 
 	return print;
+    }
+
+    @Override
+    public String getEffect() {
+	return "Calculates the value of all the arguments";
     }
 
 }

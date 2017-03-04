@@ -3,8 +3,16 @@ package Blackop778.MineCalc.core.standAlone;
 import java.util.List;
 
 public interface ICommandSA {
+    /**
+     * 
+     * @return Arguments for command
+     */
     public String getUsage();
 
+    /**
+     * @return word that signals this command
+     * 
+     */
     public String getTrigger();
 
     /**
@@ -20,4 +28,11 @@ public interface ICommandSA {
      * @return
      */
     public String execute(String[] arguments);
+
+    /**
+     * Gets what the command does
+     * 
+     * @return
+     */
+    public String getEffect();
 }

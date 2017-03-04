@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -19,6 +20,7 @@ public class Console extends JPanel {
     private JTextArea output;
     private final int textWidth = 45;
     private CommandManager cmds;
+    private JScrollPane jsp;
 
     public Console() {
 	cmds = new CommandManager();
@@ -30,7 +32,12 @@ public class Console extends JPanel {
 	input.addActionListener(new ActionListener() {
 	    @Override
 	    public void actionPerformed(ActionEvent arg0) {
+		JScrollBar vBar = jsp.getVerticalScrollBar();
+		boolean bottom = vBar.getValue() == vBar.getMaximum();
 		output.append("\n" + actionOccured(input.getText()));
+		if (bottom) {
+		    vBar.setValue(vBar.getMaximum());
+		}
 		input.setText("");
 	    }
 	});
