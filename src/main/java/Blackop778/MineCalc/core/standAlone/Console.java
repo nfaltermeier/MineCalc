@@ -18,9 +18,10 @@ public class Console extends JPanel {
     private JTextField input;
     private JTextArea output;
     private final int textWidth = 30;
-    private CommandManager cmds = new CommandManager();
+    private CommandManager cmds;
 
     public Console() {
+	cmds = new CommandManager();
 	dialog = new JDialog((JDialog) null);
 	setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -56,7 +57,8 @@ public class Console extends JPanel {
 
     private String actionOccured(String input) {
 	String[] args = input.split(Pattern.quote(" "));
-	return input;
+	String toReturn = cmds.processInput(args);
+	return toReturn;
     }
 
 }

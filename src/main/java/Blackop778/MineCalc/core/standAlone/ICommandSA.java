@@ -2,7 +2,7 @@ package Blackop778.MineCalc.core.standAlone;
 
 import java.util.List;
 
-public interface ICommand {
+public interface ICommandSA {
     public String getUsage();
 
     public String getTrigger();

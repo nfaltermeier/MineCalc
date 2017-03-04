@@ -2,12 +2,12 @@ package Blackop778.MineCalc.core.standAlone;
 
 import java.util.List;
 
-public interface ICommandManager {
-    public void addCommand(ICommand toAdd);
+public interface ICommandManagerSA {
+    public void addCommand(ICommandSA toAdd);
 
-    public ICommand get(int index);
+    public ICommandSA get(int index);
 
-    public List<ICommand> getWhole();
+    public List<ICommandSA> getWhole();
 
     /**
      * Should remove the first argument before passing to an ICommand
