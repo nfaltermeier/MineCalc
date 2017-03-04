@@ -13,5 +13,11 @@ public interface ICommand {
      */
     public List<String> getAliases();
 
-    public String execute(String input);
+    /**
+     * 
+     * @param arguments
+     *            First String shouldn't be the word that indicates this command
+     * @return
+     */
+    public String execute(String[] arguments);
 }

@@ -2,6 +2,7 @@ package Blackop778.MineCalc.core.standAlone;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.regex.Pattern;
 
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
@@ -17,6 +18,7 @@ public class Console extends JPanel {
     private JTextField input;
     private JTextArea output;
     private final int textWidth = 30;
+    private CommandManager cmds = new CommandManager();
 
     public Console() {
 	dialog = new JDialog((JDialog) null);
@@ -53,6 +55,7 @@ public class Console extends JPanel {
     }
 
     private String actionOccured(String input) {
+	String[] args = input.split(Pattern.quote(" "));
 	return input;
     }
 
