@@ -10,3 +10,5 @@ minecalc.calc.previousOutputException=ʇɹǝsuᴉ oʇ ʇndʇno snoᴉʌǝɹd ou 
 #'/calc' should NOT be translated
 minecalc.calc.usage=[ɹǝqɯnu][loqɯʎs]<ɹǝqɯnu><loqɯʎs><ɹǝqɯnu> ɔlɐɔ/ :ǝƃɐs∩
 minecalc.calc.standInsException=:sloqɯʎs ƃuᴉʍolloɟ ǝɥʇ ɟo ǝuo ǝpnlɔxǝ ǝsɐǝlԀ :ɹoɹɹƎ
+minecalc.calc.manyParenthesisException=pǝsolɔ uǝǝq ǝʌɐɥ ʇou ʎɐɯ ǝɯoS ˙ʇnduᴉ uǝǝq ǝʌɐɥ sᴉsǝɥʇuǝɹɐd ƃuᴉuǝdo ʎuɐɯ oo┴ :ɹoɹɹƎ
+minecalc.calc.fewParenthesisException=pǝuǝdo uǝǝq ǝʌɐɥ ʇou ʎɐɯ ǝɯoS ˙ʇnduᴉ uǝǝq ǝʌɐɥ sᴉsǝɥʇuǝɹɐd ƃuᴉsolɔ ʎuɐɯ oo┴ :ɹoɹɹƎ

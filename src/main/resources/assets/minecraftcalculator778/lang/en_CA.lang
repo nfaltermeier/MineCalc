@@ -10,3 +10,5 @@ minecalc.calc.previousOutputException=Error: There is no previous output to inse
 #'/calc' should NOT be translated
 minecalc.calc.usage=Usage: /calc <number><symbol><number>[symbol][number]
 minecalc.calc.standInsException=Error: Please exclude one of the following symbols:
+minecalc.calc.manyParenthesisException=Error: Too many opening parenthesis have been input. Some may not have been closed
+minecalc.calc.fewParenthesisException=Error: Too many closing parenthesis have been input. Some may not have been opened

@@ -1,18 +1,29 @@
 package Blackop778.MineCalc.core;
 
+import java.util.List;
+
 import Blackop778.MineCalc.core.CalcExceptions.DivisionException;
 import Blackop778.MineCalc.core.CalcExceptions.ImaginaryNumberException;
 
 public abstract class Operations {
 
-    public static void addOperations() {
-	Calculator.operations.add(new Addition());
-	Calculator.operations.add(new Subtraction());
-	Calculator.operations.add(new Multiplication());
-	Calculator.operations.add(new Division());
-	Calculator.operations.add(new Modulus());
-	Calculator.operations.add(new Exponent());
-	Calculator.operations.add(new Root());
+    /**
+     * In most cases is automatically called by an OperationHolder, only if it
+     * was passed 'false' in the constructor does this need to be called
+     * manually
+     * 
+     * @param toAddTo
+     * @return
+     */
+    public static List<IOperation> addOperations(List<IOperation> toAddTo) {
+	toAddTo.add(new Addition());
+	toAddTo.add(new Subtraction());
+	toAddTo.add(new Multiplication());
+	toAddTo.add(new Division());
+	toAddTo.add(new Modulus());
+	toAddTo.add(new Exponent());
+	toAddTo.add(new Root());
+	return toAddTo;
     }
 
     public static class Addition implements IOperation {

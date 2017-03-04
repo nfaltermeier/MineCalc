@@ -17,7 +17,7 @@ public abstract class Calculator {
     public static final Character[] STANDINCHARS = { '$', '#', '@', '"', ';', ':', '?', '&', '[', '{', ']', '}', '|',
 	    '!' };
     public static final Argument SORTING_HAT = new Argument(0, 0, "f");
-    public static OperationHolder operations = new OperationHolder();
+    public static OperationHolder operations = new OperationHolder(true);
     public static Double consoleLastOutput = null;
 
     public static double evaluate(String math, boolean useOOPS, Double last) throws CalcExceptions {

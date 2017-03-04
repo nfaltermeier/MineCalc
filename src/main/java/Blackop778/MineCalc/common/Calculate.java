@@ -95,11 +95,17 @@ public class Calculate extends CommandBase {
 	} catch (FancyRemainderException errors) {
 	    int num1 = (int) (errors.numerator / errors.denominator);
 	    double num2 = errors.numerator % errors.denominator;
-	    print = new TextComponentString(num1 + "R" + num2);
+	    print = new TextComponentString(num1 + "R");
+	    if (num2 % 1 == 0) {
+		int i = (int) num2;
+		print.appendSibling(new TextComponentString(String.valueOf(i)));
+	    } else {
+		print.appendSibling(new TextComponentString(String.valueOf(num2)));
+	    }
 	    setLastOutput(sender, num2);
 	} catch (AllStandinsUsedException errorsA) {
 	    return new TextComponentTranslation("minecalc.calc.standInsException").setStyle(redStyle)
-		    .appendSibling(new TextComponentString(errorsA.getMessage()));
+		    .appendSibling(new TextComponentString(errorsA.getLocalizedMessage()));
 	} catch (MultiplePointsException errorsAr) {
 	    return new TextComponentTranslation("minecalc.calc.multiplePointsException").setStyle(redStyle);
 	} catch (UsageException errorsAre) {
@@ -113,6 +119,9 @@ public class Calculate extends CommandBase {
 		return new TextComponentTranslation("minecalc.calc.fewParenthesisException").setStyle(redStyle);
 	} catch (CalcExceptions errorsAreFun) {
 	    errorsAreFun.printStackTrace();
+	    return new TextComponentString(
+		    "Error: An unknown error occured" + (errorsAreFun.getLocalizedMessage() == null ? ""
+			    : ". Message: " + errorsAreFun.getLocalizedMessage()));
 	}
 
 	// Prepend the arguments to the output, if configured to
@@ -130,7 +139,7 @@ public class Calculate extends CommandBase {
      * @throws PreviousOutputException
      *             If there was no previous output
      */
-    public static double getLastOutput(ICommandSender sender) throws PreviousOutputException {
+    private double getLastOutput(ICommandSender sender) throws PreviousOutputException {
 	if (sender == null)
 	    if (Calculator.consoleLastOutput == null)
 		throw new PreviousOutputException();
@@ -152,7 +161,7 @@ public class Calculate extends CommandBase {
 	}
     }
 
-    public static void setLastOutput(ICommandSender sender, double newOutput) {
+    private void setLastOutput(ICommandSender sender, double newOutput) {
 	if (sender == null)
 	    Calculator.consoleLastOutput = newOutput;
 	else {

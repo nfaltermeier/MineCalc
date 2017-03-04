@@ -17,7 +17,7 @@ public class Console extends JPanel {
     private JDialog dialog;
     private JTextField input;
     private JTextArea output;
-    private final int textWidth = 30;
+    private final int textWidth = 45;
     private CommandManager cmds;
 
     public Console() {
@@ -35,7 +35,7 @@ public class Console extends JPanel {
 	    }
 	});
 
-	output = new JTextArea("Type 'help' for a list of available commands", 5, textWidth);
+	output = new JTextArea("Type 'help' for a list of available commands", 8, textWidth);
 	output.setLineWrap(true);
 
 	JScrollPane jsp = new JScrollPane();

@@ -1,10 +1,21 @@
 package Blackop778.MineCalc.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class OperationHolder {
     private IOperation[][] operations;
+    public final boolean initializeWithDefaults;
 
-    public OperationHolder() {
+    public OperationHolder(boolean initializeWithDefaults) {
+	this.initializeWithDefaults = initializeWithDefaults;
 	operations = new IOperation[6][0];
+	if (this.initializeWithDefaults) {
+	    List<IOperation> temp = Operations.addOperations(new ArrayList<IOperation>());
+	    for (IOperation op : temp) {
+		add(op);
+	    }
+	}
     }
 
     public void add(IOperation op) {

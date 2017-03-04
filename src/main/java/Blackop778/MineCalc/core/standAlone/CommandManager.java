@@ -10,6 +10,7 @@ public class CommandManager implements ICommandManagerSA {
     public CommandManager() {
 	commands = new ArrayList<ICommandSA>();
 	commands.add(new Help());
+	commands.add(new CalculateSA());
     }
 
     @Override
