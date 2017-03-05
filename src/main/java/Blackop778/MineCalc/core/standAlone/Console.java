@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -17,10 +17,10 @@ public class Console extends JPanel {
     private static final long serialVersionUID = -8126442231468996619L;
     private JDialog dialog;
     private JTextField input;
-    private JTextArea output;
     private final int textWidth = 45;
     private CommandManager cmds;
     private JScrollPane jsp;
+    private JEditorPane jep;
 
     public Console() {
 	cmds = new CommandManager();
@@ -32,12 +32,7 @@ public class Console extends JPanel {
 	input.addActionListener(new ActionListener() {
 	    @Override
 	    public void actionPerformed(ActionEvent arg0) {
-		JScrollBar vBar = jsp.getVerticalScrollBar();
-		boolean bottom = vBar.getValue() == vBar.getMaximum();
 		output.append("\n" + actionOccured(input.getText()));
-		if (bottom) {
-		    vBar.setValue(vBar.getMaximum());
-		}
 		input.setText("");
 	    }
 	});
@@ -45,14 +40,14 @@ public class Console extends JPanel {
 	output = new JTextArea("Type 'help' for a list of available commands", 8, textWidth);
 	output.setLineWrap(true);
 
-	JScrollPane jsp = new JScrollPane();
+	jsp = new JScrollPane();
 	jsp.setViewportView(output);
 	jsp.createVerticalScrollBar();
 	add(jsp);
 	add(input);
 	dialog.add(this);
 
-	dialog.setTitle("MineCalc Console");
+	dialog.setTitle("MineCalc Stand Alose");
 	dialog.pack();
 	input.requestFocusInWindow();
 	dialog.setResizable(false);
