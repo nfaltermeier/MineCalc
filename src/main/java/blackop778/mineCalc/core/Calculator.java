@@ -164,7 +164,7 @@ public abstract class Calculator {
 		if (e.getMessage().equals("multiple points"))
 		    throw new MultiplePointsException();
 		else
-		    throw new InvalidNumberException();
+		    throw new InvalidNumberException(" " + number);
 	    }
 	}
 

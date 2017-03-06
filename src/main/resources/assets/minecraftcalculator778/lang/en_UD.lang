@@ -1,6 +1,6 @@
 #'/calc' should NOT be translated
 minecalc.calc.help=[ɹǝqɯnu][loqɯʎs]<ɹǝqɯnu><loqɯʎs><ɹǝqɯnu> ɔlɐɔ/
-minecalc.calc.numberFormatException=ɹǝqɯnu ɐ sɐ pǝʇǝɹdɹǝʇuᴉ ǝq ʇou plnoɔ sɹǝqɯnu pǝʇnduᴉ ǝɥʇ ɟo ǝuO
+minecalc.calc.numberFormatException=:ɹǝqɯnu ɐ sɐ pǝʇǝɹdɹǝʇuᴉ ǝq ʇou plnoɔ ƃuᴉɹʇS ƃuᴉʍolloɟ ǝɥ┴ :ɹoɹɹƎ
 minecalc.calc.imaginaryException=pǝʇɹoddns ʇou ǝɹɐ sɹǝqɯnu ʎɹɐuᴉƃɐɯI :ɹoɹɹƎ
 minecalc.calc.divZeroException=0 ʎq ǝpᴉʌᴉp ʇouuɐƆ :ɹoɹɹƎ
 minecalc.calc.symbolException=,--/ '^ '

@@ -54,12 +54,7 @@ public class CalculateSA implements ICommandSA {
 	}
 	try {
 	    double answer;
-	    try {
-		answer = Calculator.evaluate(condensedMath, useOOPS, Calculator.consoleLastOutput);
-	    } catch (CalcExceptions e) {
-		e.printStackTrace();
-		throw e;
-	    }
+	    answer = Calculator.evaluate(condensedMath, useOOPS, Calculator.consoleLastOutput);
 	    Calculator.consoleLastOutput = answer;
 	    if (answer % 1 == 0) {
 		int i = (int) answer;
@@ -95,7 +90,7 @@ public class CalculateSA implements ICommandSA {
 	} catch (UsageException errorsAre) {
 	    return "Usage: " + getUsage();
 	} catch (InvalidNumberException errorsAreF) {
-	    return "Error: One of the inputed numbers could not be interpreted as a number";
+	    return "Error: The following String could not be interpreted as a number: " + errorsAreF.getMessage();
 	} catch (ParenthesisException errorsAreFu) {
 	    if (errorsAreFu.tooMany)
 		return "Error: Too many opening parenthesis have been input. Some may not have been closed";

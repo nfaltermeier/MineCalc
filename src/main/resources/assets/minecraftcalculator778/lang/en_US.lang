@@ -1,6 +1,6 @@
 #'/calc' should NOT be translated
 minecalc.calc.help=/calc <number><symbol><number>[symbol][number]
-minecalc.calc.numberFormatException=Error: One of the inputed numbers could not be interpreted as a number
+minecalc.calc.numberFormatException=Error: The following String could not be interpreted as a number:
 minecalc.calc.imaginaryException=Error: Imaginary numbers are not supported
 minecalc.calc.divZeroException=Error: Cannot divide by 0
 minecalc.calc.symbolException=Error: Valid symbols are '+, -, *, /,

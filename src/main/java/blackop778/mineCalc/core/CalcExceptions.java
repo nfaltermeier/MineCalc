@@ -65,7 +65,9 @@ public abstract class CalcExceptions extends Exception {
     }
 
     public static class InvalidNumberException extends CalcExceptions {
-
+	public InvalidNumberException(String message) {
+	    super(message);
+	}
     }
 
     public static class ParenthesisException extends CalcExceptions {

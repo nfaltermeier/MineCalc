@@ -111,7 +111,8 @@ public class Calculate extends CommandBase {
 	} catch (UsageException errorsAre) {
 	    return new TextComponentTranslation("minecalc.calc.usage").setStyle(redStyle);
 	} catch (InvalidNumberException errorsAreF) {
-	    return new TextComponentTranslation("minecalc.calc.numberFormatException").setStyle(redStyle);
+	    return new TextComponentTranslation("minecalc.calc.numberFormatException").setStyle(redStyle)
+		    .appendSibling(new TextComponentString(errorsAreF.getMessage()));
 	} catch (ParenthesisException errorsAreFu) {
 	    if (errorsAreFu.tooMany)
 		return new TextComponentTranslation("minecalc.calc.manyParenthesisException").setStyle(redStyle);
