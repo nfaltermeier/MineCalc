@@ -172,7 +172,7 @@ public abstract class Calculator {
     }
 
     public static String trimToOperation(String math, String operationSymbol, int symbolStartIndex,
-	    Character numberStandin) throws AllStandinsUsedException, UsageException {
+	    Character numberStandin) throws AllStandinsUsedException, UsageException, InvalidNumberException {
 	int index = 0;
 	int lastIndex = 0;
 	String[] maths = math.split(Pattern.quote(operationSymbol));
@@ -193,6 +193,11 @@ public abstract class Calculator {
 		index++;
 	    }
 	    math1 = math1.substring(index, lastIndex);
+	    if (math1.equals("")) {
+		if (operationSymbol.equals("-"))
+		    math1 = addMinus(maths[0], numberStandin);
+		throw new InvalidNumberException(math1);
+	    }
 
 	    // Isolate the second number
 	    String math2 = maths[1];
@@ -206,6 +211,11 @@ public abstract class Calculator {
 	    }
 	    if (index != math2.length() - 1) {
 		math2 = math2.substring(lastIndex, index);
+	    }
+	    if (math2.equals("")) {
+		if (operationSymbol.equals("-"))
+		    math2 = addMinus(maths[1], numberStandin);
+		throw new InvalidNumberException(math2);
 	    }
 	    return math1 + operationSymbol + math2;
 	} catch (ArrayIndexOutOfBoundsException e) {

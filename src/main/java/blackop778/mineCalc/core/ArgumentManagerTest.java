@@ -46,12 +46,7 @@ public abstract class ArgumentManagerTest {
     public static boolean testMath(String math, boolean useOOPS, Object answer, int index) {
 	Object result;
 	try {
-	    try {
-		result = Calculator.evaluate(math, useOOPS, null);
-	    } catch (CalcExceptions e) {
-		e.printStackTrace();
-		throw e;
-	    }
+	    result = Calculator.evaluate(math, useOOPS, null);
 	} catch (CalcExceptions e) {
 	    result = e;
 	}
