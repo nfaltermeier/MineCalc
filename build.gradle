@@ -30,7 +30,7 @@ targetCompatibility = 1.6
 jar {
     manifest {
         attributes( 
-                   'Main-Class': 'Blackop778.MineCalc.core.standAlone.ConsoleRunnable'
+                   'Main-Class': 'blackop778.mineCalc.core.standAlone.ConsoleRunnable'
 	)
     }
 }
