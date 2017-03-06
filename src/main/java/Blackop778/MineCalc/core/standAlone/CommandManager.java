@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import Blackop778.MineCalc.core.standAlone.commands.CalculateSA;
+import Blackop778.MineCalc.core.standAlone.commands.ReturnInput;
 import Blackop778.MineCalc.core.standAlone.commands.Version;
 
 public class CommandManager implements ICommandManagerSA {
@@ -13,6 +14,7 @@ public class CommandManager implements ICommandManagerSA {
     public CommandManager() {
 	commands = new ArrayList<ICommandSA>();
 	commands.add(new Version());
+	commands.add(new ReturnInput());
 	commands.add(new CalculateSA());
 	commands.add(new Help());
     }

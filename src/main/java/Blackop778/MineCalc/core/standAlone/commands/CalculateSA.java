@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import Blackop778.MineCalc.common.MCConfig;
 import Blackop778.MineCalc.core.CalcExceptions;
 import Blackop778.MineCalc.core.CalcExceptions.AllStandinsUsedException;
 import Blackop778.MineCalc.core.CalcExceptions.CustomFunctionException;
@@ -103,7 +102,7 @@ public class CalculateSA implements ICommandSA {
 	}
 
 	// Prepend the arguments to the output, if configured to
-	if (MCConfig.returnInput) {
+	if (ReturnInput.getReturnInput()) {
 	    print = condensedMath + "=" + print;
 	}
 

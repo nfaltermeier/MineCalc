@@ -148,10 +148,7 @@ public class Calculate extends CommandBase {
 	else {
 	    Entity e = sender.getCommandSenderEntity();
 	    if (e == null)
-		if (Calculator.consoleLastOutput == null)
-		    throw new PreviousOutputException();
-		else
-		    return Calculator.consoleLastOutput;
+		return Calculator.consoleLastOutput;
 	    IMineCalcCompound comp = e.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
 	    Double last = comp.getLastNumber();
 	    if (last.isNaN())
@@ -162,13 +159,13 @@ public class Calculate extends CommandBase {
     }
 
     private void setLastOutput(ICommandSender sender, double newOutput) {
-	if (sender == null)
+	if (sender == null) {
 	    Calculator.consoleLastOutput = newOutput;
-	else {
+	} else {
 	    Entity e = sender.getCommandSenderEntity();
-	    if (e == null)
+	    if (e == null) {
 		Calculator.consoleLastOutput = newOutput;
-	    else {
+	    } else {
 		IMineCalcCompound comp = e.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
 		comp.setLastNumber(newOutput);
 	    }

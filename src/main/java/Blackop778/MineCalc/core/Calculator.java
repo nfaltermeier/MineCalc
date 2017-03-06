@@ -15,10 +15,10 @@ import Blackop778.MineCalc.core.CalcExceptions.UsageException;
 
 public abstract class Calculator {
     public static final Character[] STANDINCHARS = { '$', '#', '@', '"', ';', ':', '?', '&', '[', '{', ']', '}', '|',
-	    '!' };
+	    '!', '=' };
     public static final Argument SORTING_HAT = new Argument(0, 0, "f");
     public static OperationHolder operations = new OperationHolder(true);
-    public static Double consoleLastOutput = null;
+    public static Double consoleLastOutput = Double.NaN;
 
     public static double evaluate(String math, boolean useOOPS, Double last) throws CalcExceptions {
 	math = math.replaceAll("\\s", "");
@@ -53,86 +53,83 @@ public abstract class Calculator {
 
 	// Solve everything
 	while (true) {
-	    IOperation op = null;
-	    int index = 999;
-	    String operator = "";
-	    // Cycle through the OOPS levels
-	    for (int i = 6; i > 0; i--) {
-		IOperation[] level = operations.getLevel(i);
-		// Cycle through the operations in the OOPS level
-		for (int n = 0; n < level.length; n++) {
-		    String[] current = level[n].getOperators();
-		    // Cycle through the operation strings for the given
-		    // operation
-		    for (int x = 0; x < current.length; x++) {
-			boolean run = true;
-			int startIndex = 0;
-			while (run) {
-			    run = false;
-			    int newIndex = arguments.get(0).contents.indexOf(current[x], startIndex);
-			    updateOP: if (newIndex > -1 && newIndex < index) {
-				if (current[x].equals("-")) {
-				    String currentMath = arguments.get(0).contents;
-				    int effectiveIndex = newIndex;
-				    if (currentMath.startsWith("(") && currentMath.endsWith(")")) {
-					currentMath = currentMath.substring(1, currentMath.length() - 1);
-					effectiveIndex--;
+	    String contents = arguments.get(0).contents;
+	    if (contents.startsWith("(") && contents.endsWith(")")) {
+		contents = contents.substring(1, contents.length() - 1);
+	    }
+	    if (onlyNumber(contents)) {
+		if (arguments.updateMath(arguments.get(0).contents, contents)) {
+		    break;
+		}
+	    } else {
+		IOperation op = null;
+		int index = 999;
+		String operator = "";
+		// Cycle through the OOPS levels to find the next operation we
+		// should perform
+		for (int i = 6; i > 0; i--) {
+		    IOperation[] level = operations.getLevel(i);
+		    // Cycle through the operations in the OOPS level
+		    for (int n = 0; n < level.length; n++) {
+			String[] current = level[n].getOperators();
+			// Cycle through the operation strings for the given
+			// operation
+			for (int x = 0; x < current.length; x++) {
+			    boolean run = true;
+			    int startIndex = 0;
+			    while (run) {
+				run = false;
+				int newIndex = contents.indexOf(current[x], startIndex);
+				updateOP: if (newIndex > -1 && newIndex < index) {
+				    if (current[x].equals("-")) {
+					if (isNumber(contents.charAt(newIndex), tryCharAt(contents, newIndex - 1),
+						tryCharAt(contents, newIndex - 2))) {
+					    run = true;
+					    startIndex = newIndex + 1;
+					    break updateOP;
+					}
 				    }
-				    if (isNumber(currentMath.charAt(effectiveIndex),
-					    tryCharAt(currentMath, effectiveIndex - 1),
-					    tryCharAt(currentMath, effectiveIndex - 2))) {
-					run = true;
-					startIndex = newIndex + 1;
-					break updateOP;
-				    }
+				    index = newIndex;
+				    op = level[n];
+				    operator = current[x];
 				}
-				index = newIndex;
-				op = level[n];
-				operator = current[x];
 			    }
 			}
 		    }
-		}
 
-		if (op != null && (useOOPS || i == 0)) {
+		    if (op != null && (useOOPS || i == 0)) {
+			break;
+		    }
+		}
+		if (index == 999)
+		    throw new OperatorException();
+
+		// Solve based on the operation we found
+		Character replacer = findUnusedStandin(contents);
+		if (operator.equals("-")) {
+		    String[] temp = takeMinuses(contents, index);
+		    contents = temp[0];
+		    replacer = temp[1].charAt(0);
+		}
+		String trimmedContents = trimToOperation(contents, operator, index, replacer);
+		String[] numbersS = trimmedContents.split(Pattern.quote(operator));
+		if (operator.equals("-")) {
+		    numbersS[0] = addMinus(numbersS[0], replacer);
+		    numbersS[1] = addMinus(numbersS[1], replacer);
+		    trimmedContents = addMinus(trimmedContents, replacer);
+		}
+		double[] numbers = { getDoubleValue(numbersS[0], last), getDoubleValue(numbersS[1], last) };
+		if (operator.equals("%") && arguments.size() == 1
+			&& (arguments.get(0).contents.equals("(" + trimmedContents + ")")
+				|| arguments.get(0).contents.equals(trimmedContents)))
+		    throw new FancyRemainderException(numbers[0], numbers[1]);
+		double answer = op.evaluateFunction(numbers[0], numbers[1]);
+		if (arguments.get(0).contents.equals("(" + trimmedContents + ")")) {
+		    trimmedContents = arguments.get(0).contents;
+		}
+		if (arguments.updateMath(trimmedContents, String.valueOf(answer))) {
 		    break;
 		}
-	    }
-	    if (index == 999) {
-		throw new OperatorException();
-	    }
-
-	    String contents = arguments.get(0).contents;
-	    // Remove beginning and ending parenthesis first
-	    if (contents.startsWith("(") && contents.endsWith(")")) {
-		contents = contents.substring(1, contents.length() - 1);
-		index--;
-	    }
-	    Character replacer = findUnusedStandin(contents);
-	    if (operator.equals("-")) {
-		String[] temp = takeMinuses(contents, index);
-		contents = temp[0];
-		replacer = temp[1].charAt(0);
-	    }
-	    String trimmedContents = trimToOperation(contents, operator, index, replacer);
-	    String[] numbersS = trimmedContents.split(Pattern.quote(operator));
-	    if (operator.equals("-")) {
-		numbersS[0] = addMinus(numbersS[0], replacer);
-		numbersS[1] = addMinus(numbersS[1], replacer);
-		trimmedContents = addMinus(trimmedContents, replacer);
-	    }
-	    double[] numbers = { getDoubleValue(numbersS[0], last), getDoubleValue(numbersS[1], last) };
-	    if (operator.equals("%") && arguments.size() == 1
-		    && (arguments.get(0).contents.equals("(" + trimmedContents + ")")
-			    || arguments.get(0).contents.equals(trimmedContents))) {
-		throw new FancyRemainderException(numbers[0], numbers[1]);
-	    }
-	    double answer = op.evaluateFunction(numbers[0], numbers[1]);
-	    if (arguments.get(0).contents.equals("(" + trimmedContents + ")")) {
-		trimmedContents = arguments.get(0).contents;
-	    }
-	    if (arguments.updateMath(trimmedContents, String.valueOf(answer))) {
-		break;
 	    }
 	}
 
@@ -153,27 +150,23 @@ public abstract class Calculator {
 	} else if (number.equalsIgnoreCase("e")) {
 	    toReturn = Math.E;
 	} else if (number.equalsIgnoreCase("l")) {
-	    if (last == null)
+	    if (last == null || last.equals(Double.NaN))
 		throw new PreviousOutputException();
-	    else
+	    else {
 		toReturn = last;
+	    }
 	} else {
 	    try {
 		toReturn = Double.valueOf(number);
 	    } catch (NumberFormatException e) {
-		if (e.getMessage().equals("multiple points")) {
+		if (e.getMessage().equals("multiple points"))
 		    throw new MultiplePointsException();
-		} else
+		else
 		    throw new InvalidNumberException();
 	    }
 	}
 
 	return negative ? -toReturn : toReturn;
-    }
-
-    public static String trimToOperation(String math, String operationSymbol, int symbolStartIndex)
-	    throws AllStandinsUsedException, UsageException {
-	return trimToOperation(math, operationSymbol, symbolStartIndex, findUnusedStandin(math));
     }
 
     public static String trimToOperation(String math, String operationSymbol, int symbolStartIndex,
@@ -232,11 +225,13 @@ public abstract class Calculator {
 
     public static String concatNullableCharacters(Character first, Character... others) {
 	StringBuilder toReturn = new StringBuilder();
-	if (first != null)
+	if (first != null) {
 	    toReturn.append(first);
+	}
 	for (Character c : others) {
-	    if (c != null)
+	    if (c != null) {
 		toReturn.append(c);
+	    }
 	}
 
 	return toReturn.toString();
@@ -295,14 +290,18 @@ public abstract class Calculator {
 	return math.replaceAll(Pattern.quote(minusReplacer.toString()), "-");
     }
 
-    public static int countAppearances(String container, char toCount) {
-	int count = 0;
-	char[] cont = container.toCharArray();
-	for (char c : cont) {
-	    if (c == toCount)
-		count++;
+    public static boolean onlyNumber(String toCheck) throws AllStandinsUsedException {
+	Character lastLast;
+	Character last = null;
+	Character current = null;
+	for (int i = 0; i < toCheck.length(); i++) {
+	    lastLast = last;
+	    last = current;
+	    current = toCheck.charAt(i);
+	    if (!isNumber(current, last, lastLast))
+		return false;
 	}
 
-	return count;
+	return true;
     }
 }
