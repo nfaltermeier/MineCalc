@@ -27,6 +27,14 @@ archivesBaseName = "MineCalc"
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
+jar {
+    manifest {
+        attributes( 
+                   'Main-Class': 'blackop778.mineCalc.core.standAlone.ConsoleRunnable'
+	)
+    }
+}
+
 minecraft {
     version = "1.9.4-12.17.0.1976"
     runDir = "run"
