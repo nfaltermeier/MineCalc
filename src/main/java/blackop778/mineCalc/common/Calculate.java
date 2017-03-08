@@ -152,10 +152,7 @@ public class Calculate extends CommandBase {
 		return Calculator.consoleLastOutput;
 	    IMineCalcCompound comp = e.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
 	    Double last = comp.getLastNumber();
-	    if (last.isNaN())
-		throw new PreviousOutputException();
-	    else
-		return last;
+	    return last;
 	}
     }
 
