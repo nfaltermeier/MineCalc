@@ -40,32 +40,58 @@ public class Console extends JPanel {
 	    @Override
 	    public void actionPerformed(ActionEvent arg0) {
 		output.append("\n" + actionOccured(input.getText()));
+		if (currentInput > 0 && !inputs.get(currentInput - 1).isExecuted()) {
+		    inputs.get(currentInput - 1).setInput(input.getText());
+		    inputs.get(currentInput - 1).setExecuted();
+		} else {
+		    inputs.add(new PreviousInput(input.getText(), true));
+		    currentInput++;
+		}
 		input.setText("");
 	    }
 	});
 	InputMap keyBindings = input.getInputMap(JTextField.WHEN_FOCUSED);
-	keyBindings.put(KeyStroke.getKeyStroke("typed UP"), "UP");
-	keyBindings.put(KeyStroke.getKeyStroke("typed DOWN"), "DOWN");
+	keyBindings.put(KeyStroke.getKeyStroke("pressed UP"), "UP");
+	keyBindings.put(KeyStroke.getKeyStroke("pressed DOWN"), "DOWN");
 	ActionMap keyActions = input.getActionMap();
 	keyActions.put("UP", new AbstractAction() {
 	    private static final long serialVersionUID = 521728007529640141L;
 
+	    @SuppressWarnings("unused")
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
-
+		ArrayList<PreviousInput> inputss = inputs;
+		int currentInputs = currentInput;
+		if (currentInput > 0) {
+		    if (currentInput == inputs.size())
+			if (inputs.get(inputs.size() - 1).isExecuted())
+			    inputs.add(new PreviousInput(input.getText(), false));
+			else
+			    inputs.get(currentInput - 1).setInput(input.getText());
+		    input.setText(inputs.get(currentInput - 1).getInput());
+		    currentInput--;
+		}
 	    }
 	});
 	keyActions.put("DOWN", new AbstractAction() {
 	    private static final long serialVersionUID = 5622737238507085866L;
 
+	    @SuppressWarnings("unused")
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+		ArrayList<PreviousInput> inputss = inputs;
+		int currentInputs = currentInput;
+		if (currentInput + 1 < inputs.size()) {
+		    currentInput++;
+		    input.setText(inputs.get(currentInput).getInput());
+		}
 
 	    }
 	});
 
 	output = new JTextArea("Type 'help' for a list of available commands", 8, textWidth);
 	output.setLineWrap(true);
+	output.setEditable(false);
 
 	JScrollPane jsp = new JScrollPane();
 	jsp.setViewportView(output);

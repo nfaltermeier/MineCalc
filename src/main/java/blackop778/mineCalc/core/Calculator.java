@@ -120,7 +120,7 @@ public abstract class Calculator {
 		    trimmedContents = addMinus(trimmedContents, replacer);
 		}
 		double[] numbers = { getDoubleValue(numbersS[0], last), getDoubleValue(numbersS[1], last) };
-		if (operator.equals("%") && arguments.size() == 1
+		if (operator.equals("%") && arguments.size() == 1 && fancyRemainders
 			&& (arguments.get(0).contents.equals("(" + trimmedContents + ")")
 				|| arguments.get(0).contents.equals(trimmedContents)))
 		    throw new FancyRemainderException(numbers[0], numbers[1]);
