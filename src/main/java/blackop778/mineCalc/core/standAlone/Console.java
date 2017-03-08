@@ -40,9 +40,9 @@ public class Console extends JPanel {
 	    @Override
 	    public void actionPerformed(ActionEvent arg0) {
 		output.append("\n" + actionOccured(input.getText()));
-		if (currentInput > 0 && !inputs.get(currentInput - 1).isExecuted()) {
-		    inputs.get(currentInput - 1).setInput(input.getText());
-		    inputs.get(currentInput - 1).setExecuted();
+		if (currentInput > 0 && !inputs.get(inputs.size() - 1).isExecuted()) {
+		    inputs.get(inputs.size() - 1).setInput(input.getText());
+		    inputs.get(inputs.size() - 1).setExecuted();
 		} else {
 		    inputs.add(new PreviousInput(input.getText(), true));
 		    currentInput++;
@@ -64,10 +64,11 @@ public class Console extends JPanel {
 		int currentInputs = currentInput;
 		if (currentInput > 0) {
 		    if (currentInput == inputs.size())
-			if (inputs.get(inputs.size() - 1).isExecuted())
+			if (inputs.get(inputs.size() - 1).isExecuted()) {
 			    inputs.add(new PreviousInput(input.getText(), false));
-			else
+			} else {
 			    inputs.get(currentInput - 1).setInput(input.getText());
+			}
 		    input.setText(inputs.get(currentInput - 1).getInput());
 		    currentInput--;
 		}
@@ -130,8 +131,9 @@ public class Console extends JPanel {
 	}
 
 	public void setInput(String input) {
-	    if (!isExecuted())
+	    if (!isExecuted()) {
 		this.input = input;
+	    }
 	}
 
 	public boolean isExecuted() {
