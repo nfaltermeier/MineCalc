@@ -72,7 +72,7 @@ public class Calculate extends CommandBase {
 	    condensedMath += s;
 	}
 	try {
-	    answer = Calculator.evaluate(condensedMath, useOOPS, getLastOutput(sender));
+	    answer = Calculator.evaluate(condensedMath, useOOPS, getLastOutput(sender), MCConfig.fancyRemainders);
 	    setLastOutput(sender, answer);
 	    if (answer % 1 == 0) {
 		int i = (int) answer;

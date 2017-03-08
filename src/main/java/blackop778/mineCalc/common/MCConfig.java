@@ -25,7 +25,8 @@ public class MCConfig {
     }
 
     public static void syncConfig() {
-	returnInput = config.getBoolean("Prepend Input to Output", Configuration.CATEGORY_GENERAL, true, null);
+	returnInput = config.getBoolean("Prepend Input to Output", Configuration.CATEGORY_GENERAL, true,
+		"Displays the arguments before the result");
 	fancyRemainders = config.getBoolean("Display remainders with a fancy output", Configuration.CATEGORY_GENERAL,
 		true, "Looks like: 5 % 2 = 2R1 versus 5 % 2 = 1");
 

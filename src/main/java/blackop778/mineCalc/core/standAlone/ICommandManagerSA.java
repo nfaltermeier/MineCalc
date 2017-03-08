@@ -3,7 +3,7 @@ package blackop778.mineCalc.core.standAlone;
 import java.util.List;
 
 public interface ICommandManagerSA {
-    public void addCommand(ICommandSA toAdd);
+    public void add(ICommandSA toAdd);
 
     public ICommandSA get(int index);
 

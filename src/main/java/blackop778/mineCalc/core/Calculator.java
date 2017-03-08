@@ -20,7 +20,8 @@ public abstract class Calculator {
     public static OperationHolder operations = new OperationHolder(true);
     public static Double consoleLastOutput = Double.NaN;
 
-    public static double evaluate(String math, boolean useOOPS, Double last) throws CalcExceptions {
+    public static double evaluate(String math, boolean useOOPS, Double last, boolean fancyRemainders)
+	    throws CalcExceptions {
 	math = math.replaceAll("\\s", "");
 	ArgumentManager arguments = new ArgumentManager();
 	Stack<Integer> parenthesisStartIndex = new Stack<Integer>();
