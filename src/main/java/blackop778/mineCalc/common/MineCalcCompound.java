@@ -15,6 +15,7 @@ public class MineCalcCompound implements IMineCalcCompound {
 
     public MineCalcCompound() {
 	lastNumber = Double.NaN;
+	hasMineCalc = false;
     }
 
     @Override
@@ -55,6 +56,7 @@ public class MineCalcCompound implements IMineCalcCompound {
 		instance.setLastNumber(comp.getDouble(lastNumberKey));
 	    } else {
 		instance.setHasMineCalc(false);
+		instance.setLastNumber(Double.NaN);
 	    }
 	}
     }

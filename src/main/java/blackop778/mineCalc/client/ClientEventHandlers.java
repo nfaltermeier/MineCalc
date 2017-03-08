@@ -21,7 +21,6 @@ public class ClientEventHandlers extends CommonEventHandlers {
 	    if (event.getEntity() instanceof EntityPlayer) {
 		if (event.getEntity().equals(Minecraft.getMinecraft().thePlayer)) {
 		    NetHub.NETWORKWRAPPER.sendToServer(new HasModMessage());
-		    MineCalc.LOGGER.info("Joined a server");
 		    MinecraftForge.EVENT_BUS.unregister(this);
 		}
 	    }
