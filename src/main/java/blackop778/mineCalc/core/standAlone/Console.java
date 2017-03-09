@@ -39,15 +39,17 @@ public class Console extends JPanel {
 	input.addActionListener(new ActionListener() {
 	    @Override
 	    public void actionPerformed(ActionEvent arg0) {
-		output.append("\n" + actionOccured(input.getText()));
-		if (currentInput > 0 && !inputs.get(inputs.size() - 1).isExecuted()) {
-		    inputs.get(inputs.size() - 1).setInput(input.getText());
-		    inputs.get(inputs.size() - 1).setExecuted();
-		} else {
-		    inputs.add(new PreviousInput(input.getText(), true));
-		    currentInput++;
+		if (!input.getText().equals("")) {
+		    output.append("\n" + actionOccured(input.getText()));
+		    if (inputs.size() > 0 && !inputs.get(inputs.size() - 1).isExecuted()) {
+			inputs.get(inputs.size() - 1).setInput(input.getText());
+			inputs.get(inputs.size() - 1).setExecuted();
+		    } else {
+			inputs.add(new PreviousInput(input.getText(), true));
+		    }
+		    currentInput = inputs.size();
+		    input.setText("");
 		}
-		input.setText("");
 	    }
 	});
 	InputMap keyBindings = input.getInputMap(JTextField.WHEN_FOCUSED);
