@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 public class ClientEventHandlers extends CommonEventHandlers {
 
     public static class SubEvent {
-	// @SubscribeEvent
+	@SubscribeEvent
 	public void onPlayerJoinedServer(EntityJoinWorldEvent event) {
 	    if (event.getEntity() instanceof EntityPlayer) {
 		if (event.getEntity().equals(Minecraft.getMinecraft().thePlayer)) {
@@ -28,13 +28,9 @@ public class ClientEventHandlers extends CommonEventHandlers {
     }
 
     @SubscribeEvent
-    public void onPlayerLEftServer(ClientDisconnectionFromServerEvent event) {
-	Minecraft.getMinecraft().addScheduledTask(new Runnable() {
-	    @Override
-	    public void run() {
-		MinecraftForge.EVENT_BUS.register(new SubEvent());
-	    }
-	});
+    // Occurs on server thread
+    public void onPlayerLeftServer(ClientDisconnectionFromServerEvent event) {
+	MinecraftForge.EVENT_BUS.register(new SubEvent());
     }
 
     @SubscribeEvent

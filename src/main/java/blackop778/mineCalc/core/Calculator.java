@@ -191,9 +191,10 @@ public abstract class Calculator {
 
 	    }
 	    if (index == -1) {
-		index++;
+		index = 0;
 	    }
-	    math1 = math1.substring(index, lastIndex);
+	    if (index != lastIndex)
+		math1 = math1.substring(index, lastIndex);
 
 	    // Isolate the second number
 	    String math2 = maths[1];
@@ -208,12 +209,7 @@ public abstract class Calculator {
 	    if (index != math2.length() - 1) {
 		math2 = math2.substring(lastIndex, index);
 	    }
-	    if (math2.equals("")) {
-		if (operationSymbol.equals("-")) {
-		    math2 = addMinus(maths[1], numberStandin);
-		}
-		throw new InvalidNumberException(math2);
-	    }
+
 	    return math1 + operationSymbol + math2;
 	} catch (ArrayIndexOutOfBoundsException e) {
 	    throw new UsageException();
