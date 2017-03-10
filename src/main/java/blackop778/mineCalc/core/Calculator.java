@@ -156,9 +156,9 @@ public abstract class Calculator {
 	    else {
 		toReturn = last;
 	    }
-	} else if (number.equals("")) {
+	} else if (number.equals(""))
 	    throw new UsageException();
-	} else {
+	else {
 	    try {
 		toReturn = Double.valueOf(number);
 	    } catch (NumberFormatException e) {
@@ -194,11 +194,6 @@ public abstract class Calculator {
 		index++;
 	    }
 	    math1 = math1.substring(index, lastIndex);
-	    if (math1.equals("")) {
-		if (operationSymbol.equals("-"))
-		    math1 = addMinus(maths[0], numberStandin);
-		throw new InvalidNumberException(math1);
-	    }
 
 	    // Isolate the second number
 	    String math2 = maths[1];
@@ -214,8 +209,9 @@ public abstract class Calculator {
 		math2 = math2.substring(lastIndex, index);
 	    }
 	    if (math2.equals("")) {
-		if (operationSymbol.equals("-"))
+		if (operationSymbol.equals("-")) {
 		    math2 = addMinus(maths[1], numberStandin);
+		}
 		throw new InvalidNumberException(math2);
 	    }
 	    return math1 + operationSymbol + math2;

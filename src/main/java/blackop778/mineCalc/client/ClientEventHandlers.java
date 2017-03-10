@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 public class ClientEventHandlers extends CommonEventHandlers {
 
     public static class SubEvent {
-	@SubscribeEvent
+	// @SubscribeEvent
 	public void onPlayerJoinedServer(EntityJoinWorldEvent event) {
 	    if (event.getEntity() instanceof EntityPlayer) {
 		if (event.getEntity().equals(Minecraft.getMinecraft().thePlayer)) {
