@@ -20,7 +20,8 @@ public abstract class Calculator {
     public static OperationHolder operations = new OperationHolder(true);
     public static Double consoleLastOutput = Double.NaN;
 
-    public static double evaluate(String math, boolean useOOPS, Double last) throws CalcExceptions {
+    public static double evaluate(String math, boolean useOOPS, Double last, boolean fancyRemainders)
+	    throws CalcExceptions {
 	math = math.replaceAll("\\s", "");
 	ArgumentManager arguments = new ArgumentManager();
 	Stack<Integer> parenthesisStartIndex = new Stack<Integer>();
@@ -119,7 +120,7 @@ public abstract class Calculator {
 		    trimmedContents = addMinus(trimmedContents, replacer);
 		}
 		double[] numbers = { getDoubleValue(numbersS[0], last), getDoubleValue(numbersS[1], last) };
-		if (operator.equals("%") && arguments.size() == 1
+		if (operator.equals("%") && arguments.size() == 1 && fancyRemainders
 			&& (arguments.get(0).contents.equals("(" + trimmedContents + ")")
 				|| arguments.get(0).contents.equals(trimmedContents)))
 		    throw new FancyRemainderException(numbers[0], numbers[1]);
@@ -155,9 +156,9 @@ public abstract class Calculator {
 	    else {
 		toReturn = last;
 	    }
-	} else if (number.equals("")) {
+	} else if (number.equals(""))
 	    throw new UsageException();
-	} else {
+	else {
 	    try {
 		toReturn = Double.valueOf(number);
 	    } catch (NumberFormatException e) {
@@ -190,14 +191,10 @@ public abstract class Calculator {
 
 	    }
 	    if (index == -1) {
-		index++;
+		index = 0;
 	    }
-	    math1 = math1.substring(index, lastIndex);
-	    if (math1.equals("")) {
-		if (operationSymbol.equals("-"))
-		    math1 = addMinus(maths[0], numberStandin);
-		throw new InvalidNumberException(math1);
-	    }
+	    if (index != lastIndex)
+		math1 = math1.substring(index, lastIndex);
 
 	    // Isolate the second number
 	    String math2 = maths[1];
@@ -212,11 +209,7 @@ public abstract class Calculator {
 	    if (index != math2.length() - 1) {
 		math2 = math2.substring(lastIndex, index);
 	    }
-	    if (math2.equals("")) {
-		if (operationSymbol.equals("-"))
-		    math2 = addMinus(maths[1], numberStandin);
-		throw new InvalidNumberException(math2);
-	    }
+
 	    return math1 + operationSymbol + math2;
 	} catch (ArrayIndexOutOfBoundsException e) {
 	    throw new UsageException();

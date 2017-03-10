@@ -10,11 +10,11 @@ public class MineCalcCompound implements IMineCalcCompound {
 
     private boolean hasMineCalc;
     private double lastNumber;
-    private static final String hasMineCalcKey = "HasMineCalc";
     private static final String lastNumberKey = "LastNumber";
 
     public MineCalcCompound() {
 	lastNumber = Double.NaN;
+	hasMineCalc = false;
     }
 
     @Override
@@ -41,7 +41,6 @@ public class MineCalcCompound implements IMineCalcCompound {
 	@Override
 	public NBTBase writeNBT(Capability<IMineCalcCompound> capability, IMineCalcCompound instance, EnumFacing side) {
 	    NBTTagCompound comp = new NBTTagCompound();
-	    comp.setBoolean(hasMineCalcKey, instance.getHasMineCalc());
 	    comp.setDouble(lastNumberKey, instance.getLastNumber());
 	    return comp;
 	}
@@ -51,11 +50,11 @@ public class MineCalcCompound implements IMineCalcCompound {
 		NBTBase nbt) {
 	    if (nbt instanceof NBTTagCompound) {
 		NBTTagCompound comp = (NBTTagCompound) nbt;
-		instance.setHasMineCalc(comp.getBoolean(hasMineCalcKey));
 		instance.setLastNumber(comp.getDouble(lastNumberKey));
 	    } else {
-		instance.setHasMineCalc(false);
+		instance.setLastNumber(Double.NaN);
 	    }
+	    instance.setHasMineCalc(false);
 	}
     }
 }

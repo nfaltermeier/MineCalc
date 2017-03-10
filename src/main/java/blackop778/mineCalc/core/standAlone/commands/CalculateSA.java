@@ -54,7 +54,8 @@ public class CalculateSA implements ICommandSA {
 	}
 	try {
 	    double answer;
-	    answer = Calculator.evaluate(condensedMath, useOOPS, Calculator.consoleLastOutput);
+	    answer = Calculator.evaluate(condensedMath, useOOPS, Calculator.consoleLastOutput,
+		    FancyRemainders.getFancyRemainder());
 	    Calculator.consoleLastOutput = answer;
 	    if (answer % 1 == 0) {
 		int i = (int) answer;

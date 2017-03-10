@@ -72,7 +72,7 @@ public class Calculate extends CommandBase {
 	    condensedMath += s;
 	}
 	try {
-	    answer = Calculator.evaluate(condensedMath, useOOPS, getLastOutput(sender));
+	    answer = Calculator.evaluate(condensedMath, useOOPS, getLastOutput(sender), MCConfig.fancyRemainders);
 	    setLastOutput(sender, answer);
 	    if (answer % 1 == 0) {
 		int i = (int) answer;
@@ -152,10 +152,7 @@ public class Calculate extends CommandBase {
 		return Calculator.consoleLastOutput;
 	    IMineCalcCompound comp = e.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
 	    Double last = comp.getLastNumber();
-	    if (last.isNaN())
-		throw new PreviousOutputException();
-	    else
-		return last;
+	    return last;
 	}
     }
 

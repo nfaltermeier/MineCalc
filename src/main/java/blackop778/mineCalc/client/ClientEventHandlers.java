@@ -21,7 +21,6 @@ public class ClientEventHandlers extends CommonEventHandlers {
 	    if (event.getEntity() instanceof EntityPlayer) {
 		if (event.getEntity().equals(Minecraft.getMinecraft().thePlayer)) {
 		    NetHub.NETWORKWRAPPER.sendToServer(new HasModMessage());
-		    MineCalc.LOGGER.info("Joined a server");
 		    MinecraftForge.EVENT_BUS.unregister(this);
 		}
 	    }
@@ -29,13 +28,9 @@ public class ClientEventHandlers extends CommonEventHandlers {
     }
 
     @SubscribeEvent
-    public void onPlayerLEftServer(ClientDisconnectionFromServerEvent event) {
-	Minecraft.getMinecraft().addScheduledTask(new Runnable() {
-	    @Override
-	    public void run() {
-		MinecraftForge.EVENT_BUS.register(new SubEvent());
-	    }
-	});
+    // Occurs on server thread
+    public void onPlayerLeftServer(ClientDisconnectionFromServerEvent event) {
+	MinecraftForge.EVENT_BUS.register(new SubEvent());
     }
 
     @SubscribeEvent
