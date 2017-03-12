@@ -21,6 +21,17 @@ version = "1.7.10-"
 group= "Blackop778.MineCalc" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "MineCalc"
 
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+jar {
+    manifest {
+        attributes( 
+                   'Main-Class': 'blackop778.mineCalc.core.standAlone.ConsoleRunnable'
+	)
+    }
+}
+
 minecraft {
     version = "1.7.10-10.13.4.1558-1.7.10"
     runDir = "eclipse"
