@@ -20,11 +20,7 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-<<<<<<< HEAD
 version = "1.8.9-"
-=======
-version = "1.10.2-"
->>>>>>> 1.10.2
 group= "Blackop778.MineCalc" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "MineCalc"
 
@@ -40,11 +36,7 @@ jar {
 }
 
 minecraft {
-<<<<<<< HEAD
     version = "1.8.9-11.15.1.1722"
-=======
-    version = "1.10.2-12.18.1.2011"
->>>>>>> 1.10.2
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
