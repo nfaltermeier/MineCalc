@@ -19,7 +19,7 @@ public class ClientEventHandlers extends CommonEventHandlers {
 	@SubscribeEvent
 	public void onPlayerJoinedServer(EntityJoinWorldEvent event) {
 	    if (event.getEntity() instanceof EntityPlayer) {
-		if (event.getEntity().equals(Minecraft.getMinecraft().thePlayer)) {
+		if (event.getEntity().equals(Minecraft.getMinecraft().player)) {
 		    NetHub.NETWORKWRAPPER.sendToServer(new HasModMessage());
 		    MinecraftForge.EVENT_BUS.unregister(this);
 		}

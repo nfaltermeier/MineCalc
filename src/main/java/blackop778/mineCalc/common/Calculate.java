@@ -40,7 +40,7 @@ public class Calculate extends CommandBase {
     public static final Style redStyle = new Style().setColor(TextFormatting.RED);
 
     @Override
-    public String getCommandName() {
+    public String getName() {
 	// What must be typed in following the / to trigger the command
 	return "calc";
     }
@@ -49,7 +49,7 @@ public class Calculate extends CommandBase {
      * What is shown when "/help Calculate" is typed in
      */
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
 	if (playerHasMod(sender.getCommandSenderEntity()))
 	    return "minecalc.calc.help";
 	else
@@ -171,15 +171,14 @@ public class Calculate extends CommandBase {
     }
 
     @Override
-    public List<String> getCommandAliases() {
+    public List<String> getAliases() {
 	// A list of alternate command names
 	List<String> aliases = new ArrayList<String>(Arrays.asList("Calc", "calculate", "Calculate"));
 	return aliases;
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args,
-	    BlockPos pos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
 	if (args.length % 2 != 1) {
 	    ArrayList<String> options = new ArrayList<String>(Arrays.asList("+", "-", "*", "/", "%", "^", "/--"));
 	    return options;
@@ -200,7 +199,7 @@ public class Calculate extends CommandBase {
 		MineCalc.LOGGER.info(output.getUnformattedText());
 	    } else {
 		EntityPlayer player = (EntityPlayer) sender;
-		player.addChatMessage(output);
+		player.sendMessage(output);
 	    }
 	}
     }
