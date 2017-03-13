@@ -105,30 +105,32 @@ public abstract class Calculator {
 		if (index == 999)
 		    throw new OperatorException();
 
-		// Solve based on the operation we found
-		Character replacer = findUnusedStandin(contents);
-		if (operator.equals("-")) {
-		    String[] temp = takeMinuses(contents, index);
-		    contents = temp[0];
-		    replacer = temp[1].charAt(0);
-		}
-		String trimmedContents = trimToOperation(contents, operator, index, replacer);
-		String[] numbersS = trimmedContents.split(Pattern.quote(operator));
-		if (operator.equals("-")) {
-		    numbersS[0] = addMinus(numbersS[0], replacer);
-		    numbersS[1] = addMinus(numbersS[1], replacer);
-		    trimmedContents = addMinus(trimmedContents, replacer);
-		}
-		double[] numbers = { getDoubleValue(numbersS[0], last), getDoubleValue(numbersS[1], last) };
-		if (operator.equals("%") && arguments.size() == 1 && fancyRemainders
-			&& (arguments.get(0).contents.equals("(" + trimmedContents + ")")
-				|| arguments.get(0).contents.equals(trimmedContents)))
-		    throw new FancyRemainderException(numbers[0], numbers[1]);
-		double answer;
+		String trimmedContents = "";
+		double answer = 0;
 		if (op instanceof IBinaryOperation) {
+		    // Solve based on the operation we found
+		    Character replacer = findUnusedStandin(contents);
+		    if (operator.equals("-")) {
+			String[] temp = takeMinuses(contents, index);
+			contents = temp[0];
+			replacer = temp[1].charAt(0);
+		    }
+		    trimmedContents = binaryTrimToOperation(contents, operator, index, replacer);
+		    ;
+		    String[] numbersS = trimmedContents.split(Pattern.quote(operator));
+		    if (operator.equals("-")) {
+			numbersS[0] = addMinus(numbersS[0], replacer);
+			numbersS[1] = addMinus(numbersS[1], replacer);
+			trimmedContents = addMinus(trimmedContents, replacer);
+		    }
+		    double[] numbers = { getDoubleValue(numbersS[0], last), getDoubleValue(numbersS[1], last) };
+		    if (operator.equals("%") && arguments.size() == 1 && fancyRemainders
+			    && (arguments.get(0).contents.equals("(" + trimmedContents + ")")
+				    || arguments.get(0).contents.equals(trimmedContents)))
+			throw new FancyRemainderException(numbers[0], numbers[1]);
 		    answer = ((IBinaryOperation) op).evaluateFunction(numbers[0], numbers[1]);
 		} else {
-		    answer = Double.NaN;
+
 		}
 		if (arguments.get(0).contents.equals("(" + trimmedContents + ")")) {
 		    trimmedContents = arguments.get(0).contents;
@@ -177,7 +179,7 @@ public abstract class Calculator {
 	return negative ? -toReturn : toReturn;
     }
 
-    public static String trimToOperation(String math, String operationSymbol, int symbolStartIndex,
+    public static String binaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex,
 	    Character numberStandin) throws AllStandinsUsedException, UsageException, InvalidNumberException {
 	int index = 0;
 	int lastIndex = 0;
@@ -220,6 +222,11 @@ public abstract class Calculator {
 	} catch (ArrayIndexOutOfBoundsException e) {
 	    throw new UsageException();
 	}
+    }
+
+    public static String unaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex) {
+
+	return math;
     }
 
     /**
