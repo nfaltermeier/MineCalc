@@ -26,7 +26,7 @@ public abstract class Operations {
 	return toAddTo;
     }
 
-    public static class Addition implements IOperation {
+    public static class Addition implements IBinaryOperation {
 	@Override
 	public String[] getOperators() {
 	    return new String[] { "+" };
@@ -43,7 +43,7 @@ public abstract class Operations {
 	}
     }
 
-    public static class Subtraction implements IOperation {
+    public static class Subtraction implements IBinaryOperation {
 	@Override
 	public String[] getOperators() {
 	    return new String[] { "-" };
@@ -60,7 +60,7 @@ public abstract class Operations {
 	}
     }
 
-    public static class Multiplication implements IOperation {
+    public static class Multiplication implements IBinaryOperation {
 	@Override
 	public String[] getOperators() {
 	    return new String[] { "*", "x", "X" };
@@ -77,7 +77,7 @@ public abstract class Operations {
 	}
     }
 
-    public static class Division implements IOperation {
+    public static class Division implements IBinaryOperation {
 	@Override
 	public String[] getOperators() {
 	    return new String[] { "/" };
@@ -96,7 +96,7 @@ public abstract class Operations {
 	}
     }
 
-    public static class Modulus implements IOperation {
+    public static class Modulus implements IBinaryOperation {
 	@Override
 	public String[] getOperators() {
 	    return new String[] { "%" };
@@ -115,7 +115,7 @@ public abstract class Operations {
 	}
     }
 
-    public static class Exponent implements IOperation {
+    public static class Exponent implements IBinaryOperation {
 	@Override
 	public String[] getOperators() {
 	    return new String[] { "^" };

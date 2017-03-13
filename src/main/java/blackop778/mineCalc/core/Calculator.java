@@ -124,7 +124,12 @@ public abstract class Calculator {
 			&& (arguments.get(0).contents.equals("(" + trimmedContents + ")")
 				|| arguments.get(0).contents.equals(trimmedContents)))
 		    throw new FancyRemainderException(numbers[0], numbers[1]);
-		double answer = op.evaluateFunction(numbers[0], numbers[1]);
+		double answer;
+		if (op instanceof IBinaryOperation) {
+		    answer = ((IBinaryOperation) op).evaluateFunction(numbers[0], numbers[1]);
+		} else {
+		    answer = Double.NaN;
+		}
 		if (arguments.get(0).contents.equals("(" + trimmedContents + ")")) {
 		    trimmedContents = arguments.get(0).contents;
 		}
@@ -193,8 +198,9 @@ public abstract class Calculator {
 	    if (index == -1) {
 		index = 0;
 	    }
-	    if (index != lastIndex)
+	    if (index != lastIndex) {
 		math1 = math1.substring(index, lastIndex);
+	    }
 
 	    // Isolate the second number
 	    String math2 = maths[1];
