@@ -6,6 +6,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CommonEventHandlers {
+    @SuppressWarnings("deprecation")
     @SubscribeEvent
     public void attachCapability(AttachCapabilitiesEvent.Entity event) {
 	if (!(event.getEntity() instanceof EntityPlayer))
