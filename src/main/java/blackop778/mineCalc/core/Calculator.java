@@ -224,8 +224,13 @@ public abstract class Calculator {
 	}
     }
 
-    public static String unaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex) {
+    public static String unaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex)
+	    throws AllStandinsUsedException {
+	// Is the number before the operation
+	if (tryCharAt(math, symbolStartIndex - 1) != null && isNumber(math.charAt(symbolStartIndex - 1),
+		tryCharAt(math, symbolStartIndex - 2), tryCharAt(math, symbolStartIndex - 3))) {
 
+	}
 	return math;
     }
 
