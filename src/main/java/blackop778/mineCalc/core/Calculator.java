@@ -11,6 +11,7 @@ import blackop778.mineCalc.core.CalcExceptions.MultiplePointsException;
 import blackop778.mineCalc.core.CalcExceptions.OperatorException;
 import blackop778.mineCalc.core.CalcExceptions.ParenthesisException;
 import blackop778.mineCalc.core.CalcExceptions.PreviousOutputException;
+import blackop778.mineCalc.core.CalcExceptions.UnaryUsageException;
 import blackop778.mineCalc.core.CalcExceptions.UsageException;
 
 public abstract class Calculator {
@@ -225,12 +226,35 @@ public abstract class Calculator {
     }
 
     public static String unaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex)
-	    throws AllStandinsUsedException {
+	    throws AllStandinsUsedException, UnaryUsageException {
+	// Remove leading parenthesis
+	if (new Character('(').equals(tryCharAt(math, 0))
+		&& new Character(')').equals(tryCharAt(math, symbolStartIndex - 1))) {
+	    math = math.substring(1, symbolStartIndex - 1) + math.substring(symbolStartIndex, math.length());
+	    symbolStartIndex -= 2;
+	}
+	// Remove following parenthesis
+	if (new Character('(').equals(tryCharAt(math, symbolStartIndex + operationSymbol.length() + 1))
+		&& new Character(')').equals(tryCharAt(math, math.length() - 1))) {
+	    math = math.substring(0, symbolStartIndex + operationSymbol.length() + 1)
+		    + math.substring(symbolStartIndex + operationSymbol.length() + 2, math.length() - 1);
+	}
+	int numLocation = 0;
 	// Is the number before the operation
 	if (tryCharAt(math, symbolStartIndex - 1) != null && isNumber(math.charAt(symbolStartIndex - 1),
 		tryCharAt(math, symbolStartIndex - 2), tryCharAt(math, symbolStartIndex - 3))) {
-
+	    numLocation = -1;
 	}
+	if (tryCharAt(math, symbolStartIndex + operationSymbol.length() + 1) != null
+		&& isNumber(math.charAt(symbolStartIndex + operationSymbol.length() + 1),
+			tryCharAt(math, symbolStartIndex + operationSymbol.length()),
+			tryCharAt(math, symbolStartIndex + operationSymbol.length() - 1))) {
+	    if (numLocation == -1)
+		throw new UnaryUsageException();
+	    numLocation = 1;
+	}
+	if (numLocation == 0)
+	    throw new UnaryUsageException();
 	return math;
     }
 

@@ -77,4 +77,8 @@ public abstract class CalcExceptions extends Exception {
 	    this.tooMany = tooMany;
 	}
     }
+
+    public static class UnaryUsageException extends CalcExceptions {
+
+    }
 }
