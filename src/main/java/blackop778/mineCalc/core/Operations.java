@@ -23,6 +23,7 @@ public abstract class Operations {
 	toAddTo.add(new Modulus());
 	toAddTo.add(new Exponent());
 	toAddTo.add(new Root());
+	toAddTo.add(new Sine());
 	return toAddTo;
     }
 
@@ -153,5 +154,25 @@ public abstract class Operations {
 	public double evaluateFunction(double base, double num2) throws CalcExceptions {
 	    return super.evaluateFunction(base, 1 / num2);
 	}
+    }
+
+    public static class Sine implements IUnaryOperation {
+
+	@Override
+	public String[] getOperators() {
+	    return new String[] { "sin", "sine" };
+	}
+
+	@Override
+	public int getImportance() {
+	    // TODO Auto-generated method stub
+	    return 0;
+	}
+
+	@Override
+	public double evaluateFunction(double input) {
+	    return Math.sin(AngleManager.convertInputToRadian(input));
+	}
+
     }
 }

@@ -117,7 +117,6 @@ public abstract class Calculator {
 			replacer = temp[1].charAt(0);
 		    }
 		    trimmedContents = binaryTrimToOperation(contents, operator, index, replacer);
-		    ;
 		    String[] numbersS = trimmedContents.split(Pattern.quote(operator));
 		    if (operator.equals("-")) {
 			numbersS[0] = addMinus(numbersS[0], replacer);
@@ -131,7 +130,9 @@ public abstract class Calculator {
 			throw new FancyRemainderException(numbers[0], numbers[1]);
 		    answer = ((IBinaryOperation) op).evaluateFunction(numbers[0], numbers[1]);
 		} else {
-
+		    trimmedContents = unaryTrimToOperation(contents, operator, index);
+		    double number = getDoubleValue(trimmedContents.replaceAll(Pattern.quote(operator), ""), last);
+		    answer = ((IUnaryOperation) op).evaluateFunction(number);
 		}
 		if (arguments.get(0).contents.equals("(" + trimmedContents + ")")) {
 		    trimmedContents = arguments.get(0).contents;
@@ -145,7 +146,7 @@ public abstract class Calculator {
 	return Double.valueOf(arguments.get(0).contents);
     }
 
-    public static double getDoubleValue(String number, Double last)
+    private static double getDoubleValue(String number, Double last)
 	    throws PreviousOutputException, MultiplePointsException, InvalidNumberException, UsageException {
 	boolean negative = false;
 	double toReturn;
@@ -180,7 +181,7 @@ public abstract class Calculator {
 	return negative ? -toReturn : toReturn;
     }
 
-    public static String binaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex,
+    private static String binaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex,
 	    Character numberStandin) throws AllStandinsUsedException, UsageException, InvalidNumberException {
 	int index = 0;
 	int lastIndex = 0;
@@ -225,7 +226,7 @@ public abstract class Calculator {
 	}
     }
 
-    public static String unaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex)
+    private static String unaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex)
 	    throws AllStandinsUsedException, UnaryUsageException {
 	// Remove leading parenthesis
 	if (new Character('(').equals(tryCharAt(math, 0))
@@ -240,18 +241,37 @@ public abstract class Calculator {
 		    + math.substring(symbolStartIndex + operationSymbol.length() + 2, math.length() - 1);
 	}
 	int numLocation = 0;
+	Character currentChar = tryCharAt(math, symbolStartIndex - 1);
+	Character lastChar = tryCharAt(math, symbolStartIndex - 2);
+	Character lastLastChar = tryCharAt(math, symbolStartIndex - 3);
+	int i = 0;
 	// Is the number before the operation
-	if (tryCharAt(math, symbolStartIndex - 1) != null && isNumber(math.charAt(symbolStartIndex - 1),
-		tryCharAt(math, symbolStartIndex - 2), tryCharAt(math, symbolStartIndex - 3))) {
+	if (currentChar != null && isNumber(currentChar, lastChar, lastLastChar)) {
 	    numLocation = -1;
+	    for (i = 2; symbolStartIndex - i > -1 || isNumber(currentChar, lastChar, lastLastChar); i++) {
+		lastLastChar = lastChar;
+		lastChar = currentChar;
+		currentChar = math.charAt(symbolStartIndex - i);
+	    }
+	    if (symbolStartIndex - i == -1)
+		i--;
+	    math = math.substring(symbolStartIndex - i, symbolStartIndex + operationSymbol.length());
 	}
-	if (tryCharAt(math, symbolStartIndex + operationSymbol.length() + 1) != null
-		&& isNumber(math.charAt(symbolStartIndex + operationSymbol.length() + 1),
-			tryCharAt(math, symbolStartIndex + operationSymbol.length()),
-			tryCharAt(math, symbolStartIndex + operationSymbol.length() - 1))) {
+	currentChar = tryCharAt(math, symbolStartIndex + operationSymbol.length() + 1);
+	lastChar = tryCharAt(math, symbolStartIndex + operationSymbol.length());
+	lastLastChar = tryCharAt(math, symbolStartIndex + operationSymbol.length() - 1);
+	// Is the number after the operation
+	if (currentChar != null && isNumber(currentChar, lastChar, lastLastChar)) {
 	    if (numLocation == -1)
 		throw new UnaryUsageException();
 	    numLocation = 1;
+	    for (i = 2; symbolStartIndex + operationSymbol.length() + i < math.length()
+		    || isNumber(currentChar, lastChar, lastLastChar); i++) {
+		lastLastChar = lastChar;
+		lastChar = currentChar;
+		currentChar = math.charAt(symbolStartIndex + operationSymbol.length() + i);
+	    }
+	    math = math.substring(symbolStartIndex, symbolStartIndex + operationSymbol.length() + i);
 	}
 	if (numLocation == 0)
 	    throw new UnaryUsageException();
@@ -262,7 +282,7 @@ public abstract class Calculator {
      * Gets the character at index in string, and returns null instead of
      * StringIndexOutOfBoundsException
      */
-    public static Character tryCharAt(String string, int index) {
+    private static Character tryCharAt(String string, int index) {
 	try {
 	    return string.charAt(index);
 	} catch (StringIndexOutOfBoundsException e) {
@@ -270,7 +290,7 @@ public abstract class Calculator {
 	}
     }
 
-    public static String concatNullableCharacters(Character first, Character... others) {
+    private static String concatNullableCharacters(Character first, Character... others) {
 	StringBuilder toReturn = new StringBuilder();
 	if (first != null) {
 	    toReturn.append(first);
@@ -284,12 +304,12 @@ public abstract class Calculator {
 	return toReturn.toString();
     }
 
-    public static boolean isNumber(Character current, Character last, Character lastLast)
+    private static boolean isNumber(Character current, Character last, Character lastLast)
 	    throws AllStandinsUsedException {
 	return isNumber(current, last, lastLast, findUnusedStandin(concatNullableCharacters(current, last, lastLast)));
     }
 
-    public static boolean isNumber(Character current, Character last, Character lastLast, Character numberStandIn) {
+    private static boolean isNumber(Character current, Character last, Character lastLast, Character numberStandIn) {
 	if (current.toString().matches("\\d|\\.|[lpieLPIE]|" + Pattern.quote(numberStandIn.toString())))
 	    return true;
 	else if (current.equals('-') && !(new Character('/').equals(lastLast))) {
@@ -302,7 +322,7 @@ public abstract class Calculator {
 	return false;
     }
 
-    public static Character findUnusedStandin(String text) throws AllStandinsUsedException {
+    private static Character findUnusedStandin(String text) throws AllStandinsUsedException {
 	for (Character c : STANDINCHARS) {
 	    if (!text.contains(new StringBuilder().append(c).toString()))
 		return c;
@@ -323,7 +343,7 @@ public abstract class Calculator {
      *         were replaced by
      * @throws AllStandinsUsedException
      */
-    public static String[] takeMinuses(String toChange, int unchangedIndex) throws AllStandinsUsedException {
+    private static String[] takeMinuses(String toChange, int unchangedIndex) throws AllStandinsUsedException {
 	Character replacement = findUnusedStandin(toChange);
 
 	toChange = toChange.replaceAll(Pattern.quote("-"), Matcher.quoteReplacement(replacement.toString()));
@@ -333,11 +353,11 @@ public abstract class Calculator {
 	return new String[] { toChange, replacement.toString() };
     }
 
-    public static String addMinus(String math, Character minusReplacer) {
+    private static String addMinus(String math, Character minusReplacer) {
 	return math.replaceAll(Pattern.quote(minusReplacer.toString()), "-");
     }
 
-    public static boolean onlyNumber(String toCheck) throws AllStandinsUsedException {
+    private static boolean onlyNumber(String toCheck) throws AllStandinsUsedException {
 	Character lastLast;
 	Character last = null;
 	Character current = null;
