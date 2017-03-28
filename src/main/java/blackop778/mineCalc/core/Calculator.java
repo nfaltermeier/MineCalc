@@ -69,7 +69,7 @@ public abstract class Calculator {
 		String operator = "";
 		// Cycle through the OOPS levels to find the next operation we
 		// should perform
-		for (int i = 6; i > 0; i--) {
+		for (int i = operations.LEVELS; i > 0; i--) {
 		    IOperation[] level = operations.getLevel(i);
 		    // Cycle through the operations in the OOPS level
 		    for (int n = 0; n < level.length; n++) {
@@ -248,7 +248,7 @@ public abstract class Calculator {
 	// Is the number before the operation
 	if (currentChar != null && isNumber(currentChar, lastChar, lastLastChar)) {
 	    numLocation = -1;
-	    for (i = 2; symbolStartIndex - i > -1 || isNumber(currentChar, lastChar, lastLastChar); i++) {
+	    for (i = 1; symbolStartIndex - i > -1 && isNumber(currentChar, lastChar, lastLastChar); i++) {
 		lastLastChar = lastChar;
 		lastChar = currentChar;
 		currentChar = math.charAt(symbolStartIndex - i);
@@ -257,16 +257,16 @@ public abstract class Calculator {
 		i--;
 	    math = math.substring(symbolStartIndex - i, symbolStartIndex + operationSymbol.length());
 	}
-	currentChar = tryCharAt(math, symbolStartIndex + operationSymbol.length() + 1);
-	lastChar = tryCharAt(math, symbolStartIndex + operationSymbol.length());
-	lastLastChar = tryCharAt(math, symbolStartIndex + operationSymbol.length() - 1);
+	currentChar = tryCharAt(math, symbolStartIndex + operationSymbol.length());
+	lastChar = tryCharAt(math, symbolStartIndex + operationSymbol.length() - 1);
+	lastLastChar = tryCharAt(math, symbolStartIndex + operationSymbol.length() - 2);
 	// Is the number after the operation
 	if (currentChar != null && isNumber(currentChar, lastChar, lastLastChar)) {
 	    if (numLocation == -1)
 		throw new UnaryUsageException();
 	    numLocation = 1;
-	    for (i = 2; symbolStartIndex + operationSymbol.length() + i < math.length()
-		    || isNumber(currentChar, lastChar, lastLastChar); i++) {
+	    for (i = 1; symbolStartIndex + operationSymbol.length() + i < math.length()
+		    && isNumber(currentChar, lastChar, lastLastChar); i++) {
 		lastLastChar = lastChar;
 		lastChar = currentChar;
 		currentChar = math.charAt(symbolStartIndex + operationSymbol.length() + i);

@@ -5,12 +5,26 @@ import java.util.List;
 
 public class OperationHolder {
     private IOperation[][] operations;
-    public final boolean initializeWithDefaults;
+    public final boolean INITIALIZE_WITH_DEFAULTS;
+    // 8 - Trigonometry functions
+    // 7 - Empty
+    // 6 - Powers
+    // 5 - Empty
+    // 4 - Multiplicative
+    // 3 - Empty
+    // 2 - Additive
+    // 1 - Empty
+    public final int LEVELS;
 
     public OperationHolder(boolean initializeWithDefaults) {
-	this.initializeWithDefaults = initializeWithDefaults;
-	operations = new IOperation[6][0];
-	if (this.initializeWithDefaults) {
+	this(initializeWithDefaults, 8);
+    }
+
+    public OperationHolder(boolean initializeWithDefaults, int levels) {
+	this.LEVELS = levels;
+	this.INITIALIZE_WITH_DEFAULTS = initializeWithDefaults;
+	operations = new IOperation[8][0];
+	if (this.INITIALIZE_WITH_DEFAULTS) {
 	    List<IOperation> temp = Operations.addOperations(new ArrayList<IOperation>());
 	    for (IOperation op : temp) {
 		add(op);
@@ -35,7 +49,7 @@ public class OperationHolder {
 
     /**
      * Returns the importance level specified by level. Should be between or
-     * equal to 1 through 6.
+     * equal to 1 through LEVELS.
      */
     public IOperation[] getLevel(int level) {
 	return operations[level - 1];

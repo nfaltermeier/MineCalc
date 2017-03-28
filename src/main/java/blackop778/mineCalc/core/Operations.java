@@ -165,13 +165,41 @@ public abstract class Operations {
 
 	@Override
 	public int getImportance() {
-	    // TODO Auto-generated method stub
-	    return 0;
+	    return 8;
 	}
 
 	@Override
 	public double evaluateFunction(double input) {
-	    return Math.sin(AngleManager.convertInputToRadian(input));
+	    double answer = Math.sin(AngleManager.convertInputToRadian(input));
+	    // FLOAAATTTT!
+	    double tAnswer = Math.abs(answer);
+	    if (tAnswer < .000000001 && tAnswer > 0)
+		answer = 0;
+	    return answer;
+	}
+
+    }
+
+    public static class ArcSine implements IUnaryOperation {
+
+	@Override
+	public String[] getOperators() {
+	    return new String[] { "asin", "asine", "arcsin", "arcsine" };
+	}
+
+	@Override
+	public int getImportance() {
+	    return 8;
+	}
+
+	@Override
+	public double evaluateFunction(double input) {
+	    double answer = AngleManager.convertRadianToInput(Math.asin(input));
+	    // FLOAAATTTT!
+	    double tAnswer = Math.abs(answer);
+	    if (tAnswer < .000000001 && tAnswer > 0)
+		answer = 0;
+	    return answer;
 	}
 
     }
