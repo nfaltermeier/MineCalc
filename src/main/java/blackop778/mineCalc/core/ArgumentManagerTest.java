@@ -24,16 +24,16 @@ public abstract class ArgumentManagerTest {
 		"5*(1+1-(6/2))", "5--6", "5y6", "80/0", "-5/--2", "6*l", "2^3^2", "3^(2+1)", "0/5", "2^-2",
 		"(1/2)^(1+1)", "-8^(1/2)", "-8^(1/3)", "9/---2", ".25+6..75", "8-9.0.4", "8*", "r%4", "pi*1", "e*1",
 		"1+(6*7", "(9*8)", "((8*8))-3", "7*(5%3(", "1 + 1 + 1 - 1", "6-u*9", "6%5", "7%5-2", "sin(pi/2)",
-		"sin(pi)", "sin((3*pi)/2)", "sin(0)" };
+		"sin(pi)", "sin((3*pi)/2)", "sin(0)", "sin(arcsin(.5))", "sin(pi/6)-1" };
 	boolean[] useOOPSs = { true, true, true, false, true, true, false, false, true, true, true, true, true, true,
 		true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-		true, true, true, true, true, true };
+		true, true, true, true, true, true, true, true };
 	Object[] answers = { 45.0, 3.0, 14.0, 20.0, 2.5, -5.0, 11.0, new OperatorException(), new DivisionException(),
 		new ImaginaryNumberException(), new PreviousOutputException(), 64.0, 27.0, 0.0, .25, .25,
 		new ImaginaryNumberException(), -2.0, (1 / 3.0), new MultiplePointsException(),
 		new MultiplePointsException(), new UsageException(), new InvalidNumberException("u"), Math.PI, Math.E,
 		new ParenthesisException(true), 72.0, 61.0, new ParenthesisException(true), 2.0,
-		new InvalidNumberException("u"), new FancyRemainderException(6, 5), 0.0, 1.0, 0.0, -1.0, 0.0, };
+		new InvalidNumberException("u"), new FancyRemainderException(6, 5), 0.0, 1.0, 0.0, -1.0, 0.0, .5, -.5 };
 	int fails = 0;
 	for (int i = 0; i < questions.length; i++) {
 	    if (!testMath(questions[i], useOOPSs[i], answers[i], i)) {
@@ -64,6 +64,8 @@ public abstract class ArgumentManagerTest {
 	}
 
 	if (!success || debug) {
+	    if (result instanceof Exception)
+		((Exception) result).printStackTrace();
 	    System.out.println("Test " + (index + 1) + " result: " + (success ? "Success" : "Failure") + ". " + math
 		    + " Returned: " + result + " Expected: " + answer);
 	}

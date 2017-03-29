@@ -24,6 +24,7 @@ public abstract class Operations {
 	toAddTo.add(new Exponent());
 	toAddTo.add(new Root());
 	toAddTo.add(new Sine());
+	toAddTo.add(new ArcSine());
 	return toAddTo;
     }
 
