@@ -2,6 +2,7 @@ package blackop778.mineCalc.core;
 
 import java.util.List;
 
+import blackop778.mineCalc.core.CalcExceptions.BitwiseDecimalException;
 import blackop778.mineCalc.core.CalcExceptions.DivisionException;
 import blackop778.mineCalc.core.CalcExceptions.ImaginaryNumberException;
 
@@ -23,8 +24,13 @@ public abstract class Operations {
 	toAddTo.add(new Modulus());
 	toAddTo.add(new Exponent());
 	toAddTo.add(new Root());
-	toAddTo.add(new Sine());
-	toAddTo.add(new ArcSine());
+	toAddTo.add(new BitAnd());
+	toAddTo.add(new BitOr());
+	toAddTo.add(new BitXOr());
+	toAddTo.add(new BitNot());
+	toAddTo.add(new BitShiftRight());
+	toAddTo.add(new BitShiftLeft());
+	toAddTo.add(new BitShiftRightFillZeros());
 	return toAddTo;
     }
 
@@ -41,7 +47,7 @@ public abstract class Operations {
 
 	@Override
 	public int getImportance() {
-	    return 2;
+	    return 10;
 	}
     }
 
@@ -58,7 +64,7 @@ public abstract class Operations {
 
 	@Override
 	public int getImportance() {
-	    return 2;
+	    return 10;
 	}
     }
 
@@ -75,7 +81,7 @@ public abstract class Operations {
 
 	@Override
 	public int getImportance() {
-	    return 4;
+	    return 12;
 	}
     }
 
@@ -94,7 +100,7 @@ public abstract class Operations {
 
 	@Override
 	public int getImportance() {
-	    return 4;
+	    return 12;
 	}
     }
 
@@ -113,7 +119,7 @@ public abstract class Operations {
 
 	@Override
 	public int getImportance() {
-	    return 4;
+	    return 12;
 	}
     }
 
@@ -141,7 +147,7 @@ public abstract class Operations {
 
 	@Override
 	public int getImportance() {
-	    return 6;
+	    return 14;
 	}
     }
 
@@ -157,35 +163,99 @@ public abstract class Operations {
 	}
     }
 
-    public static class Sine implements IUnaryOperation {
-
+    public static class BitAnd implements IBinaryOperation {
 	@Override
 	public String[] getOperators() {
-	    return new String[] { "sin", "sine" };
+	    return new String[] { "&" };
 	}
 
 	@Override
 	public int getImportance() {
-	    return 8;
+	    return 6;
 	}
 
 	@Override
-	public double evaluateFunction(double input) {
-	    double answer = Math.sin(AngleManager.convertInputToRadian(input));
-	    // FLOAAATTTT!
-	    double tAnswer = Math.abs(answer);
-	    if (tAnswer < .000000001 && tAnswer > 0)
-		answer = 0;
-	    return answer;
+	public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
+	    if ((int) numbers != numbers)
+		throw new BitwiseDecimalException(numbers);
+	    if ((int) numbers2 != numbers2)
+		throw new BitwiseDecimalException(numbers2);
+	    int int1 = (int) numbers;
+	    int int2 = (int) numbers2;
+	    return int1 & int2;
 	}
-
     }
 
-    public static class ArcSine implements IUnaryOperation {
-
+    public static class BitOr implements IBinaryOperation {
 	@Override
 	public String[] getOperators() {
-	    return new String[] { "asin", "asine", "arcsin", "arcsine" };
+	    return new String[] { "|" };
+	}
+
+	@Override
+	public int getImportance() {
+	    return 2;
+	}
+
+	@Override
+	public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
+	    if ((int) numbers != numbers)
+		throw new BitwiseDecimalException(numbers);
+	    if ((int) numbers2 != numbers2)
+		throw new BitwiseDecimalException(numbers2);
+	    int int1 = (int) numbers;
+	    int int2 = (int) numbers2;
+	    return int1 | int2;
+	}
+    }
+
+    public static class BitXOr implements IBinaryOperation {
+	@Override
+	public String[] getOperators() {
+	    return new String[] { "^^" };
+	}
+
+	@Override
+	public int getImportance() {
+	    return 4;
+	}
+
+	@Override
+	public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
+	    if ((int) numbers != numbers)
+		throw new BitwiseDecimalException(numbers);
+	    if ((int) numbers2 != numbers2)
+		throw new BitwiseDecimalException(numbers2);
+	    int int1 = (int) numbers;
+	    int int2 = (int) numbers2;
+	    return int1 ^ int2;
+	}
+    }
+
+    public static class BitNot implements IUnaryOperation {
+	@Override
+	public String[] getOperators() {
+	    return new String[] { "~" };
+	}
+
+	@Override
+	public int getImportance() {
+	    return 16;
+	}
+
+	@Override
+	public double evaluateFunction(double input) throws CalcExceptions {
+	    if ((int) input != input)
+		throw new BitwiseDecimalException(input);
+	    int int1 = (int) input;
+	    return ~int1;
+	}
+    }
+
+    public static class BitShiftRight implements IBinaryOperation {
+	@Override
+	public String[] getOperators() {
+	    return new String[] { ">>" };
 	}
 
 	@Override
@@ -194,14 +264,60 @@ public abstract class Operations {
 	}
 
 	@Override
-	public double evaluateFunction(double input) {
-	    double answer = AngleManager.convertRadianToInput(Math.asin(input));
-	    // FLOAAATTTT!
-	    double tAnswer = Math.abs(answer);
-	    if (tAnswer < .000000001 && tAnswer > 0)
-		answer = 0;
-	    return answer;
+	public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
+	    if ((int) numbers != numbers)
+		throw new BitwiseDecimalException(numbers);
+	    if ((int) numbers2 != numbers2)
+		throw new BitwiseDecimalException(numbers2);
+	    int int1 = (int) numbers;
+	    int int2 = (int) numbers2;
+	    return int1 >> int2;
+	}
+    }
+
+    public static class BitShiftLeft implements IBinaryOperation {
+	@Override
+	public String[] getOperators() {
+	    return new String[] { "<<" };
 	}
 
+	@Override
+	public int getImportance() {
+	    return 8;
+	}
+
+	@Override
+	public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
+	    if ((int) numbers != numbers)
+		throw new BitwiseDecimalException(numbers);
+	    if ((int) numbers2 != numbers2)
+		throw new BitwiseDecimalException(numbers2);
+	    int int1 = (int) numbers;
+	    int int2 = (int) numbers2;
+	    return int1 << int2;
+	}
+    }
+
+    public static class BitShiftRightFillZeros implements IBinaryOperation {
+	@Override
+	public String[] getOperators() {
+	    return new String[] { ">>>" };
+	}
+
+	@Override
+	public int getImportance() {
+	    return 8;
+	}
+
+	@Override
+	public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
+	    if ((int) numbers != numbers)
+		throw new BitwiseDecimalException(numbers);
+	    if ((int) numbers2 != numbers2)
+		throw new BitwiseDecimalException(numbers2);
+	    int int1 = (int) numbers;
+	    int int2 = (int) numbers2;
+	    return int1 >>> int2;
+	}
     }
 }

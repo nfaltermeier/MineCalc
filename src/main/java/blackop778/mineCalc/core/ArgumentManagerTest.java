@@ -1,6 +1,5 @@
 package blackop778.mineCalc.core;
 
-import blackop778.mineCalc.core.AngleManager.AngleType;
 import blackop778.mineCalc.core.CalcExceptions.DivisionException;
 import blackop778.mineCalc.core.CalcExceptions.FancyRemainderException;
 import blackop778.mineCalc.core.CalcExceptions.ImaginaryNumberException;
@@ -15,7 +14,6 @@ public abstract class ArgumentManagerTest {
     public static boolean debug = false;
 
     public static void main(String[] args) {
-	AngleManager.inputType = AngleType.RADIAN;
 	diagnostic();
     }
 

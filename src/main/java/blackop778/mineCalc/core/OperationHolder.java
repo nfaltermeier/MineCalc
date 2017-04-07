@@ -6,18 +6,26 @@ import java.util.List;
 public class OperationHolder {
     private IOperation[][] operations;
     public final boolean INITIALIZE_WITH_DEFAULTS;
-    // 8 - Trigonometry functions
+    // 16 - Bitwise NOT
+    // 15 - Empty
+    // 14 - Powers
+    // 13 - Empty
+    // 12 - Multiplicative
+    // 11 - Empty
+    // 10 - Additive
+    // 9 - Empty
+    // 8 - Shift
     // 7 - Empty
-    // 6 - Powers
+    // 6 - Bitwise AND
     // 5 - Empty
-    // 4 - Multiplicative
+    // 4 - Bitwise XOR
     // 3 - Empty
-    // 2 - Additive
+    // 2 - Bitwise OR
     // 1 - Empty
     public final int LEVELS;
 
     public OperationHolder(boolean initializeWithDefaults) {
-	this(initializeWithDefaults, 8);
+	this(initializeWithDefaults, 16);
     }
 
     public OperationHolder(boolean initializeWithDefaults, int levels) {

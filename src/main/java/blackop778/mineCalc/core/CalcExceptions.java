@@ -81,4 +81,10 @@ public abstract class CalcExceptions extends Exception {
     public static class UnaryUsageException extends CalcExceptions {
 
     }
+
+    public static class BitwiseDecimalException extends CalcExceptions {
+	public BitwiseDecimalException(double number) {
+	    super(String.valueOf(number));
+	}
+    }
 }
