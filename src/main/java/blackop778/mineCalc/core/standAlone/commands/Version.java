@@ -1,9 +1,9 @@
 package blackop778.mineCalc.core.standAlone.commands;
 
+import blackop778.mineCalc.core.standAlone.ICommandSA;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import blackop778.mineCalc.core.standAlone.ICommandSA;
 
 public class Version implements ICommandSA {
 
@@ -11,27 +11,27 @@ public class Version implements ICommandSA {
 
     @Override
     public String getUsage() {
-	return "version";
+        return "version";
     }
 
     @Override
     public String getTrigger() {
-	return "version";
+        return "version";
     }
 
     @Override
     public List<String> getAliases() {
-	return new ArrayList<String>();
+        return new ArrayList<String>();
     }
 
     @Override
     public String execute(String[] arguments) {
-	return version;
+        return version;
     }
 
     @Override
     public String getEffect() {
-	return "Returns the version of MineCalc running";
+        return "Returns the version of MineCalc running";
     }
 
 }

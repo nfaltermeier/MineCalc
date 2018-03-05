@@ -16,27 +16,27 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 public class ClientEventHandlers extends CommonEventHandlers {
 
     public static class SubEvent {
-	@SubscribeEvent
-	public void onPlayerJoinedServer(EntityJoinWorldEvent event) {
-	    if (event.getEntity() instanceof EntityPlayer) {
-		if (event.getEntity().equals(Minecraft.getMinecraft().player)) {
-		    NetHub.NETWORKWRAPPER.sendToServer(new HasModMessage());
-		    MinecraftForge.EVENT_BUS.unregister(this);
-		}
-	    }
-	}
+        @SubscribeEvent
+        public void onPlayerJoinedServer(EntityJoinWorldEvent event) {
+            if (event.getEntity() instanceof EntityPlayer) {
+                if (event.getEntity().equals(Minecraft.getMinecraft().player)) {
+                    NetHub.NETWORKWRAPPER.sendToServer(new HasModMessage());
+                    MinecraftForge.EVENT_BUS.unregister(this);
+                }
+            }
+        }
     }
 
     @SubscribeEvent
     // Occurs on server thread
     public void onPlayerLeftServer(ClientDisconnectionFromServerEvent event) {
-	MinecraftForge.EVENT_BUS.register(new SubEvent());
+        MinecraftForge.EVENT_BUS.register(new SubEvent());
     }
 
     @SubscribeEvent
     public void onConfigChanged(OnConfigChangedEvent event) {
-	if (event.getModID().equalsIgnoreCase(MineCalc.MODID)) {
-	    MCConfig.syncConfig();
-	}
+        if (event.getModID().equalsIgnoreCase(MineCalc.MODID)) {
+            MCConfig.syncConfig();
+        }
     }
 }

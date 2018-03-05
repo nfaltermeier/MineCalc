@@ -16,11 +16,11 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
-	CapabilityManager.INSTANCE.register(IMineCalcCompound.class, new MineCalcCompoundStorage(),
-		MineCalcCompound.class);
-	MCConfig.loadConfig(event.getModConfigurationDirectory());
-	NetHub.NETWORKWRAPPER.registerMessage(HasModMessageHandler.class, HasModMessage.class,
-		NetHub.packetDiscriminator++, Side.SERVER);
+        CapabilityManager.INSTANCE.register(IMineCalcCompound.class, new MineCalcCompoundStorage(),
+                MineCalcCompound.class);
+        MCConfig.loadConfig(event.getModConfigurationDirectory());
+        NetHub.NETWORKWRAPPER.registerMessage(HasModMessageHandler.class, HasModMessage.class,
+                NetHub.packetDiscriminator++, Side.SERVER);
     }
 
     public void load(FMLInitializationEvent event) {
@@ -32,9 +32,9 @@ public class CommonProxy {
     }
 
     public void serverStart(FMLServerStartingEvent event) {
-	MinecraftServer server = event.getServer();
-	ICommandManager command = server.getCommandManager();
-	ServerCommandManager manager = (ServerCommandManager) command;
-	manager.registerCommand(new Calculate());
+        MinecraftServer server = event.getServer();
+        ICommandManager command = server.getCommandManager();
+        ServerCommandManager manager = (ServerCommandManager) command;
+        manager.registerCommand(new Calculate());
     }
 }

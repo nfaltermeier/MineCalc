@@ -18,27 +18,27 @@ public class MineCalcCompoundProvider implements ICapabilitySerializable<NBTBase
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-	return capability == MCC_CAP;
+        return capability == MCC_CAP;
     }
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-	return capability == MCC_CAP ? MCC_CAP.<T>cast(getInstance()) : null;
+        return capability == MCC_CAP ? MCC_CAP.<T>cast(getInstance()) : null;
     }
 
     @Override
     public NBTBase serializeNBT() {
-	return MCC_CAP.writeNBT(getInstance(), null);
+        return MCC_CAP.writeNBT(getInstance(), null);
     }
 
     @Override
     public void deserializeNBT(NBTBase nbt) {
-	MCC_CAP.readNBT(getInstance(), null, nbt);
+        MCC_CAP.readNBT(getInstance(), null, nbt);
     }
 
     private static IMineCalcCompound getInstance() {
-	if (instance == null)
-	    instance = MCC_CAP.getDefaultInstance();
-	return instance;
+        if (instance == null)
+            instance = MCC_CAP.getDefaultInstance();
+        return instance;
     }
 }

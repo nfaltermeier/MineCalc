@@ -13,48 +13,48 @@ public class MineCalcCompound implements IMineCalcCompound {
     private static final String lastNumberKey = "LastNumber";
 
     public MineCalcCompound() {
-	lastNumber = Double.NaN;
-	hasMineCalc = false;
+        lastNumber = Double.NaN;
+        hasMineCalc = false;
     }
 
     @Override
     public boolean getHasMineCalc() {
-	return hasMineCalc;
+        return hasMineCalc;
     }
 
     @Override
     public void setHasMineCalc(boolean HasMineCalc) {
-	this.hasMineCalc = HasMineCalc;
+        this.hasMineCalc = HasMineCalc;
     }
 
     @Override
     public double getLastNumber() {
-	return lastNumber;
+        return lastNumber;
     }
 
     @Override
     public void setLastNumber(double num) {
-	this.lastNumber = num;
+        this.lastNumber = num;
     }
 
     public static class MineCalcCompoundStorage implements IStorage<IMineCalcCompound> {
-	@Override
-	public NBTBase writeNBT(Capability<IMineCalcCompound> capability, IMineCalcCompound instance, EnumFacing side) {
-	    NBTTagCompound comp = new NBTTagCompound();
-	    comp.setDouble(lastNumberKey, instance.getLastNumber());
-	    return comp;
-	}
+        @Override
+        public NBTBase writeNBT(Capability<IMineCalcCompound> capability, IMineCalcCompound instance, EnumFacing side) {
+            NBTTagCompound comp = new NBTTagCompound();
+            comp.setDouble(lastNumberKey, instance.getLastNumber());
+            return comp;
+        }
 
-	@Override
-	public void readNBT(Capability<IMineCalcCompound> capability, IMineCalcCompound instance, EnumFacing side,
-		NBTBase nbt) {
-	    if (nbt instanceof NBTTagCompound) {
-		NBTTagCompound comp = (NBTTagCompound) nbt;
-		instance.setLastNumber(comp.getDouble(lastNumberKey));
-	    } else {
-		instance.setLastNumber(Double.NaN);
-	    }
-	    instance.setHasMineCalc(false);
-	}
+        @Override
+        public void readNBT(Capability<IMineCalcCompound> capability, IMineCalcCompound instance, EnumFacing side,
+                            NBTBase nbt) {
+            if (nbt instanceof NBTTagCompound) {
+                NBTTagCompound comp = (NBTTagCompound) nbt;
+                instance.setLastNumber(comp.getDouble(lastNumberKey));
+            } else {
+                instance.setLastNumber(Double.NaN);
+            }
+            instance.setHasMineCalc(false);
+        }
     }
 }

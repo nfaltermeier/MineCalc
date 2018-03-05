@@ -3,11 +3,11 @@ package blackop778.mineCalc.core;
 @SuppressWarnings("serial")
 public abstract class CalcExceptions extends Exception {
     public CalcExceptions() {
-	super();
+        super();
     }
 
     public CalcExceptions(String message) {
-	super(message);
+        super(message);
     }
 
     public static class ImaginaryNumberException extends CalcExceptions {
@@ -31,9 +31,9 @@ public abstract class CalcExceptions extends Exception {
      * user for these Exceptions
      */
     public static class CustomFunctionException extends CalcExceptions {
-	public CustomFunctionException(String message) {
-	    super(message);
-	}
+        public CustomFunctionException(String message) {
+            super(message);
+        }
     }
 
     /**
@@ -41,19 +41,19 @@ public abstract class CalcExceptions extends Exception {
      * functionality
      */
     public static class FancyRemainderException extends CalcExceptions {
-	public double numerator;
-	public double denominator;
+        public double numerator;
+        public double denominator;
 
-	public FancyRemainderException(double numbers, double numbers2) {
-	    this.numerator = numbers;
-	    this.denominator = numbers2;
-	}
+        public FancyRemainderException(double numbers, double numbers2) {
+            this.numerator = numbers;
+            this.denominator = numbers2;
+        }
     }
 
     public static class AllStandinsUsedException extends CalcExceptions {
-	public AllStandinsUsedException(String standins) {
-	    super(standins);
-	}
+        public AllStandinsUsedException(String standins) {
+            super(standins);
+        }
     }
 
     public static class MultiplePointsException extends CalcExceptions {
@@ -65,17 +65,17 @@ public abstract class CalcExceptions extends Exception {
     }
 
     public static class InvalidNumberException extends CalcExceptions {
-	public InvalidNumberException(String message) {
-	    super(message);
-	}
+        public InvalidNumberException(String message) {
+            super(message);
+        }
     }
 
     public static class ParenthesisException extends CalcExceptions {
-	public final boolean tooMany;
+        public final boolean tooMany;
 
-	public ParenthesisException(boolean tooMany) {
-	    this.tooMany = tooMany;
-	}
+        public ParenthesisException(boolean tooMany) {
+            this.tooMany = tooMany;
+        }
     }
 
     public static class UnaryUsageException extends CalcExceptions {
@@ -83,8 +83,8 @@ public abstract class CalcExceptions extends Exception {
     }
 
     public static class BitwiseDecimalException extends CalcExceptions {
-	public BitwiseDecimalException(double number) {
-	    super(String.valueOf(number));
-	}
+        public BitwiseDecimalException(double number) {
+            super(String.valueOf(number));
+        }
     }
 }

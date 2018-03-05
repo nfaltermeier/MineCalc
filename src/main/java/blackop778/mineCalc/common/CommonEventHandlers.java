@@ -9,20 +9,20 @@ public class CommonEventHandlers {
     @SuppressWarnings("deprecation")
     @SubscribeEvent
     public void attachCapability(AttachCapabilitiesEvent.Entity event) {
-	if (!(event.getEntity() instanceof EntityPlayer))
-	    return;
-	event.addCapability(MineCalcCompoundProvider.MCC_RL, new MineCalcCompoundProvider());
+        if (!(event.getEntity() instanceof EntityPlayer))
+            return;
+        event.addCapability(MineCalcCompoundProvider.MCC_RL, new MineCalcCompoundProvider());
     }
 
     @SubscribeEvent
     public void onPlayerClone(PlayerEvent.Clone event) {
-	if (event.isWasDeath()) {
-	    EntityPlayer old = event.getOriginal();
-	    EntityPlayer new_ = event.getEntityPlayer();
-	    IMineCalcCompound oldMCC = old.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
-	    IMineCalcCompound newMCC = new_.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
-	    newMCC.setHasMineCalc(oldMCC.getHasMineCalc());
-	    newMCC.setLastNumber(oldMCC.getLastNumber());
-	}
+        if (event.isWasDeath()) {
+            EntityPlayer old = event.getOriginal();
+            EntityPlayer new_ = event.getEntityPlayer();
+            IMineCalcCompound oldMCC = old.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
+            IMineCalcCompound newMCC = new_.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
+            newMCC.setHasMineCalc(oldMCC.getHasMineCalc());
+            newMCC.setLastNumber(oldMCC.getLastNumber());
+        }
     }
 }

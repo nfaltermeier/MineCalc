@@ -11,7 +11,7 @@ public interface ICommandManagerSA {
 
     /**
      * Should remove the first argument before passing to an ICommand
-     * 
+     *
      * @param args
      * @return
      */

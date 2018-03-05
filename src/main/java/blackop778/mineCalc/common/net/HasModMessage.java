@@ -15,14 +15,14 @@ public class HasModMessage implements IMessage {
 
     public static class HasModMessageHandler implements IMessageHandler<HasModMessage, IMessage> {
 
-	@Override
-	public IMessage onMessage(HasModMessage message, MessageContext ctx) {
-	    if (!ClientProxy.isClientSide()) {
-		ctx.getServerHandler().playerEntity.getCapability(MineCalcCompoundProvider.MCC_CAP, null)
-			.setHasMineCalc(true);
-	    }
-	    return null;
-	}
+        @Override
+        public IMessage onMessage(HasModMessage message, MessageContext ctx) {
+            if (!ClientProxy.isClientSide()) {
+                ctx.getServerHandler().playerEntity.getCapability(MineCalcCompoundProvider.MCC_CAP, null)
+                        .setHasMineCalc(true);
+            }
+            return null;
+        }
 
     }
 
