@@ -31,7 +31,7 @@ public class OperationHolder {
     public OperationHolder(boolean initializeWithDefaults, int levels) {
         this.LEVELS = levels;
         this.INITIALIZE_WITH_DEFAULTS = initializeWithDefaults;
-        operations = new IOperation[8][0];
+        operations = new IOperation[levels][0];
         if (this.INITIALIZE_WITH_DEFAULTS) {
             List<IOperation> temp = Operations.addOperations(new ArrayList<IOperation>());
             for (IOperation op : temp) {

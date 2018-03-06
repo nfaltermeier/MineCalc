@@ -1,6 +1,7 @@
 package blackop778.mineCalc.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.ListIterator;
 import java.util.regex.Pattern;
@@ -17,7 +18,7 @@ public class ArgumentManager {
     }
 
     public void sort(Comparator<? super Argument> c) {
-        arguments.sort(c);
+        Collections.sort(arguments, c);
     }
 
     public Argument get(int index) {

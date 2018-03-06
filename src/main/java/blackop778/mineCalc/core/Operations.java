@@ -41,7 +41,7 @@ public abstract class Operations {
         }
 
         @Override
-        public double evaluateFunction(double num1, double num2) throws CalcExceptions {
+        public double evaluateFunction(double num1, double num2) {
             return num1 + num2;
         }
 
@@ -58,7 +58,7 @@ public abstract class Operations {
         }
 
         @Override
-        public double evaluateFunction(double num1, double num2) throws CalcExceptions {
+        public double evaluateFunction(double num1, double num2) {
             return num1 - num2;
         }
 
@@ -75,7 +75,7 @@ public abstract class Operations {
         }
 
         @Override
-        public double evaluateFunction(double num1, double num2) throws CalcExceptions {
+        public double evaluateFunction(double num1, double num2) {
             return num1 * num2;
         }
 

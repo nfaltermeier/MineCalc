@@ -15,10 +15,14 @@ public abstract class Calculator {
 
     public static double evaluate(String math, boolean useOOPS, Double last, boolean fancyRemainders)
             throws CalcExceptions {
+        // Remove spaces from input
         math = math.replaceAll("\\s", "");
         ArgumentManager arguments = new ArgumentManager();
+        // Use stack because we want to process inner-most parenthesis first
         Stack<Integer> parenthesisStartIndex = new Stack<Integer>();
+        // Need to prime the Stack
         parenthesisStartIndex.add(0);
+        // How many sets of nested parenthesis we're in
         int parenthesisLevel = 0;
 
         // Divide into arguments by parenthesis
@@ -35,11 +39,13 @@ public abstract class Calculator {
                     arguments.add(new Argument(arguments.size(), parenthesisLevel,
                             math.substring(parenthesisStartIndex.pop(), i + 1)));
                     parenthesisLevel--;
+                    // If we've closed more parenthesis than we've opened
                     if (parenthesisLevel < 0)
                         throw new ParenthesisException(false);
                 }
             }
         }
+        // If we've opened more parenthesis than we've closed
         if (parenthesisLevel > 0)
             throw new ParenthesisException(true);
 
@@ -48,9 +54,12 @@ public abstract class Calculator {
         // Solve everything
         while (true) {
             String contents = arguments.get(0).contents;
+            // Remove parenthesis that may be warpping the math
             if (contents.startsWith("(") && contents.endsWith(")")) {
                 contents = contents.substring(1, contents.length() - 1);
             }
+
+            // If our math is only a number our job is done
             if (onlyNumber(contents)) {
                 if (arguments.updateMath(arguments.get(0).contents, contents)) {
                     break;
@@ -99,8 +108,8 @@ public abstract class Calculator {
                 if (index == 999)
                     throw new OperatorException();
 
-                String trimmedContents = "";
-                double answer = 0;
+                String trimmedContents;
+                double answer;
                 if (op instanceof IBinaryOperation) {
                     // Solve based on the operation we found
                     Character replacer = findUnusedStandin(contents);
@@ -109,8 +118,14 @@ public abstract class Calculator {
                         contents = temp[0];
                         replacer = temp[1].charAt(0);
                     }
-                    trimmedContents = binaryTrimToOperation(contents, operator, index, replacer);
+
+                    trimmedContents = binaryTrimToOperation(contents, operator, replacer);
                     String[] numbersS = trimmedContents.split(Pattern.quote(operator));
+                    // There probably was two operators in a row like '4**7'
+                    if (numbersS.length < 2) {
+                        throw new UsageException();
+                    }
+
                     if (operator.equals("-")) {
                         numbersS[0] = addMinus(numbersS[0], replacer);
                         numbersS[1] = addMinus(numbersS[1], replacer);
@@ -136,7 +151,7 @@ public abstract class Calculator {
             }
         }
 
-        return Double.valueOf(arguments.get(0).contents);
+        return getDoubleValue(arguments.get(0).contents, last);
     }
 
     private static double getDoubleValue(String number, Double last)
@@ -174,10 +189,10 @@ public abstract class Calculator {
         return negative ? -toReturn : toReturn;
     }
 
-    private static String binaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex,
-                                                Character numberStandin) throws AllStandinsUsedException, UsageException, InvalidNumberException {
-        int index = 0;
-        int lastIndex = 0;
+    private static String binaryTrimToOperation(String math, String operationSymbol,
+                                                Character numberStandin) throws UsageException {
+        int index;
+        int lastIndex;
         String[] maths = math.split(Pattern.quote(operationSymbol));
 
         try {
@@ -222,14 +237,14 @@ public abstract class Calculator {
     private static String unaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex)
             throws AllStandinsUsedException, UnaryUsageException {
         // Remove leading parenthesis
-        if (new Character('(').equals(tryCharAt(math, 0))
-                && new Character(')').equals(tryCharAt(math, symbolStartIndex - 1))) {
+        if (Character.valueOf('(').equals(tryCharAt(math, 0))
+                && Character.valueOf(')').equals(tryCharAt(math, symbolStartIndex - 1))) {
             math = math.substring(1, symbolStartIndex - 1) + math.substring(symbolStartIndex, math.length());
             symbolStartIndex -= 2;
         }
         // Remove following parenthesis
-        if (new Character('(').equals(tryCharAt(math, symbolStartIndex + operationSymbol.length() + 1))
-                && new Character(')').equals(tryCharAt(math, math.length() - 1))) {
+        if (Character.valueOf('(').equals(tryCharAt(math, symbolStartIndex + operationSymbol.length() + 1))
+                && Character.valueOf(')').equals(tryCharAt(math, math.length() - 1))) {
             math = math.substring(0, symbolStartIndex + operationSymbol.length() + 1)
                     + math.substring(symbolStartIndex + operationSymbol.length() + 2, math.length() - 1);
         }
@@ -237,7 +252,7 @@ public abstract class Calculator {
         Character currentChar = tryCharAt(math, symbolStartIndex - 1);
         Character lastChar = tryCharAt(math, symbolStartIndex - 2);
         Character lastLastChar = tryCharAt(math, symbolStartIndex - 3);
-        int i = 0;
+        int i;
         // Is the number before the operation
         if (currentChar != null && isNumber(currentChar, lastChar, lastLastChar)) {
             numLocation = -1;
@@ -305,14 +320,22 @@ public abstract class Calculator {
     private static boolean isNumber(Character current, Character last, Character lastLast, Character numberStandIn) {
         if (current.toString().matches("\\d|\\.|[lpieLPIE]|" + Pattern.quote(numberStandIn.toString())))
             return true;
-        else if (current.equals('-') && !(new Character('/').equals(lastLast))) {
+        else if (current.equals('-') && !(Character.valueOf('/').equals(lastLast))) {
             if (last == null)
                 return true;
-            else if (!last.toString().matches("\\d|\\.|[lpieLPIE]|" + Pattern.quote(numberStandIn.toString())))
-                return true;
+            else return !last.toString().matches("\\d|\\.|[lpieLPIE]");
         }
 
         return false;
+    }
+
+    private static boolean isBasicNumber(Character current) {
+        return current.toString().matches("\\d|\\.");
+    }
+
+    // Advanced numbers are letters or sets of letters that the Calculator can convert into numbers ex. e or pi
+    private static boolean isAdvancedNumber(Character current) {
+        return current.toString().matches("[lpieLPIE]");
     }
 
     private static Character findUnusedStandin(String text) throws AllStandinsUsedException {
@@ -329,10 +352,10 @@ public abstract class Calculator {
     }
 
     /**
-     * @param toChange
-     * @param unchangedIndex
-     * @return the changed string followed by the char the extra minus signs
-     * were replaced by
+     * @param toChange       String with minuses to remove
+     * @param unchangedIndex Index of minus to leave as a minus
+     * @return the changed string followed by the char the extra minus signs were
+     * replaced by
      * @throws AllStandinsUsedException
      */
     private static String[] takeMinuses(String toChange, int unchangedIndex) throws AllStandinsUsedException {

@@ -2,31 +2,21 @@ package blackop778.mineCalc.core;
 
 import blackop778.mineCalc.core.CalcExceptions.*;
 
+import java.util.ArrayList;
+
 public abstract class ArgumentManagerTest {
-    public static boolean debug = false;
+    public static boolean DEBUG = false;
 
     public static void main(String[] args) {
-        diagnostic();
+        ArrayList<Test> tests = new ArrayList<Test>();
+        addTests(tests);
+        diagnostic(tests);
     }
 
-    public static void diagnostic() {
-        String[] questions = {"3+(4+3)*6", "(6*6)/--2+((-1*1)+1+(1*-1))*3", "2+3*4", "2+3*4", "1.25*4/2",
-                "5*(1+1-(6/2))", "5--6", "5y6", "80/0", "-5/--2", "6*l", "2^3^2", "3^(2+1)", "0/5", "2^-2",
-                "(1/2)^(1+1)", "-8^(1/2)", "-8^(1/3)", "9/---2", ".25+6..75", "8-9.0.4", "8*", "r%4", "pi*1", "e*1",
-                "1+(6*7", "(9*8)", "((8*8))-3", "7*(5%3(", "1 + 1 + 1 - 1", "6-u*9", "6%5", "7%5-2", "sin(pi/2)",
-                "sin(pi)", "sin((3*pi)/2)", "sin(0)", "sin(arcsin(.5))", "sin(pi/6)-1"};
-        boolean[] useOOPSs = {true, true, true, false, true, true, false, false, true, true, true, true, true, true,
-                true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-                true, true, true, true, true, true, true, true};
-        Object[] answers = {45.0, 3.0, 14.0, 20.0, 2.5, -5.0, 11.0, new OperatorException(), new DivisionException(),
-                new ImaginaryNumberException(), new PreviousOutputException(), 64.0, 27.0, 0.0, .25, .25,
-                new ImaginaryNumberException(), -2.0, (1 / 3.0), new MultiplePointsException(),
-                new MultiplePointsException(), new UsageException(), new InvalidNumberException("u"), Math.PI, Math.E,
-                new ParenthesisException(true), 72.0, 61.0, new ParenthesisException(true), 2.0,
-                new InvalidNumberException("u"), new FancyRemainderException(6, 5), 0.0, 1.0, 0.0, -1.0, 0.0, .5, -.5};
+    public static void diagnostic(ArrayList<Test> tests) {
         int fails = 0;
-        for (int i = 0; i < questions.length; i++) {
-            if (!testMath(questions[i], useOOPSs[i], answers[i], i)) {
+        for (int i = 0; i < tests.size(); i++) {
+            if (!tests.get(i).test(i, DEBUG)) {
                 fails++;
             }
         }
@@ -38,28 +28,44 @@ public abstract class ArgumentManagerTest {
         }
     }
 
-    public static boolean testMath(String math, boolean useOOPS, Object answer, int index) {
-        Object result;
-        try {
-            result = Calculator.evaluate(math, useOOPS, null, true);
-        } catch (CalcExceptions e) {
-            result = e;
-        }
-
-        boolean success;
-        if (result instanceof CalcExceptions) {
-            success = result.getClass().equals(answer.getClass());
-        } else {
-            success = result.equals(answer);
-        }
-
-        if (!success || debug) {
-            if (result instanceof Exception)
-                ((Exception) result).printStackTrace();
-            System.out.println("Test " + (index + 1) + " result: " + (success ? "Success" : "Failure") + ". " + math
-                    + " Returned: " + result + " Expected: " + answer);
-        }
-
-        return success;
+    public static void addTests(ArrayList<Test> tests) {
+        tests.add(new Test("3+(4+3)*6", true, 45.0));
+        tests.add(new Test("(6*6)/--2+((-1*1)+1+(1*-1))*3", true, 3.0));
+        tests.add(new Test("2+3*4", true, 14.0));
+        tests.add(new Test("2+3*4", false, 20.0));
+        tests.add(new Test("1.25*4/2", true, 2.5));
+        tests.add(new Test("5*(1+1-(6/2))", true, -5.0));
+        tests.add(new Test("5--6", false, 11.0));
+        tests.add(new Test("5y6", false, new OperatorException()));
+        tests.add(new Test("80/0", true, new DivisionException()));
+        tests.add(new Test("-5/--2", true, new ImaginaryNumberException()));
+        tests.add(new Test("6*l", true, new PreviousOutputException()));
+        tests.add(new Test("2^3^2", true, 64.0));
+        tests.add(new Test("3^(2+1)", true, 27.0));
+        tests.add(new Test("0/5", true, 0.0));
+        tests.add(new Test("2^-2", true, .25));
+        tests.add(new Test("(1/2)^(1+1)", true, .25));
+        tests.add(new Test("-8^(1/2)", true, new ImaginaryNumberException()));
+        tests.add(new Test("-8^(1/3)", true, -2.0));
+        tests.add(new Test("9/---2", true, (1 / 3.0)));
+        tests.add(new Test(".25+6..75", true, new MultiplePointsException()));
+        tests.add(new Test("8-9.0.4", true, new MultiplePointsException()));
+        tests.add(new Test("8*", true, new UsageException()));
+        tests.add(new Test("r%4", true, new InvalidNumberException("u")));
+        tests.add(new Test("pi*1", true, Math.PI));
+        tests.add(new Test("e*1", true, Math.E));
+        tests.add(new Test("1+(6*7", true, new ParenthesisException(true)));
+        tests.add(new Test("(9*8)", true, 72.0));
+        tests.add(new Test("((8*8))-3", true, 61.0));
+        tests.add(new Test("7*(5%3(", true, new ParenthesisException(true)));
+        tests.add(new Test("1 + 1 + 1 - 1", true, 2.0));
+        tests.add(new Test("6-u*9", true, new InvalidNumberException("u")));
+        tests.add(new Test("6%5", true, new FancyRemainderException(6, 5)));
+        tests.add(new Test("7%5-2", true, 0.0));
+        tests.add(new Test("-(5*6)", true, -30.0));
+        tests.add(new Test("4**7", true, new UsageException()));
+        tests.add(new Test("5.5>>4", true, new BitwiseDecimalException(4.5)));
+        tests.add(new Test("4-5--6", true, 5.0));
+        tests.add(new Test("e", true, Math.E));
     }
 }

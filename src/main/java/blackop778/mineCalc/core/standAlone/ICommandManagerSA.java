@@ -3,11 +3,11 @@ package blackop778.mineCalc.core.standAlone;
 import java.util.List;
 
 public interface ICommandManagerSA {
-    public void add(ICommandSA toAdd);
+    void add(ICommandSA toAdd);
 
-    public ICommandSA get(int index);
+    ICommandSA get(int index);
 
-    public List<ICommandSA> getWhole();
+    List<ICommandSA> getWhole();
 
     /**
      * Should remove the first argument before passing to an ICommand
@@ -15,5 +15,5 @@ public interface ICommandManagerSA {
      * @param args
      * @return
      */
-    public String processInput(String[] args);
+    String processInput(String[] args);
 }

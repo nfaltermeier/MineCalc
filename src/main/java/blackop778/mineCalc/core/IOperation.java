@@ -4,7 +4,7 @@ public interface IOperation {
     /**
      * Gets the String(s) that indicates this operation
      */
-    public abstract String[] getOperators();
+    String[] getOperators();
 
     /**
      * Gets the Order of Operations importance of this function. Should only be
@@ -16,5 +16,11 @@ public interface IOperation {
      * <p>
      * 5 - after parenthesis and exponents but before multiplication
      */
-    public abstract int getImportance();
+    int getImportance();
+
+    // TODO: Implement
+    /*
+     * Returns a string explaining how the operation is used
+     */
+    // String getUsage();
 }

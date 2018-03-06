@@ -6,28 +6,28 @@ public interface ICommandSA {
     /**
      * @return Arguments for command
      */
-    public String getUsage();
+    String getUsage();
 
     /**
      * @return word that signals this command
      */
-    public String getTrigger();
+    String getTrigger();
 
     /**
      * @return Don't return null!
      */
-    public List<String> getAliases();
+    List<String> getAliases();
 
     /**
      * @param arguments First String shouldn't be the word that indicates this command
      * @return
      */
-    public String execute(String[] arguments);
+    String execute(String[] arguments);
 
     /**
      * Gets what the command does
      *
      * @return
      */
-    public String getEffect();
+    String getEffect();
 }
