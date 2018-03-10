@@ -54,7 +54,7 @@ public abstract class Calculator {
         // Solve everything
         while (true) {
             String contents = arguments.get(0).contents;
-            // Remove parenthesis that may be warpping the math
+            // Remove parenthesis that may be wrapping the math
             if (contents.startsWith("(") && contents.endsWith(")")) {
                 contents = contents.substring(1, contents.length() - 1);
             }
@@ -66,7 +66,8 @@ public abstract class Calculator {
                 }
             } else {
                 IOperation op = null;
-                int index = 999;
+                // Index within the string of the operator
+                int index = 99999;
                 String operator = "";
                 // Cycle through the OOPS levels to find the next operation we
                 // should perform
@@ -105,7 +106,7 @@ public abstract class Calculator {
                         break;
                     }
                 }
-                if (index == 999)
+                if (index == 99999)
                     throw new OperatorException();
 
                 String trimmedContents;
@@ -119,8 +120,9 @@ public abstract class Calculator {
                         replacer = temp[1].charAt(0);
                     }
 
-                    trimmedContents = binaryTrimToOperation(contents, operator, replacer);
+                    trimmedContents = binaryTrimToOperation(contents, operator, index,replacer);
                     String[] numbersS = trimmedContents.split(Pattern.quote(operator));
+
                     // There probably was two operators in a row like '4**7'
                     if (numbersS.length < 2) {
                         throw new UsageException();
@@ -132,9 +134,9 @@ public abstract class Calculator {
                         trimmedContents = addMinus(trimmedContents, replacer);
                     }
                     double[] numbers = {getDoubleValue(numbersS[0], last), getDoubleValue(numbersS[1], last)};
-                    if (operator.equals("%") && arguments.size() == 1 && fancyRemainders
-                            && (arguments.get(0).contents.equals("(" + trimmedContents + ")")
-                            || arguments.get(0).contents.equals(trimmedContents)))
+                    if (operator.equals("%") && arguments.size() == 1 && fancyRemainders &&
+                            (arguments.get(0).contents.equals("(" + trimmedContents + ")") ||
+                            arguments.get(0).contents.equals(trimmedContents)))
                         throw new FancyRemainderException(numbers[0], numbers[1]);
                     answer = ((IBinaryOperation) op).evaluateFunction(numbers[0], numbers[1]);
                 } else {
@@ -189,24 +191,37 @@ public abstract class Calculator {
         return negative ? -toReturn : toReturn;
     }
 
-    private static String binaryTrimToOperation(String math, String operationSymbol,
-                                                Character numberStandin) throws UsageException {
+    private static String binaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex,
+                                                Character numberStandin) throws UsageException, AllStandinsUsedException {
         int index;
         int lastIndex;
-        String[] maths = math.split(Pattern.quote(operationSymbol));
+
+        String math1 = math.substring(0, symbolStartIndex);
+        String math2 = math.substring(symbolStartIndex + operationSymbol.length());
 
         try {
-            // Isolate the first number
-            String math1 = maths[0];
+            // This section: Isolate the first number
             lastIndex = math1.length();
+
             for (index = lastIndex - 1; index > -1; index--) {
-                if (!isNumber(math1.charAt(index), tryCharAt(math1, index - 1), tryCharAt(math1, index - 2),
-                        numberStandin)) {
+                // Don't pass standin because that will be handled in the try clause following this
+                if (!isNumber(math1.charAt(index), tryCharAt(math1, index - 1), tryCharAt(math1, index - 2))) {
                     index++;
                     break;
                 }
-
             }
+            try {
+                // Need to check the next character because this number could be negative
+                if (index > 1 && isNumber(math1.charAt(index - 1), tryCharAt(math1, index - 2), tryCharAt(math1, index - 3),
+                        numberStandin) && !isNumber(math1.charAt(index - 2), tryCharAt(math1, index - 3),
+                        tryCharAt(math1, index - 4))) {
+                    index++;
+                }
+                // Could have been thrown by the 2nd isNumber if index is 1 (1st isNumber checked the last character)
+            } catch (StringIndexOutOfBoundsException e) {
+                index--;
+            }
+
             if (index == -1) {
                 index = 0;
             }
@@ -214,16 +229,25 @@ public abstract class Calculator {
                 math1 = math1.substring(index, lastIndex);
             }
 
-            // Isolate the second number
-            String math2 = maths[1];
-
+            // This section: Isolate the second number
             lastIndex = 0;
-            for (index = lastIndex; index < math2.length(); index++) {
-                if (!isNumber(math2.charAt(index), tryCharAt(math2, index - 1), tryCharAt(math2, index - 2),
-                        numberStandin)) {
-                    break;
-                }
+            if (math2.length() == 0 || !isNumber(math2.charAt(0), tryCharAt(math2, -1), tryCharAt(math2, -2),
+                    numberStandin)) {
+                index = 0;
             }
+            else if (math2.length() > 1) {
+                for (index = lastIndex + 1; index < math2.length(); index++) {
+                    // Don't pass standin because after the 1st character minuses aren't part of numbers for this purpose anymore
+                    if (!isNumber(math2.charAt(index), tryCharAt(math2, index - 1), tryCharAt(math2, index - 2))) {
+                        index++;
+                        break;
+                    }
+
+                }
+            } else {
+                index = 1;
+            }
+
             if (index != math2.length() - 1) {
                 math2 = math2.substring(lastIndex, index);
             }
@@ -327,15 +351,6 @@ public abstract class Calculator {
         }
 
         return false;
-    }
-
-    private static boolean isBasicNumber(Character current) {
-        return current.toString().matches("\\d|\\.");
-    }
-
-    // Advanced numbers are letters or sets of letters that the Calculator can convert into numbers ex. e or pi
-    private static boolean isAdvancedNumber(Character current) {
-        return current.toString().matches("[lpieLPIE]");
     }
 
     private static Character findUnusedStandin(String text) throws AllStandinsUsedException {
