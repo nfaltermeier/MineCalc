@@ -49,6 +49,7 @@ public abstract class Calculator {
         if (parenthesisLevel > 0)
             throw new ParenthesisException(true);
 
+        // Sort so we process the innermost parenthesis first
         arguments.sort(SORTING_HAT);
 
         // Solve everything
@@ -144,6 +145,8 @@ public abstract class Calculator {
                     double number = getDoubleValue(trimmedContents.replaceAll(Pattern.quote(operator), ""), last);
                     answer = ((IUnaryOperation) op).evaluateFunction(number);
                 }
+
+                // If we removed parenthesis earlier, readd them so the parenthesis can be removed when we updateMath
                 if (arguments.get(0).contents.equals("(" + trimmedContents + ")")) {
                     trimmedContents = arguments.get(0).contents;
                 }
@@ -212,7 +215,7 @@ public abstract class Calculator {
             }
             try {
                 // Need to check the next character because this number could be negative
-                if (index > 1 && isNumber(math1.charAt(index - 1), tryCharAt(math1, index - 2), tryCharAt(math1, index - 3),
+                if (index >= 1 && isNumber(math1.charAt(index - 1), tryCharAt(math1, index - 2), tryCharAt(math1, index - 3),
                         numberStandin) && !isNumber(math1.charAt(index - 2), tryCharAt(math1, index - 3),
                         tryCharAt(math1, index - 4))) {
                     index++;
@@ -222,10 +225,12 @@ public abstract class Calculator {
                 index--;
             }
 
+            // This occurs when the beginning of the string is reached - expected behavior
             if (index == -1) {
                 index = 0;
             }
-            if (index != lastIndex) {
+            // If index == lastIndex the string is empty and will fail later, if index is 0 the whole string is the number we want
+            if (index != lastIndex && index != 0) {
                 math1 = math1.substring(index, lastIndex);
             }
 
@@ -239,7 +244,6 @@ public abstract class Calculator {
                 for (index = lastIndex + 1; index < math2.length(); index++) {
                     // Don't pass standin because after the 1st character minuses aren't part of numbers for this purpose anymore
                     if (!isNumber(math2.charAt(index), tryCharAt(math2, index - 1), tryCharAt(math2, index - 2))) {
-                        index++;
                         break;
                     }
 
