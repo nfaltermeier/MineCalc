@@ -67,5 +67,7 @@ public abstract class ArgumentManagerTest {
         tests.add(new Test("5.5>>4", true, new BitwiseDecimalException(4.5)));
         tests.add(new Test("4-5--6", true, 5.0));
         tests.add(new Test("e", true, Math.E));
+        tests.add(new Test("~7", true, -8.0));
+        tests.add(new Test("1-~654*2", true, 1311.0));
     }
 }
