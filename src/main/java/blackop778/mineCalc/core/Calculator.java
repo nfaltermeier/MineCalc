@@ -276,41 +276,60 @@ public abstract class Calculator {
             math = math.substring(0, symbolStartIndex + operationSymbol.length() + 1)
                     + math.substring(symbolStartIndex + operationSymbol.length() + 2, math.length() - 1);
         }
+
         int numLocation = 0;
         Character currentChar = tryCharAt(math, symbolStartIndex - 1);
         Character lastChar = tryCharAt(math, symbolStartIndex - 2);
         Character lastLastChar = tryCharAt(math, symbolStartIndex - 3);
         int i;
-        // Is the number before the operation
+
+        // Is the number before the operation?
         if (currentChar != null && isNumber(currentChar, lastChar, lastLastChar)) {
             numLocation = -1;
-            for (i = 1; symbolStartIndex - i > -1 && isNumber(currentChar, lastChar, lastLastChar); i++) {
-                lastLastChar = lastChar;
-                lastChar = currentChar;
-                currentChar = math.charAt(symbolStartIndex - i);
+            for (i = 1; symbolStartIndex - i > -1; i++) {
+                if(isNumber(currentChar, lastChar, lastLastChar)) {
+                    lastLastChar = lastChar;
+                    lastChar = currentChar;
+                    currentChar = math.charAt(symbolStartIndex - i);
+                }
+                else
+                {
+                    i--;
+                    break;
+                }
             }
             if (symbolStartIndex - i == -1)
                 i--;
             math = math.substring(symbolStartIndex - i, symbolStartIndex + operationSymbol.length());
         }
+
         currentChar = tryCharAt(math, symbolStartIndex + operationSymbol.length());
         lastChar = tryCharAt(math, symbolStartIndex + operationSymbol.length() - 1);
         lastLastChar = tryCharAt(math, symbolStartIndex + operationSymbol.length() - 2);
-        // Is the number after the operation
+
+        // Is the number after the operation?
         if (currentChar != null && isNumber(currentChar, lastChar, lastLastChar)) {
             if (numLocation == -1)
                 throw new UnaryUsageException();
             numLocation = 1;
-            for (i = 1; symbolStartIndex + operationSymbol.length() + i < math.length()
-                    && isNumber(currentChar, lastChar, lastLastChar); i++) {
-                lastLastChar = lastChar;
-                lastChar = currentChar;
-                currentChar = math.charAt(symbolStartIndex + operationSymbol.length() + i);
+            for (i = 1; symbolStartIndex + operationSymbol.length() + i < math.length(); i++) {
+                if(isNumber(currentChar, lastChar, lastLastChar)) {
+                    lastLastChar = lastChar;
+                    lastChar = currentChar;
+                    currentChar = math.charAt(symbolStartIndex + operationSymbol.length() + i);
+                }
+                else
+                {
+                    i--;
+                    break;
+                }
             }
             math = math.substring(symbolStartIndex, symbolStartIndex + operationSymbol.length() + i);
         }
+
         if (numLocation == 0)
             throw new UnaryUsageException();
+
         return math;
     }
 

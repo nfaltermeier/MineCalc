@@ -49,18 +49,25 @@ public class Calculate extends CommandBase {
 
         if (args.length == 0)
             return new TextComponentTranslation("minecalc.calc.usage").setStyle(redStyle);
-        useOOPS = Boolean.valueOf(args[0]);
+
         if (args[0].equalsIgnoreCase("true") || args[0].equalsIgnoreCase("false")) {
+            useOOPS = Boolean.valueOf(args[0]);
             args[0] = "";
         }
+        else
+        {
+            useOOPS = true;
+        }
+
         String condensedMath = "";
         for (String s : args) {
             condensedMath += s;
         }
+
         try {
             answer = Calculator.evaluate(condensedMath, useOOPS, getLastOutput(sender), MCConfig.fancyRemainders);
             setLastOutput(sender, answer);
-            if (answer % 1 == 0) {
+            if (answer % 1 == 0 && answer < Integer.MAX_VALUE && answer > Integer.MIN_VALUE) {
                 int i = (int) answer;
                 print = new TextComponentString(String.valueOf(i));
             } else {

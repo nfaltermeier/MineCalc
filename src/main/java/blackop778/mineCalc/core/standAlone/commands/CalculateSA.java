@@ -34,20 +34,27 @@ public class CalculateSA implements ICommandSA {
 
         if (args.length == 0)
             return "Usage: " + getUsage();
-        useOOPS = Boolean.valueOf(args[0]);
+
         if (args[0].equalsIgnoreCase("true") || args[0].equalsIgnoreCase("false")) {
+            useOOPS = Boolean.valueOf(args[0]);
             args[0] = "";
         }
+        else
+        {
+            useOOPS = true;
+        }
+
         String condensedMath = "";
         for (String s : args) {
             condensedMath += s;
         }
+
         try {
             double answer;
             answer = Calculator.evaluate(condensedMath, useOOPS, Calculator.consoleLastOutput,
                     FancyRemainders.getFancyRemainder());
             Calculator.consoleLastOutput = answer;
-            if (answer % 1 == 0) {
+            if (answer % 1 == 0 && answer < Integer.MAX_VALUE && answer > Integer.MIN_VALUE) {
                 int i = (int) answer;
                 print = String.valueOf(i);
             } else {
