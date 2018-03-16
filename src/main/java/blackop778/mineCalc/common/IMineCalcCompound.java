@@ -2,11 +2,11 @@ package blackop778.mineCalc.common;
 
 public interface IMineCalcCompound {
 
-    public boolean getHasMineCalc();
+    boolean getHasMineCalc();
 
-    public void setHasMineCalc(boolean HasMineCalc);
+    void setHasMineCalc(boolean HasMineCalc);
 
-    public double getLastNumber();
+    double getLastNumber();
 
-    public void setLastNumber(double num);
+    void setLastNumber(double num);
 }

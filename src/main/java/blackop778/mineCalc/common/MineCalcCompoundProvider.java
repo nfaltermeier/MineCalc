@@ -7,13 +7,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import javax.annotation.Nullable;
 
 public class MineCalcCompoundProvider implements ICapabilitySerializable<NBTBase> {
 
+    @Nullable
     @CapabilityInject(IMineCalcCompound.class)
     public static final Capability<IMineCalcCompound> MCC_CAP = null;
     public static final ResourceLocation MCC_RL = new ResourceLocation(MineCalc.MODID, "HMC");
 
+    @Nullable
     private static IMineCalcCompound instance = null;
 
     @Override
@@ -26,6 +29,7 @@ public class MineCalcCompoundProvider implements ICapabilitySerializable<NBTBase
         return capability == MCC_CAP ? MCC_CAP.<T>cast(getInstance()) : null;
     }
 
+    @Nullable
     @Override
     public NBTBase serializeNBT() {
         return MCC_CAP.writeNBT(getInstance(), null);
@@ -36,6 +40,7 @@ public class MineCalcCompoundProvider implements ICapabilitySerializable<NBTBase
         MCC_CAP.readNBT(getInstance(), null, nbt);
     }
 
+    @Nullable
     private static IMineCalcCompound getInstance() {
         if (instance == null)
             instance = MCC_CAP.getDefaultInstance();

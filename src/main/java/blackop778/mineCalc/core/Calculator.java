@@ -1,6 +1,9 @@
 package blackop778.mineCalc.core;
 
 import blackop778.mineCalc.core.CalcExceptions.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -10,6 +13,7 @@ public abstract class Calculator {
     public static final Character[] STANDINCHARS = {'$', '#', '@', '"', ';', ':', '?', '&', '[', '{', ']', '}', '|',
             '!', '='};
     public static final Argument SORTING_HAT = new Argument(0, 0, "f");
+    @Nonnull
     public static OperationHolder operations = new OperationHolder(true);
     public static Double consoleLastOutput = Double.NaN;
 
@@ -75,19 +79,19 @@ public abstract class Calculator {
                 for (int i = operations.LEVELS; i > 0; i--) {
                     IOperation[] level = operations.getLevel(i);
                     // Cycle through the operations in the OOPS level
-                    for (int n = 0; n < level.length; n++) {
-                        String[] current = level[n].getOperators();
+                    for (IOperation aLevel : level) {
+                        String[] current = aLevel.getOperators();
                         // Cycle through the operation strings for the given
                         // operation
-                        for (int x = 0; x < current.length; x++) {
+                        for (String aCurrent : current) {
                             boolean run = true;
                             int startIndex = 0;
                             while (run) {
                                 run = false;
-                                int newIndex = contents.indexOf(current[x], startIndex);
+                                int newIndex = contents.indexOf(aCurrent, startIndex);
                                 updateOP:
                                 if (newIndex > -1 && newIndex < index) {
-                                    if (current[x].equals("-")) {
+                                    if (aCurrent.equals("-")) {
                                         if (isNumber(contents.charAt(newIndex), tryCharAt(contents, newIndex - 1),
                                                 tryCharAt(contents, newIndex - 2))) {
                                             run = true;
@@ -96,14 +100,14 @@ public abstract class Calculator {
                                         }
                                     }
                                     index = newIndex;
-                                    op = level[n];
-                                    operator = current[x];
+                                    op = aLevel;
+                                    operator = aCurrent;
                                 }
                             }
                         }
                     }
 
-                    if (op != null && (useOOPS || i == 0)) {
+                    if (op != null && useOOPS) {
                         break;
                     }
                 }
@@ -116,9 +120,7 @@ public abstract class Calculator {
                     // Solve based on the operation we found
                     Character replacer = findUnusedStandin(contents);
                     if (operator.equals("-")) {
-                        String[] temp = takeMinuses(contents, index);
-                        contents = temp[0];
-                        replacer = temp[1].charAt(0);
+                        contents = takeMinuses(contents, index, replacer);
                     }
 
                     trimmedContents = binaryTrimToOperation(contents, operator, index,replacer);
@@ -140,10 +142,12 @@ public abstract class Calculator {
                             arguments.get(0).contents.equals(trimmedContents)))
                         throw new FancyRemainderException(numbers[0], numbers[1]);
                     answer = ((IBinaryOperation) op).evaluateFunction(numbers[0], numbers[1]);
-                } else {
+                } else if (op instanceof IUnaryOperation) {
                     trimmedContents = unaryTrimToOperation(contents, operator, index);
                     double number = getDoubleValue(trimmedContents.replaceAll(Pattern.quote(operator), ""), last);
                     answer = ((IUnaryOperation) op).evaluateFunction(number);
+                } else {
+                    throw new UnimplementedOperationTypeException();
                 }
 
                 // If we removed parenthesis earlier, readd them so the parenthesis can be removed when we updateMath
@@ -159,7 +163,7 @@ public abstract class Calculator {
         return getDoubleValue(arguments.get(0).contents, last);
     }
 
-    private static double getDoubleValue(String number, Double last)
+    private static double getDoubleValue(String number, @Nullable Double last)
             throws PreviousOutputException, MultiplePointsException, InvalidNumberException, UsageException {
         boolean negative = false;
         double toReturn;
@@ -195,7 +199,7 @@ public abstract class Calculator {
     }
 
     private static String binaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex,
-                                                Character numberStandin) throws UsageException, AllStandinsUsedException {
+                                                @Nonnull Character numberStandin) throws UsageException, AllStandinsUsedException {
         int index;
         int lastIndex;
 
@@ -252,7 +256,7 @@ public abstract class Calculator {
                 index = 1;
             }
 
-            if (index != math2.length() - 1) {
+            if (index != math2.length()) {
                 math2 = math2.substring(lastIndex, index);
             }
 
@@ -262,7 +266,8 @@ public abstract class Calculator {
         }
     }
 
-    private static String unaryTrimToOperation(String math, String operationSymbol, int symbolStartIndex)
+    @Nonnull
+    private static String unaryTrimToOperation(@Nonnull String math, @Nonnull String operationSymbol, int symbolStartIndex)
             throws AllStandinsUsedException, UnaryUsageException {
         // Remove leading parenthesis
         if (Character.valueOf('(').equals(tryCharAt(math, 0))
@@ -345,7 +350,7 @@ public abstract class Calculator {
         }
     }
 
-    private static String concatNullableCharacters(Character first, Character... others) {
+    private static String concatNullableCharacters(@Nullable Character first, @Nonnull Character... others) {
         StringBuilder toReturn = new StringBuilder();
         if (first != null) {
             toReturn.append(first);
@@ -359,12 +364,12 @@ public abstract class Calculator {
         return toReturn.toString();
     }
 
-    private static boolean isNumber(Character current, Character last, Character lastLast)
+    private static boolean isNumber(@Nonnull Character current, Character last, Character lastLast)
             throws AllStandinsUsedException {
         return isNumber(current, last, lastLast, findUnusedStandin(concatNullableCharacters(current, last, lastLast)));
     }
 
-    private static boolean isNumber(Character current, Character last, Character lastLast, Character numberStandIn) {
+    private static boolean isNumber(Character current, @Nullable Character last, Character lastLast, Character numberStandIn) {
         if (current.toString().matches("\\d|\\.|[lpieLPIE]|" + Pattern.quote(numberStandIn.toString())))
             return true;
         else if (current.equals('-') && !(Character.valueOf('/').equals(lastLast))) {
@@ -376,9 +381,10 @@ public abstract class Calculator {
         return false;
     }
 
-    private static Character findUnusedStandin(String text) throws AllStandinsUsedException {
+    @Nonnull
+    private static Character findUnusedStandin(@Nonnull String text) throws AllStandinsUsedException {
         for (Character c : STANDINCHARS) {
-            if (!text.contains(new StringBuilder().append(c).toString()))
+            if (!text.contains(c.toString()))
                 return c;
         }
 
@@ -392,18 +398,15 @@ public abstract class Calculator {
     /**
      * @param toChange       String with minuses to remove
      * @param unchangedIndex Index of minus to leave as a minus
-     * @return the changed string followed by the char the extra minus signs were
-     * replaced by
-     * @throws AllStandinsUsedException
+     * @param replacement    What character to replace other minuses with
+     * @return               The string with the other minuses replaced with <code>replacement</code>
      */
-    private static String[] takeMinuses(String toChange, int unchangedIndex) throws AllStandinsUsedException {
-        Character replacement = findUnusedStandin(toChange);
-
+    private static String takeMinuses(String toChange, int unchangedIndex, Character replacement) {
         toChange = toChange.replaceAll(Pattern.quote("-"), Matcher.quoteReplacement(replacement.toString()));
         toChange = toChange.substring(0, unchangedIndex) + "-"
                 + toChange.substring(unchangedIndex + 1, toChange.length());
 
-        return new String[]{toChange, replacement.toString()};
+        return toChange;
     }
 
     private static String addMinus(String math, Character minusReplacer) {

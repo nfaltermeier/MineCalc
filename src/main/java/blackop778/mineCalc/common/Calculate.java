@@ -14,17 +14,20 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.*;
 import net.minecraft.util.text.translation.I18n;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "ConstantConditions"})
 public class Calculate extends CommandBase {
 
     public static final Style redStyle = new Style().setColor(TextFormatting.RED);
 
+    @Nonnull
     @Override
     public String getName() {
         // What must be typed in following the / to trigger the command
@@ -34,6 +37,7 @@ public class Calculate extends CommandBase {
     /**
      * What is shown when "/help Calculate" is typed in
      */
+    @Nonnull
     @Override
     public String getUsage(ICommandSender sender) {
         if (playerHasMod(sender.getCommandSenderEntity()))
@@ -42,8 +46,8 @@ public class Calculate extends CommandBase {
             return I18n.translateToLocal("minecalc.calc.help");
     }
 
-    public ITextComponent calculate(MinecraftServer server, ICommandSender sender, String[] args) {
-        ITextComponent print = null;
+    public ITextComponent calculate(ICommandSender sender, @Nonnull String[] args) {
+        ITextComponent print;
         boolean useOOPS;
         double answer;
 
@@ -59,13 +63,13 @@ public class Calculate extends CommandBase {
             useOOPS = true;
         }
 
-        String condensedMath = "";
+        StringBuilder condensedMath = new StringBuilder();
         for (String s : args) {
-            condensedMath += s;
+            condensedMath.append(s);
         }
 
         try {
-            answer = Calculator.evaluate(condensedMath, useOOPS, getLastOutput(sender), MCConfig.fancyRemainders);
+            answer = Calculator.evaluate(condensedMath.toString(), useOOPS, getLastOutput(sender), MCConfig.fancyRemainders);
             setLastOutput(sender, answer);
             if (answer % 1 == 0 && answer < Integer.MAX_VALUE && answer > Integer.MIN_VALUE) {
                 int i = (int) answer;
@@ -114,7 +118,7 @@ public class Calculate extends CommandBase {
         } catch (CalcExceptions errorsAreFun) {
             errorsAreFun.printStackTrace();
             return new TextComponentString(
-                    "Error: An unknown error occured" + (errorsAreFun.getLocalizedMessage() == null ? ""
+                    "Error: An unknown error occurred" + (errorsAreFun.getLocalizedMessage() == null ? ""
                             : ". Message: " + errorsAreFun.getLocalizedMessage()));
         }
 
@@ -127,11 +131,11 @@ public class Calculate extends CommandBase {
     }
 
     /**
-     * @param sender Can be null
+     * @param sender Who sent the command
      * @return The last output the user received
      * @throws PreviousOutputException If there was no previous output
      */
-    private double getLastOutput(ICommandSender sender) throws PreviousOutputException {
+    private double getLastOutput(@Nullable ICommandSender sender) throws PreviousOutputException {
         if (sender == null)
             if (Calculator.consoleLastOutput == null)
                 throw new PreviousOutputException();
@@ -142,12 +146,14 @@ public class Calculate extends CommandBase {
             if (e == null)
                 return Calculator.consoleLastOutput;
             IMineCalcCompound comp = e.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
-            Double last = comp.getLastNumber();
-            return last;
+            // Not exactly sure how we could get here, but this seems like a safe bet for feedback
+            if (comp == null)
+                throw new PreviousOutputException();
+            return comp.getLastNumber();
         }
     }
 
-    private void setLastOutput(ICommandSender sender, double newOutput) {
+    private void setLastOutput(@javax.annotation.Nullable ICommandSender sender, double newOutput) {
         if (sender == null) {
             Calculator.consoleLastOutput = newOutput;
         } else {
@@ -156,23 +162,24 @@ public class Calculate extends CommandBase {
                 Calculator.consoleLastOutput = newOutput;
             } else {
                 IMineCalcCompound comp = e.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
-                comp.setLastNumber(newOutput);
+                if(comp != null)
+                    comp.setLastNumber(newOutput);
             }
         }
     }
 
+    @Nonnull
     @Override
     public List<String> getAliases() {
         // A list of alternate command names
-        List<String> aliases = new ArrayList<String>(Arrays.asList("Calc", "calculate", "Calculate"));
-        return aliases;
+        return new ArrayList<String>(Arrays.asList("Calc", "calculate", "Calculate"));
     }
 
+    @javax.annotation.Nullable
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
         if (args.length % 2 != 1) {
-            ArrayList<String> options = new ArrayList<String>(Arrays.asList("+", "-", "*", "/", "%", "^", "/--"));
-            return options;
+            return new ArrayList<String>(Arrays.asList("+", "-", "*", "/", "%", "^", "/--"));
         } else
             return null;
     }
@@ -182,7 +189,7 @@ public class Calculate extends CommandBase {
         if (sender.getName().equals("@")) {
             MineCalc.LOGGER.warn("Command blocks cannot use /calc");
         } else {
-            ITextComponent output = calculate(server, sender, args);
+            ITextComponent output = calculate(sender, args);
             output = translateCheck(sender, output);
 
             // Send the message back to the user
@@ -200,7 +207,8 @@ public class Calculate extends CommandBase {
         return true;
     }
 
-    private ITextComponent translateCheck(ICommandSender sender, ITextComponent toOutput) {
+    @javax.annotation.Nullable
+    private ITextComponent translateCheck(ICommandSender sender, @Nonnull ITextComponent toOutput) {
         if (playerHasMod(sender.getCommandSenderEntity()))
             return toOutput;
         else {
@@ -230,11 +238,16 @@ public class Calculate extends CommandBase {
         }
     }
 
-    private boolean playerHasMod(Entity ent) {
+    @SuppressWarnings("ConstantConditions")
+    private boolean playerHasMod(@javax.annotation.Nullable Entity ent) {
         if (ClientProxy.isClientSide())
             return true;
         if (ent == null)
             return true;
-        return ent.getCapability(MineCalcCompoundProvider.MCC_CAP, null).getHasMineCalc();
+        IMineCalcCompound comp = ent.getCapability(MineCalcCompoundProvider.MCC_CAP, null);
+        if(comp != null)
+            return comp.getHasMineCalc();
+        else
+            return false;
     }
 }

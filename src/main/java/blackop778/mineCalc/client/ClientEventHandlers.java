@@ -12,12 +12,13 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import javax.annotation.Nonnull;
 
 public class ClientEventHandlers extends CommonEventHandlers {
 
     public static class SubEvent {
         @SubscribeEvent
-        public void onPlayerJoinedServer(EntityJoinWorldEvent event) {
+        public void onPlayerJoinedServer(@Nonnull EntityJoinWorldEvent event) {
             if (event.getEntity() instanceof EntityPlayer) {
                 if (event.getEntity().equals(Minecraft.getMinecraft().player)) {
                     NetHub.NETWORKWRAPPER.sendToServer(new HasModMessage());
@@ -34,7 +35,7 @@ public class ClientEventHandlers extends CommonEventHandlers {
     }
 
     @SubscribeEvent
-    public void onConfigChanged(OnConfigChangedEvent event) {
+    public void onConfigChanged(@Nonnull OnConfigChangedEvent event) {
         if (event.getModID().equalsIgnoreCase(MineCalc.MODID)) {
             MCConfig.syncConfig();
         }

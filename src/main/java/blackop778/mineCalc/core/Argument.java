@@ -1,9 +1,10 @@
 package blackop778.mineCalc.core;
 
+import javax.annotation.Nonnull;
+
 import java.util.Comparator;
 
 public class Argument implements Comparator<Argument> {
-    public static final int MAXLOOPS = 100;
 
     public final int index;
     public final int importance;
@@ -22,10 +23,10 @@ public class Argument implements Comparator<Argument> {
     }
 
     @Override
-    public int compare(Argument first, Argument second) {
-        int importanceOrder = new Integer(first.importance).compareTo(second.importance);
+    public int compare(@Nonnull Argument first, @Nonnull Argument second) {
+        int importanceOrder = Integer.valueOf(first.importance).compareTo(second.importance);
         if (importanceOrder != 0)
             return -importanceOrder;
-        return new Integer(first.index).compareTo(second.index);
+        return Integer.valueOf(first.index).compareTo(second.index);
     }
 }

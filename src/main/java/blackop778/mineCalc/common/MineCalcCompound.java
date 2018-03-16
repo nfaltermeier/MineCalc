@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
+import javax.annotation.Nonnull;
 
 public class MineCalcCompound implements IMineCalcCompound {
 
@@ -39,14 +40,14 @@ public class MineCalcCompound implements IMineCalcCompound {
 
     public static class MineCalcCompoundStorage implements IStorage<IMineCalcCompound> {
         @Override
-        public NBTBase writeNBT(Capability<IMineCalcCompound> capability, IMineCalcCompound instance, EnumFacing side) {
+        public NBTBase writeNBT(Capability<IMineCalcCompound> capability, @Nonnull IMineCalcCompound instance, EnumFacing side) {
             NBTTagCompound comp = new NBTTagCompound();
             comp.setDouble(lastNumberKey, instance.getLastNumber());
             return comp;
         }
 
         @Override
-        public void readNBT(Capability<IMineCalcCompound> capability, IMineCalcCompound instance, EnumFacing side,
+        public void readNBT(Capability<IMineCalcCompound> capability, @Nonnull IMineCalcCompound instance, EnumFacing side,
                             NBTBase nbt) {
             if (nbt instanceof NBTTagCompound) {
                 NBTTagCompound comp = (NBTTagCompound) nbt;

@@ -20,14 +20,12 @@ public interface ICommandSA {
 
     /**
      * @param arguments First String shouldn't be the word that indicates this command
-     * @return
+     * @return The result of the arguments processed through the command
      */
     String execute(String[] arguments);
 
     /**
-     * Gets what the command does
-     *
-     * @return
+     * @return A description of what the command does
      */
     String getEffect();
 }

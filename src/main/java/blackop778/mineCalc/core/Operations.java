@@ -3,6 +3,7 @@ package blackop778.mineCalc.core;
 import blackop778.mineCalc.core.CalcExceptions.BitwiseDecimalException;
 import blackop778.mineCalc.core.CalcExceptions.DivisionException;
 import blackop778.mineCalc.core.CalcExceptions.ImaginaryNumberException;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -13,9 +14,10 @@ public abstract class Operations {
      * was passed 'false' in the constructor does this need to be called
      * manually
      *
-     * @param toAddTo
-     * @return
+     * @param toAddTo The list to add the operations to
+     * @return The list now with the operations
      */
+    @Nonnull
     public static List<IOperation> addOperations(List<IOperation> toAddTo) {
         toAddTo.add(new Addition());
         toAddTo.add(new Subtraction());
@@ -35,6 +37,7 @@ public abstract class Operations {
     }
 
     public static class Addition implements IBinaryOperation {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{"+"};
@@ -52,6 +55,7 @@ public abstract class Operations {
     }
 
     public static class Subtraction implements IBinaryOperation {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{"-"};
@@ -69,6 +73,7 @@ public abstract class Operations {
     }
 
     public static class Multiplication implements IBinaryOperation {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{"*", "x", "X"};
@@ -86,6 +91,7 @@ public abstract class Operations {
     }
 
     public static class Division implements IBinaryOperation {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{"/"};
@@ -105,6 +111,7 @@ public abstract class Operations {
     }
 
     public static class Modulus implements IBinaryOperation {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{"%"};
@@ -124,6 +131,7 @@ public abstract class Operations {
     }
 
     public static class Exponent implements IBinaryOperation {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{"^"};
@@ -152,6 +160,7 @@ public abstract class Operations {
     }
 
     public static class Root extends Exponent {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{"/--"};
@@ -164,6 +173,7 @@ public abstract class Operations {
     }
 
     public static class BitAnd implements IBinaryOperation {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{"&"};
@@ -187,6 +197,7 @@ public abstract class Operations {
     }
 
     public static class BitOr implements IBinaryOperation {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{"|"};
@@ -210,6 +221,7 @@ public abstract class Operations {
     }
 
     public static class BitXOr implements IBinaryOperation {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{"^^"};
@@ -233,6 +245,7 @@ public abstract class Operations {
     }
 
     public static class BitNot implements IUnaryOperation {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{"~"};
@@ -253,6 +266,7 @@ public abstract class Operations {
     }
 
     public static class BitShiftRight implements IBinaryOperation {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{">>"};
@@ -276,6 +290,7 @@ public abstract class Operations {
     }
 
     public static class BitShiftLeft implements IBinaryOperation {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{"<<"};
@@ -299,6 +314,7 @@ public abstract class Operations {
     }
 
     public static class BitShiftRightFillZeros implements IBinaryOperation {
+        @Nonnull
         @Override
         public String[] getOperators() {
             return new String[]{">>>"};

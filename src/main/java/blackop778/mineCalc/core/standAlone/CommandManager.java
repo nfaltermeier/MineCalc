@@ -4,6 +4,8 @@ import blackop778.mineCalc.core.standAlone.commands.CalculateSA;
 import blackop778.mineCalc.core.standAlone.commands.FancyRemainders;
 import blackop778.mineCalc.core.standAlone.commands.ReturnInput;
 import blackop778.mineCalc.core.standAlone.commands.Version;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,11 +33,13 @@ public class CommandManager implements ICommandManagerSA {
         return commands.get(index);
     }
 
+    @Nonnull
     @Override
     public List<ICommandSA> getWhole() {
         return new ArrayList<ICommandSA>(commands);
     }
 
+    @Nullable
     public ICommandSA getByTriggers(String trigger) {
         for (ICommandSA cmd : commands) {
             if (cmd.getTrigger().equals(trigger))
@@ -66,30 +70,33 @@ public class CommandManager implements ICommandManagerSA {
 
         // Remove first arg
         args = Arrays.asList(args).subList(1, args.length).toArray(new String[0]);
-        String output = command.execute(args);
 
-        return output;
+        return command.execute(args);
     }
 
     public class Help implements ICommandSA {
 
+        @Nonnull
         @Override
         public String getUsage() {
             return "help <command name>";
         }
 
+        @Nonnull
         @Override
         public String getTrigger() {
             return "help";
         }
 
+        @Nonnull
         @Override
         public List<String> getAliases() {
             return new ArrayList<String>();
         }
 
+        @Nonnull
         @Override
-        public String execute(String[] args) {
+        public String execute(@Nonnull String[] args) {
             List<ICommandSA> cmds = getWhole();
             if (args.length != 0) {
                 for (ICommandSA cmd : commands) {
@@ -102,14 +109,15 @@ public class CommandManager implements ICommandManagerSA {
                 }
             }
 
-            String toOutput = "Available commands:";
+            StringBuilder toOutput = new StringBuilder("Available commands:");
             for (ICommandSA cmd : cmds) {
-                toOutput += "\n" + cmd.getUsage();
+                toOutput.append("\n").append(cmd.getUsage());
             }
 
-            return toOutput;
+            return toOutput.toString();
         }
 
+        @Nonnull
         @Override
         public String getEffect() {
             return "No args - Lists commands\n    [command name] - displays info for command";

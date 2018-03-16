@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import javax.annotation.Nonnull;
 
 @Mod(modid = MineCalc.MODID, name = MineCalc.MODNAME, version = MineCalc.MODVER, acceptableRemoteVersions = "*", guiFactory = "blackop778.mineCalc.client.config.GuiFactoryMineCalc", updateJSON = MineCalc.UPDATEJSONURL)
 public class MineCalc {
@@ -23,7 +24,7 @@ public class MineCalc {
     public static CommonProxy proxy;
 
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
+    public void preInit(@Nonnull FMLPreInitializationEvent event) {
         proxy.preInit(event);
     }
 
@@ -38,7 +39,7 @@ public class MineCalc {
     }
 
     @EventHandler
-    public void serverStart(FMLServerStartingEvent event) {
+    public void serverStart(@Nonnull FMLServerStartingEvent event) {
         proxy.serverStart(event);
     }
 }

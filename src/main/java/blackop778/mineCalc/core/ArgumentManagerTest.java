@@ -5,7 +5,7 @@ import blackop778.mineCalc.core.CalcExceptions.*;
 import java.util.ArrayList;
 
 public abstract class ArgumentManagerTest {
-    public static boolean DEBUG = false;
+    public static final boolean DEBUG = false;
 
     public static void main(String[] args) {
         ArrayList<Test> tests = new ArrayList<Test>();
@@ -69,5 +69,7 @@ public abstract class ArgumentManagerTest {
         tests.add(new Test("e", true, Math.E));
         tests.add(new Test("~7", true, -8.0));
         tests.add(new Test("1-~654*2", true, 1311.0));
+        tests.add(new Test("1+4~", false, -6.0));
+        tests.add(new Test("(6+8)4", true, new UsageException()));
     }
 }

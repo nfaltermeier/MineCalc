@@ -1,5 +1,7 @@
 package blackop778.mineCalc.core.standAlone;
 
+import javax.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +11,7 @@ import java.util.regex.Pattern;
 public class Console extends JPanel {
 
     private static final long serialVersionUID = -8126442231468996619L;
+    @Nullable
     private JDialog dialog;
     private JTextField input;
     private JTextArea output;

@@ -1,5 +1,7 @@
 package blackop778.mineCalc.core;
 
+import javax.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,6 +23,7 @@ public class ArgumentManager {
         Collections.sort(arguments, c);
     }
 
+    @Nonnull
     public Argument get(int index) {
         return new Argument(arguments.get(index));
     }
@@ -32,7 +35,7 @@ public class ArgumentManager {
     /**
      * Returns whether or not the arguments are fully computed
      */
-    public boolean updateMath(String oldMath, String answer) {
+    public boolean updateMath(@Nonnull String oldMath, @Nonnull String answer) {
         ListIterator<Argument> it = arguments.listIterator();
         while (it.hasNext()) {
             Argument arg = it.next();

@@ -1,5 +1,7 @@
 package blackop778.mineCalc.core;
 
+import javax.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,17 +42,17 @@ public class OperationHolder {
         }
     }
 
-    public void add(IOperation op) {
+    public void add(@Nonnull IOperation op) {
         int level = op.getImportance();
         operations[level - 1] = expandArray(operations[level - 1]);
         operations[level - 1][operations[level - 1].length - 1] = op;
     }
 
+    @Nonnull
     public static IOperation[] expandArray(IOperation[] array) {
         IOperation[] newArray = new IOperation[array.length + 1];
-        for (int i = 0; i < array.length; i++) {
-            newArray[i] = array[i];
-        }
+
+        System.arraycopy(array, 0, newArray, 0, array.length);
 
         return newArray;
     }

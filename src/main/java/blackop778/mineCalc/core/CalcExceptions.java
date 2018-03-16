@@ -41,8 +41,8 @@ public abstract class CalcExceptions extends Exception {
      * functionality
      */
     public static class FancyRemainderException extends CalcExceptions {
-        public double numerator;
-        public double denominator;
+        public final double numerator;
+        public final double denominator;
 
         public FancyRemainderException(double numbers, double numbers2) {
             this.numerator = numbers;
@@ -86,5 +86,9 @@ public abstract class CalcExceptions extends Exception {
         public BitwiseDecimalException(double number) {
             super(String.valueOf(number));
         }
+    }
+
+    public static class UnimplementedOperationTypeException extends CalcExceptions {
+
     }
 }

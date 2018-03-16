@@ -4,6 +4,7 @@ import blackop778.mineCalc.core.CalcExceptions;
 import blackop778.mineCalc.core.CalcExceptions.*;
 import blackop778.mineCalc.core.Calculator;
 import blackop778.mineCalc.core.standAlone.ICommandSA;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,24 +12,26 @@ import java.util.List;
 
 public class CalculateSA implements ICommandSA {
 
+    @Nonnull
     @Override
     public String getUsage() {
         return "calc <boolean: use OOPS> [number][operator][number]<operator><number>";
     }
 
+    @Nonnull
     @Override
     public String getTrigger() {
         return "calc";
     }
 
+    @Nonnull
     @Override
     public List<String> getAliases() {
-        List<String> aliases = new ArrayList<String>(Arrays.asList("Calc", "calculate", "Calculate"));
-        return aliases;
+        return new ArrayList<String>(Arrays.asList("Calc", "calculate", "Calculate"));
     }
 
     @Override
-    public String execute(String[] args) {
+    public String execute(@Nonnull String[] args) {
         String print;
         boolean useOOPS;
 
@@ -44,14 +47,14 @@ public class CalculateSA implements ICommandSA {
             useOOPS = true;
         }
 
-        String condensedMath = "";
+        StringBuilder condensedMath = new StringBuilder();
         for (String s : args) {
-            condensedMath += s;
+            condensedMath.append(s);
         }
 
         try {
             double answer;
-            answer = Calculator.evaluate(condensedMath, useOOPS, Calculator.consoleLastOutput,
+            answer = Calculator.evaluate(condensedMath.toString(), useOOPS, Calculator.consoleLastOutput,
                     FancyRemainders.getFancyRemainder());
             Calculator.consoleLastOutput = answer;
             if (answer % 1 == 0 && answer < Integer.MAX_VALUE && answer > Integer.MIN_VALUE) {
@@ -96,7 +99,7 @@ public class CalculateSA implements ICommandSA {
                 return "Error: Too many closing parenthesis have been input. Some may not have been opened";
         } catch (CalcExceptions errorsAreFun) {
             errorsAreFun.printStackTrace();
-            return "Error: An unknown error occured" + (errorsAreFun.getLocalizedMessage() == null ? ""
+            return "Error: An unknown error occurred" + (errorsAreFun.getLocalizedMessage() == null ? ""
                     : ". Message: " + errorsAreFun.getLocalizedMessage());
         }
 
@@ -108,6 +111,7 @@ public class CalculateSA implements ICommandSA {
         return print;
     }
 
+    @Nonnull
     @Override
     public String getEffect() {
         return "Calculates the value of all the arguments";
