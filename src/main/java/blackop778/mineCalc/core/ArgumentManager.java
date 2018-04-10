@@ -37,6 +37,7 @@ public class ArgumentManager {
      */
     public boolean updateMath(@Nonnull String oldMath, @Nonnull String answer) {
         ListIterator<Argument> it = arguments.listIterator();
+
         while (it.hasNext()) {
             Argument arg = it.next();
             if (!arg.contents.equals(oldMath)) {
@@ -49,5 +50,24 @@ public class ArgumentManager {
         }
 
         return false;
+    }
+
+    private void verifyPostUpdateIntegrity(@Nonnull String answer)
+    {
+        ListIterator<Argument> it = arguments.listIterator();
+
+        while (it.hasNext()) {
+            Argument arg = it.next();
+            String contents = arg.contents;
+
+            int index = contents.indexOf(answer);
+            if(index > -1 && !contents.equals(answer))
+            {
+                if(index > 0)
+                {
+                    if(contents.charAt(index - 1) != '(' && )
+                }
+            }
+        }
     }
 }
