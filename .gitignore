@@ -101,6 +101,7 @@ eclipse/
 
 # IntelliJ
 /out/
+/production/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/

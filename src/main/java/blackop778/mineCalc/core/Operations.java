@@ -18,21 +18,21 @@ public abstract class Operations {
      * @return The list now with the operations
      */
     @Nonnull
-    public static List<IOperation> addOperations(List<IOperation> toAddTo) {
+    public static List<IBinaryOperation> addOperations(List<IBinaryOperation> toAddTo) {
         toAddTo.add(new Addition());
         toAddTo.add(new Subtraction());
         toAddTo.add(new Multiplication());
         toAddTo.add(new Division());
         toAddTo.add(new Modulus());
         toAddTo.add(new Exponent());
-        toAddTo.add(new Root());
-        toAddTo.add(new BitAnd());
-        toAddTo.add(new BitOr());
-        toAddTo.add(new BitXOr());
-        toAddTo.add(new BitNot());
-        toAddTo.add(new BitShiftRight());
-        toAddTo.add(new BitShiftLeft());
-        toAddTo.add(new BitShiftRightFillZeros());
+//        toAddTo.add(new Root());
+//        toAddTo.add(new BitAnd());
+//        toAddTo.add(new BitOr());
+//        toAddTo.add(new BitXOr());
+//        toAddTo.add(new BitNot());
+//        toAddTo.add(new BitShiftRight());
+//        toAddTo.add(new BitShiftLeft());
+//        toAddTo.add(new BitShiftRightFillZeros());
         return toAddTo;
     }
 
@@ -49,8 +49,13 @@ public abstract class Operations {
         }
 
         @Override
-        public int getImportance() {
+        public int getPrecedence() {
             return 10;
+        }
+
+        @Override
+        public Associativity getAssociativity() {
+            return Associativity.Left;
         }
     }
 
@@ -67,8 +72,13 @@ public abstract class Operations {
         }
 
         @Override
-        public int getImportance() {
+        public int getPrecedence() {
             return 10;
+        }
+
+        @Override
+        public Associativity getAssociativity() {
+            return Associativity.Left;
         }
     }
 
@@ -76,7 +86,7 @@ public abstract class Operations {
         @Nonnull
         @Override
         public String[] getOperators() {
-            return new String[]{"*", "x", "X"};
+            return new String[]{"*", "x"};
         }
 
         @Override
@@ -85,8 +95,13 @@ public abstract class Operations {
         }
 
         @Override
-        public int getImportance() {
+        public int getPrecedence() {
             return 12;
+        }
+
+        @Override
+        public Associativity getAssociativity() {
+            return Associativity.Left;
         }
     }
 
@@ -105,8 +120,13 @@ public abstract class Operations {
         }
 
         @Override
-        public int getImportance() {
+        public int getPrecedence() {
             return 12;
+        }
+
+        @Override
+        public Associativity getAssociativity() {
+            return Associativity.Left;
         }
     }
 
@@ -125,8 +145,13 @@ public abstract class Operations {
         }
 
         @Override
-        public int getImportance() {
+        public int getPrecedence() {
             return 12;
+        }
+
+        @Override
+        public Associativity getAssociativity() {
+            return Associativity.Left;
         }
     }
 
@@ -154,186 +179,191 @@ public abstract class Operations {
         }
 
         @Override
-        public int getImportance() {
+        public int getPrecedence() {
             return 14;
         }
-    }
-
-    public static class Root extends Exponent {
-        @Nonnull
-        @Override
-        public String[] getOperators() {
-            return new String[]{"/--"};
-        }
 
         @Override
-        public double evaluateFunction(double base, double num2) throws CalcExceptions {
-            return super.evaluateFunction(base, 1 / num2);
+        public Associativity getAssociativity() {
+            return Associativity.Right;
         }
     }
 
-    public static class BitAnd implements IBinaryOperation {
-        @Nonnull
-        @Override
-        public String[] getOperators() {
-            return new String[]{"&"};
-        }
-
-        @Override
-        public int getImportance() {
-            return 6;
-        }
-
-        @Override
-        public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
-            if ((int) numbers != numbers)
-                throw new BitwiseDecimalException(numbers);
-            if ((int) numbers2 != numbers2)
-                throw new BitwiseDecimalException(numbers2);
-            int int1 = (int) numbers;
-            int int2 = (int) numbers2;
-            return int1 & int2;
-        }
-    }
-
-    public static class BitOr implements IBinaryOperation {
-        @Nonnull
-        @Override
-        public String[] getOperators() {
-            return new String[]{"|"};
-        }
-
-        @Override
-        public int getImportance() {
-            return 2;
-        }
-
-        @Override
-        public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
-            if ((int) numbers != numbers)
-                throw new BitwiseDecimalException(numbers);
-            if ((int) numbers2 != numbers2)
-                throw new BitwiseDecimalException(numbers2);
-            int int1 = (int) numbers;
-            int int2 = (int) numbers2;
-            return int1 | int2;
-        }
-    }
-
-    public static class BitXOr implements IBinaryOperation {
-        @Nonnull
-        @Override
-        public String[] getOperators() {
-            return new String[]{"^^"};
-        }
-
-        @Override
-        public int getImportance() {
-            return 4;
-        }
-
-        @Override
-        public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
-            if ((int) numbers != numbers)
-                throw new BitwiseDecimalException(numbers);
-            if ((int) numbers2 != numbers2)
-                throw new BitwiseDecimalException(numbers2);
-            int int1 = (int) numbers;
-            int int2 = (int) numbers2;
-            return int1 ^ int2;
-        }
-    }
-
-    public static class BitNot implements IUnaryOperation {
-        @Nonnull
-        @Override
-        public String[] getOperators() {
-            return new String[]{"~"};
-        }
-
-        @Override
-        public int getImportance() {
-            return 16;
-        }
-
-        @Override
-        public double evaluateFunction(double input) throws CalcExceptions {
-            if ((int) input != input)
-                throw new BitwiseDecimalException(input);
-            int int1 = (int) input;
-            return ~int1;
-        }
-    }
-
-    public static class BitShiftRight implements IBinaryOperation {
-        @Nonnull
-        @Override
-        public String[] getOperators() {
-            return new String[]{">>"};
-        }
-
-        @Override
-        public int getImportance() {
-            return 8;
-        }
-
-        @Override
-        public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
-            if ((int) numbers != numbers)
-                throw new BitwiseDecimalException(numbers);
-            if ((int) numbers2 != numbers2)
-                throw new BitwiseDecimalException(numbers2);
-            int int1 = (int) numbers;
-            int int2 = (int) numbers2;
-            return int1 >> int2;
-        }
-    }
-
-    public static class BitShiftLeft implements IBinaryOperation {
-        @Nonnull
-        @Override
-        public String[] getOperators() {
-            return new String[]{"<<"};
-        }
-
-        @Override
-        public int getImportance() {
-            return 8;
-        }
-
-        @Override
-        public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
-            if ((int) numbers != numbers)
-                throw new BitwiseDecimalException(numbers);
-            if ((int) numbers2 != numbers2)
-                throw new BitwiseDecimalException(numbers2);
-            int int1 = (int) numbers;
-            int int2 = (int) numbers2;
-            return int1 << int2;
-        }
-    }
-
-    public static class BitShiftRightFillZeros implements IBinaryOperation {
-        @Nonnull
-        @Override
-        public String[] getOperators() {
-            return new String[]{">>>"};
-        }
-
-        @Override
-        public int getImportance() {
-            return 8;
-        }
-
-        @Override
-        public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
-            if ((int) numbers != numbers)
-                throw new BitwiseDecimalException(numbers);
-            if ((int) numbers2 != numbers2)
-                throw new BitwiseDecimalException(numbers2);
-            int int1 = (int) numbers;
-            int int2 = (int) numbers2;
-            return int1 >>> int2;
-        }
-    }
+//    public static class Root extends Exponent {
+//        @Nonnull
+//        @Override
+//        public String[] getOperators() {
+//            return new String[]{"/--"};
+//        }
+//
+//        @Override
+//        public double evaluateFunction(double base, double num2) throws CalcExceptions {
+//            return super.evaluateFunction(base, 1 / num2);
+//        }
+//    }
+//
+//    public static class BitAnd implements IBinaryOperation {
+//        @Nonnull
+//        @Override
+//        public String[] getOperators() {
+//            return new String[]{"&"};
+//        }
+//
+//        @Override
+//        public int getPrecedence() {
+//            return 6;
+//        }
+//
+//        @Override
+//        public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
+//            if ((int) numbers != numbers)
+//                throw new BitwiseDecimalException(numbers);
+//            if ((int) numbers2 != numbers2)
+//                throw new BitwiseDecimalException(numbers2);
+//            int int1 = (int) numbers;
+//            int int2 = (int) numbers2;
+//            return int1 & int2;
+//        }
+//    }
+//
+//    public static class BitOr implements IBinaryOperation {
+//        @Nonnull
+//        @Override
+//        public String[] getOperators() {
+//            return new String[]{"|"};
+//        }
+//
+//        @Override
+//        public int getPrecedence() {
+//            return 2;
+//        }
+//
+//        @Override
+//        public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
+//            if ((int) numbers != numbers)
+//                throw new BitwiseDecimalException(numbers);
+//            if ((int) numbers2 != numbers2)
+//                throw new BitwiseDecimalException(numbers2);
+//            int int1 = (int) numbers;
+//            int int2 = (int) numbers2;
+//            return int1 | int2;
+//        }
+//    }
+//
+//    public static class BitXOr implements IBinaryOperation {
+//        @Nonnull
+//        @Override
+//        public String[] getOperators() {
+//            return new String[]{"^^"};
+//        }
+//
+//        @Override
+//        public int getPrecedence() {
+//            return 4;
+//        }
+//
+//        @Override
+//        public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
+//            if ((int) numbers != numbers)
+//                throw new BitwiseDecimalException(numbers);
+//            if ((int) numbers2 != numbers2)
+//                throw new BitwiseDecimalException(numbers2);
+//            int int1 = (int) numbers;
+//            int int2 = (int) numbers2;
+//            return int1 ^ int2;
+//        }
+//    }
+//
+//    public static class BitNot implements IUnaryOperation {
+//        @Nonnull
+//        @Override
+//        public String[] getOperators() {
+//            return new String[]{"~"};
+//        }
+//
+//        @Override
+//        public int getPrecedence() {
+//            return 16;
+//        }
+//
+//        @Override
+//        public double evaluateFunction(double input) throws CalcExceptions {
+//            if ((int) input != input)
+//                throw new BitwiseDecimalException(input);
+//            int int1 = (int) input;
+//            return ~int1;
+//        }
+//    }
+//
+//    public static class BitShiftRight implements IBinaryOperation {
+//        @Nonnull
+//        @Override
+//        public String[] getOperators() {
+//            return new String[]{">>"};
+//        }
+//
+//        @Override
+//        public int getPrecedence() {
+//            return 8;
+//        }
+//
+//        @Override
+//        public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
+//            if ((int) numbers != numbers)
+//                throw new BitwiseDecimalException(numbers);
+//            if ((int) numbers2 != numbers2)
+//                throw new BitwiseDecimalException(numbers2);
+//            int int1 = (int) numbers;
+//            int int2 = (int) numbers2;
+//            return int1 >> int2;
+//        }
+//    }
+//
+//    public static class BitShiftLeft implements IBinaryOperation {
+//        @Nonnull
+//        @Override
+//        public String[] getOperators() {
+//            return new String[]{"<<"};
+//        }
+//
+//        @Override
+//        public int getPrecedence() {
+//            return 8;
+//        }
+//
+//        @Override
+//        public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
+//            if ((int) numbers != numbers)
+//                throw new BitwiseDecimalException(numbers);
+//            if ((int) numbers2 != numbers2)
+//                throw new BitwiseDecimalException(numbers2);
+//            int int1 = (int) numbers;
+//            int int2 = (int) numbers2;
+//            return int1 << int2;
+//        }
+//    }
+//
+//    public static class BitShiftRightFillZeros implements IBinaryOperation {
+//        @Nonnull
+//        @Override
+//        public String[] getOperators() {
+//            return new String[]{">>>"};
+//        }
+//
+//        @Override
+//        public int getPrecedence() {
+//            return 8;
+//        }
+//
+//        @Override
+//        public double evaluateFunction(double numbers, double numbers2) throws CalcExceptions {
+//            if ((int) numbers != numbers)
+//                throw new BitwiseDecimalException(numbers);
+//            if ((int) numbers2 != numbers2)
+//                throw new BitwiseDecimalException(numbers2);
+//            int int1 = (int) numbers;
+//            int int2 = (int) numbers2;
+//            return int1 >>> int2;
+//        }
+//    }
 }

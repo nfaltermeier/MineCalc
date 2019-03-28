@@ -16,7 +16,7 @@ public interface IOperation {
      * <p>
      * 5 - after parenthesis and exponents but before multiplication
      */
-    int getImportance();
+    int getPrecedence();
 
     // TODO: Implement
     /*
